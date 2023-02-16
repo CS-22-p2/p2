@@ -1,21 +1,8 @@
-.my-button {
-    display: inline-block;
-    border-radius: 4px;
-    background-color: #D4D4CE;
-    border: none;
-    color: black;
-    text-align: center;
-    font-size: 16px;
-    padding: 10px;
-    width: 100px;
-    transition: all 0.5s;
-    cursor: pointer;
-    box-shadow: 2px 5px 4px #888888;
-    white-space: nowrap;
-}
-
-.my-button1 {
-    background-color: green;
+body {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: white;
 }
 
 p {
@@ -30,4 +17,29 @@ p {
     width: auto;
     height: auto;
     box-shadow: 2px 5px 4px #888888;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+}
+
+.topnav a {
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav a:hover {
+    background-color: white;
+    color: black;
+}
+  
+.topnav a.active {
+    background-color: rgb(10, 10, 11);
+    color: white;
 }
