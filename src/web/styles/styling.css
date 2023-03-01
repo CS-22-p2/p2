@@ -19,6 +19,49 @@ p {
     box-shadow: 2px 5px 4px #888888;
 }
 
+.images {
+    display: block;
+    width: 100%;
+}
+  
+.images.image-bundle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 10px;
+}
+.images.image-bundle img {
+    width: 46%;
+    border: 1px solid black;
+}
+
+.centered-text-box {
+    display: block;
+    text-align: center;
+    color: black;
+    margin: 0 auto;
+    padding-top: 30px;
+    font: arial;
+}
+
+.centered-text-box.big {
+    font-size: 48px;
+}
+
+.aligned-text-box{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.aligned-text-box div {
+    max-width: 46%;
+    text-align: left
+}
+
 .topnav {
     overflow: hidden;
     background-color: #333;
