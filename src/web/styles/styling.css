@@ -1,25 +1,12 @@
-.my-button {
-    display: inline-block;
-    border-radius: 4px;
-    background-color: #D4D4CE;
-    border: none;
-    color: black;
-    text-align: center;
-    font-size: 16px;
-    padding: 10px;
-    width: 100px;
-    transition: all 0.5s;
-    cursor: pointer;
-    box-shadow: 2px 5px 4px #888888;
-    white-space: nowrap;
-}
-
-.my-button1 {
-    background-color: green;
+body {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: white;
 }
 
 p {
-    display: none;
+    display: block;
     background-color: #D4D4CE;
     color: black;
     border: none;
@@ -30,4 +17,83 @@ p {
     width: auto;
     height: auto;
     box-shadow: 2px 5px 4px #888888;
+}
+
+.images {
+    display: flex;
+    justify-content: center;
+    max-block-size: 100vh;
+    width: 100%;
+    border: 1px black;
+}
+  
+.images.image-bundle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 10px;
+    background-color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    max-block-size: none;
+}
+.images.image-bundle img {
+    width: 46%;
+    border: 1px solid black;
+}
+  
+.text-card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    height: clamp(min(25vh), 50vh, 100vh);
+    width: 100%;
+}
+
+.title-text-card {
+    text-align: center;
+    font-family: open sans-serif;
+    font-size: 48px;
+    width: 40%
+}
+
+.text-box {
+    text-align: center;
+    font-family: open sans-serif;
+    font-size: 24px;
+}
+
+.text-box a {
+    display: inline;
+    font-size: 18px;
+    white-space: nowrap;
+    margin: 10px;
+    padding-top: 10px;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+}
+
+.topnav a {
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    font-family: open sans-serif;
+}
+
+.topnav a:hover {
+    background-color: white;
+    color: black;
+}
+  
+.topnav a.active {
+    background-color: rgb(10, 10, 11);
+    color: white;
 }
