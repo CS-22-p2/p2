@@ -1,22 +1,6 @@
 body {
     width: 100%;
     margin: 0px;
-    padding: 0px;
-    background-color: white;
-}
-
-p {
-    display: block;
-    background-color: #D4D4CE;
-    color: black;
-    border: none;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 20px;
-    padding: 10px;
-    width: auto;
-    height: auto;
-    box-shadow: 2px 5px 4px #888888;
 }
 
 .images {
@@ -32,14 +16,15 @@ p {
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px 10px;
-    background-color: black;
     padding-top: 5px;
     padding-bottom: 5px;
     max-block-size: none;
 }
 .images.image-bundle img {
     width: 46%;
-    border: 1px solid black;
+    box-shadow: 2px 2px 10px rgb(0, 0, 0);
+    opacity: 0;
+    transition: 0.5ms ease-in-out;
 }
   
 .text-card {
@@ -96,4 +81,10 @@ p {
 .topnav a.active {
     background-color: rgb(10, 10, 11);
     color: white;
+}
+
+.main-page {
+    width: 80%;
+    padding-left: 10%;
+    padding-right: 10%;
 }
