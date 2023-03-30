@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/CS-22-p2/p2#readme",
   "dependencies": {
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^18.15.11",
     "mongodb": "^5.1.0"
   }
