@@ -72,11 +72,48 @@ async function getEntry (query, collection) {
     } catch (error) {
         console.error(error);
     } finally {
+        setTimeout(() => {client.close()}, 1500)
+        //await client.close();
+    }
+}
+
+// This functions returns all the entrys in a collection that matches the searchTerm in any field
+async function serchAllFields(searchTerm) {
+    let client;
+    let result = [];
+
+    try {
+        client = await establishConnection();
+        
+        // This function call returns a cursor containing the searched entrys 
+        let cursor =  client.db("p2").collection("userdb").find({ $text: { $search: searchTerm, $caseSensitive: false } });
+        await cursor.forEach(doc => result.push(doc));
+
+        if (result.length > 0) {
+            return result;
+        }
+
+        return "No entries found";
+    } catch (error) {
+        console.error(error);
+    } finally {
         await client.close();
     }
 }
 
-//const result = getEntry("Anna", "userdb");
-//const result = insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
+// TODO: Figure out how to make querrys easy
+function createQuery(req) {
+    let query = {};
+    let andConditions = {};
 
-console.log(result);
+}
+
+async function main() {
+    //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
+    //const result = await getEntry("Anna", "userdb");
+    const result = await serchAllFields('Aa');
+    
+    console.log(result);
+}
+
+main();
