@@ -26,6 +26,10 @@ function when_event(date) {
     return Math.ceil(difference_milliseconds / (1000 * 3600 * 24));
 }
 
+function remove_numbers_string(string) {
+    return string.replace(/\d+/g, '');
+}
+
 class relevancy_score {
     constructor(location, participants, date) {
         this.location = location;
@@ -49,6 +53,10 @@ class relevancy_score {
         let campus_addresses = ["selmalagerløfsvej", "bertil ohtils vej", "frederik bajers vej"];
 
         // check if this.location is in campus_addresses
+        if (campus_addresses.toLowerCase.includes(remove_numbers_string(this.location).toLowerCase)) {
+            return true
+        }
+        return false
     }
 
     // Calculate a weight for time_left
