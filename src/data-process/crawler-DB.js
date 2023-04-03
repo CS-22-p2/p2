@@ -26,8 +26,9 @@ function when_event(date) {
     return Math.ceil(difference_milliseconds / (1000 * 3600 * 24));
 }
 
-function remove_numbers_string(string) {
-    return string.replace(/\d+/g, '');
+// Formats string
+function format_string(string) {
+    return ((string.replace(/\d+/g, '')).trim()).toLowerCase();
 }
 
 class relevancy_score {
@@ -42,21 +43,38 @@ class relevancy_score {
         this.relevant_number = 200;
     }
 
+    update() {
+
+    }
+
+    score() {
+        // Basic score, maybe change later
+        return (this.time_left_score() + this.on_campus() + this.repeated_events());
+    }
+
     // Determine if event are repeated
     repeated_events() {
         // Check DB if there's prior events, with matching 
+    }
+
+    // Participants
+    participants() {
+        return this.participants;
     }
 
     // Determine if event are on campus
     on_campus() {
         // Example
         let campus_addresses = ["selmalagerløfsvej", "bertil ohtils vej", "frederik bajers vej"];
+        let check_location = remove_numbers_string(this.location)
 
         // check if this.location is in campus_addresses
-        if (campus_addresses.toLowerCase.includes(remove_numbers_string(this.location).toLowerCase)) {
+        if (campus_addresses.toLowerCase.includes(check_location)) {
             return true
         }
-        return false
+        else {
+            return false
+        }
     }
 
     // Calculate a weight for time_left
@@ -75,11 +93,5 @@ class relevancy_score {
         }
         // less than 2 weeks
         return this.relevant_number;
-    }
-
-    // Calculate score
-    score() {
-        // Basic score, maybe change later
-        return (this.time_left_score() + this.on_campus() + this.repeated_events());
     }
 }

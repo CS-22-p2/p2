@@ -1,10 +1,19 @@
 
-function date() {
-    const event_date = new Date('2023-3-30');
-    const current_date = new Date();
-    // getTime - gets time in milliseconds from your pc
-    let difference_milliseconds = event_date.getTime() - current_date.getTime();
-    let difference_days = Math.ceil(difference_milliseconds / (1000 * 3600 * 24));
-    console.log(`DAYS BETWEEN: ${difference_days}`);
+
+function format_string(string) {
+    return ((string.replace(/\d+/g, '')).trim()).toLowerCase();
 }
-date();
+
+function main() {
+    let campus_addresses = ["selmalagerløfsvej", "bertil ohtils vej", "frederik bajers vej"];
+    let b = "Selmalagerløfsvej 12";
+    let a = format_string(b);
+    if (campus_addresses.includes(a)) {
+        console.log("Works");
+    }
+    else {
+        console.log("Not works");
+    }
+}
+
+main();
