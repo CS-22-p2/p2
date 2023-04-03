@@ -21,30 +21,75 @@ const getData = async () => {
     waitUntil: "networkidle2",
   });
 
-  // Get all cards
-  var cards = await page.evaluate(() => {
-    const elements = document.querySelectorAll("div.ExpandableCard_ExpandableCard__P6qcZ")
-
-    var arr = Array.from(elements)
-    arr.forEach((element, index) => {
-        arr[index] = element.id
-    })
-
-    return JSON.stringify(arr)
-  }, page);
-
-  // Convert back to an array and click on all cards
-  cards = JSON.parse(cards)
-
-  const doClick = async (id) =>
+  const ElementToSearchString = function(element)
   {
-    console.log("#"+id)
-    await page.click("#" + id)
+    return element.tagName + element.className.Replace(" ", ".")
   }
 
-  console.log(cards)
-  cards.forEach(doClick)
+  // Get all cards
+  var cards = await page.$$("div.ExpandableCard_ExpandableCard__P6qcZ")
 
+  async function ExtractCardURLs(cards)
+  {
+    const allOrgData = []
+
+    // Loop over each card
+    for (var cardId in cards) {
+      const cardHandler = cards[cardId]
+
+      // Expand the card
+      try {
+        await cardHandler.click()
+      } catch (error) {
+        console.log("Failed to press expandable card...", cardHandler)
+        continue
+      }
+
+      const OrgData = {
+        name: "Unknown",
+        contactInfo: "Unknown",
+        description: "Unknown",
+        destinationURL: ""
+      }
+
+      // Temporary handle variables
+      async function ExtractContent(cardHandler, cls, content)
+      {
+        // Find handler for the class
+        const handler = await cardHandler.$(cls)
+        if (handler != null)
+        {
+          // Get the text
+          var propertyHandler = await handler.getProperty(content)
+
+          if (propertyHandler != null)
+          {
+            // Return json value
+            return await propertyHandler.jsonValue()
+          }
+        }
+
+        return "Unknown"
+      }
+
+      // Extract name
+
+
+      OrgData.name = await ExtractContent(cardHandler, "h5.Heading_Heading__5IvtX.Heading_Heading___h5__i5794.ExpandableCard_ExpandableCard_heading__EtE4x", "textContent")
+      OrgData.contactInfo = await ExtractContent(cardHandler, "p.Paragraph_Paragraph__6scoC.Paragraph_Paragraph___medium__N4iI7.ExpandableCard_ExpandableCard_abstract__I_vmV", "textContent")
+      OrgData.description = await ExtractContent(cardHandler, "p.Label_Label__zGuNh.Label_Label___sm__zV3Td.ExpandableCard_ExpandableCard_label__Mtcnt", "textContent")
+      OrgData.destinationURL = await ExtractContent(cardHandler, "a.Link_Link__k_sCh.Link_Link___icon__KHlSc.ExpandableCard_ExpandableCard_link__tM1qF", "href")
+
+      allOrgData.push(OrgData)
+    }
+
+    return allOrgData
+  }
+
+  const AllOrgData = await ExtractCardURLs(cards)
+  console.log(AllOrgData)
+
+  // Convert back to an array and click on all cards
   return
   
   // Click on all of the elements
@@ -52,11 +97,6 @@ const getData = async () => {
   {
     console.log("Found no cards")
     return
-  }
-
-  const ElementToSearchString = function(element)
-  {
-    return element.tagName + element.className.Replace(" ", ".")
   }
 
   cards.forEach((element) => {
