@@ -44,12 +44,20 @@ class relevancy_score {
     }
 
     update() {
-
+        return [this.time_left_score(), this.participants]
     }
 
     score() {
         // Basic score, maybe change later
-        return (this.time_left_score() + this.on_campus() + this.repeated_events());
+        let a = 0;
+        let b = 0;
+        if (this.on_campus()) {
+            a = this.relevant_number;
+        }
+        if (this.repeated_events()) {
+            b = this.relevant_number;
+        }
+        return [a, b, this.time_left_score(), this.participants]
     }
 
     // Determine if event are repeated
@@ -57,19 +65,14 @@ class relevancy_score {
         // Check DB if there's prior events, with matching 
     }
 
-    // Participants
-    participants() {
-        return this.participants;
-    }
-
     // Determine if event are on campus
     on_campus() {
         // Example
         let campus_addresses = ["selmalagerløfsvej", "bertil ohtils vej", "frederik bajers vej"];
-        let check_location = remove_numbers_string(this.location)
+        let check_location = format_string(this.location);
 
         // check if this.location is in campus_addresses
-        if (campus_addresses.toLowerCase.includes(check_location)) {
+        if (campus_addresses.includes(check_location)) {
             return true
         }
         else {
@@ -85,13 +88,16 @@ class relevancy_score {
         }
         // If there's a over a month left
         else if (this.time_left > 30) {
-            return base;
+            return this.base_number;
         }
         // More than two weeks, less than 1 month
-        else if (this.time_left_left >= 14 && this.time_left <= 30 ) {
-            return base * 1.5;
+        else if (this.time_left >= 14 && this.time_left <= 30 ) {
+            return this.base_number * 1.5;
         }
         // less than 2 weeks
         return this.relevant_number;
     }
 }
+
+// How to make an event
+const an_event = new relevancy_score("Selmalagerløfsvej", 112, '2023-04-15');
