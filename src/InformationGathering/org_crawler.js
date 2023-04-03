@@ -35,20 +35,22 @@ function ClassToSearchableString(cls)
 }
 
 // Temporary handle variables
-async function ExtractContent(cardHandler, cls, content)
+async function ExtractContent(cardHandler, scrapeMember)
 {
   // Find handler for the class
-  const handler = await cardHandler.$(cls)
+  const handler = await cardHandler.$(scrapeMember.class)
   if (handler != null)
   {
     // Get the text
-    var propertyHandler = await handler.getProperty(content)
+    var propertyHandler = await handler.getProperty(scrapeMember.content)
 
     if (propertyHandler != null)
     {
       // Return json value
       return await propertyHandler.jsonValue()
     }
+  else
+    console.log("Failed to evaluate handler for class ", scrapeMember.class)
   }
 
   return "Unknown"
@@ -59,10 +61,10 @@ async function ExtractCardData(scrape, cardHandler)
   const data = new OrgData()
 
   // Extract name
-  data.name = await ExtractContent(cardHandler, scrape.name.class, scrape.name.content)
-  data.contactInfo = await ExtractContent(cardHandler, scrape.contactInfo.class, scrape.contactInfo.content)
-  data.description = await ExtractContent(cardHandler, scrape.description.class, scrape.description.content)
-  data.destinationURL = await ExtractContent(cardHandler, scrape.destinationURL.class, scrape.destinationURL.content)
+  data.name = await ExtractContent(cardHandler, scrape.name)
+  data.contactInfo = await ExtractContent(cardHandler, scrape.contactInfo)
+  data.description = await ExtractContent(cardHandler, scrape.description)
+  data.destinationURL = await ExtractContent(cardHandler, scrape.destinationURL)
 
   return data
 }
