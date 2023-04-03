@@ -6,7 +6,7 @@ export { insertEntry, getEntry }
 
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
-    const uri = "mongodb://p2Access:cs23sw202@192.168.0.127:27017/p2?retryWrites=true&w=majority";
+    const uri = "mongodb://p2Access:cs23sw202@bmpnj.duckdns.org/p2?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
 
     try {
@@ -86,7 +86,9 @@ async function serchAllFields(searchTerm) {
         client = await establishConnection();
         
         // This function call returns a cursor containing the searched entrys 
-        let cursor =  client.db("p2").collection("userdb").find({ $text: { $search: searchTerm, $caseSensitive: false } });
+        let cursor =  client.db("p2").collection("userdb").find({$or: [{fName: {$regex: searchTerm, $options: "i"}},
+                                                                                                                                      {lName: {$regex: searchTerm, $options: "i"}}
+                                                                                                                        ]});
         await cursor.forEach(doc => result.push(doc));
 
         if (result.length > 0) {
@@ -111,7 +113,7 @@ function createQuery(req) {
 async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Anna", "userdb");
-    const result = await serchAllFields('Aa');
+    const result = await serchAllFields("m");
     
     console.log(result);
 }
