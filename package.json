@@ -1,4 +1,7 @@
 {
+  "dependencies": {
+    "@types/node": "^18.15.11"
+  }
   "name": "p2",
   "version": "1.0.0",
   "description": "",
