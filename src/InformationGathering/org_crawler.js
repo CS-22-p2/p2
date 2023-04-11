@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer'
 import fs from 'fs';
 import { title } from 'process';
+export { scrapeOrgData, scrape};
 
 // Class representing data extracted from an organisation website
 class OrgData {
@@ -145,6 +146,8 @@ const scrape = new OrgScrape("https://www.studerende.aau.dk/studieliv/fritid-og-
   }
 })
 
+/*
 const orgData = await scrapeOrgData(scrape);
 console.log(orgData)
 console.log(orgData.length)
+*/

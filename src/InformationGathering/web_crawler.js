@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer'
 import fs from 'fs';
 import { get } from 'http';
 import { Event } from "./eventClass.js";
+export {getData, processInformation};
  
 const popUp_click = "div.x1iorvi4.xdl72j9";
 const seeMore_click = "div.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.xt0b8zv.xzsf02u.x1s688f";
@@ -136,7 +137,7 @@ async function processInformation(gatheredData)
  {
   description += element;
  }
- description = description.replace("See","Bop");
+ description = description.replace("See less","");
  event_data.eventDescription = description;
 
  console.log(event_data);
@@ -146,5 +147,7 @@ async function processInformation(gatheredData)
 
 
 // Start the scraping
+/*
 let gathered_data = await getData("https://www.facebook.com/events/155003607431682/?acontext=%7B%22event_action_history%22%3A[%7B%22mechanism%22%3A%22discovery_top_tab%22%2C%22surface%22%3A%22bookmark%22%7D]%2C%22ref_notif_type%22%3Anull%7D");
 let output_event = await processInformation(gathered_data);
+*/

@@ -1,4 +1,4 @@
-class Event {
+export class Event {
   constructor(orgName, orgType, orgContactInfo, 
               eventLink, eventTitle, eventDate, 
               eventHosts, eventParticipants, eventLocation, 
