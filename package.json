@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/node": "^18.15.11"
-  }
+  },
   "name": "p2",
   "version": "1.0.0",
   "description": "",
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/CS-22-p2/p2/issues"
   },
-  "homepage": "https://github.com/CS-22-p2/p2#readme"
+  "homepage": "https://github.com/CS-22-p2/p2#readme",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
 }

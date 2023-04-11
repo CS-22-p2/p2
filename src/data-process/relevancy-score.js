@@ -1,18 +1,8 @@
-// Input from webcrawler will look like
-class Event {
-    constructor(orgName, orgType,contactInfo, link, eventTitle, participants, location, duration, isPrivate, description) {
-      this.orgName = orgName;
-      this.orgType = orgType;
-      this.contactInfo = contactInfo;
-      this.link = link;
-      this.eventTitle = eventTitle;
-      this.participants = participants;
-      this.location = location;
-      this.duration = duration;
-      this.isPrivate = isPrivate;
-      this.description = description; 
-    }
-}
+
+// Import
+
+// Export
+export {when_event, format_string, relevancy_score};
 
 
 // When event is happening relative to current time
@@ -44,7 +34,7 @@ class relevancy_score {
     }
 
     update() {
-        return [this.time_left_score(), this.participants]
+        return [this.time_left_score(), this.participants];
     }
 
     score() {
@@ -57,7 +47,7 @@ class relevancy_score {
         if (this.repeated_events()) {
             b = this.relevant_number;
         }
-        return [a, b, this.time_left_score(), this.participants]
+        return [a, b, this.time_left_score(), this.participants];
     }
 
     // Determine if event are repeated
@@ -73,10 +63,10 @@ class relevancy_score {
 
         // check if this.location is in campus_addresses
         if (campus_addresses.includes(check_location)) {
-            return true
+            return true;
         }
         else {
-            return false
+            return false;
         }
     }
 
