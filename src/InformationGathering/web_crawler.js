@@ -107,7 +107,6 @@ async function processInformation(gatheredData)
   let description = "";
 
   //Some fields can just be stored directly without any processing
-  //eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDuration, isPrivate, eventDescription, eventTickets, eventImage
   event_data.eventLink = gatheredData.eventLink;
   event_data.eventTitle = gatheredData.eventTitle;
   event_data.eventDate = gatheredData.eventDate;
@@ -119,7 +118,7 @@ async function processInformation(gatheredData)
   //Converting participants from string to integer
   event_data.eventParticipants = parseInt(gatheredData.eventParticipants);
 
-  //Processing details
+  //Processing details. Since details is an array, and often appears in a 
   for(let element of gatheredData.eventDetails)
   {
     if(element.includes("Duration:") || element.includes("days")){
@@ -137,7 +136,7 @@ async function processInformation(gatheredData)
  {
   description += element;
  }
- description.replace("See","Bop");
+ description = description.replace("See","Bop");
  event_data.eventDescription = description;
 
  console.log(event_data);

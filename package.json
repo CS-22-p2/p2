@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/CS-22-p2/p2/issues"
   },
-  "homepage": "https://github.com/CS-22-p2/p2#readme"
+  "homepage": "https://github.com/CS-22-p2/p2#readme",
+  "dependencies": {
+    "puppeteer": "^19.8.5"
+  }
 }
