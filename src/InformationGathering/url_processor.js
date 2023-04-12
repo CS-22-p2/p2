@@ -2,39 +2,46 @@ import puppeteer from "puppeteer";
 import {getData, processInformation} from "./web_crawler.js";
 import { scrapeOrgData, scrape} from "./org_crawler.js";
 
-let orgData = await scrapeOrgData(scrape);
-await logEvents(orgData);
-await checkFb(orgData[7].destinationURL);
-
-/*
-let gatheredData = await getData("https://www.facebook.com/events/155003607431682/?acontext=%7B%22event_action_history%22%3A[%7B%22mechanism%22%3A%22discovery_top_tab%22%2C%22surface%22%3A%22bookmark%22%7D]%2C%22ref_notif_type%22%3Anull%7D");
-let processedData = await processInformation(gatheredData);
-console.log(processedData);
-*/
+const popUp_click = "div.x1iorvi4.xdl72j9";
 
 
+//const orgData = await scrapeOrgData(scrape);
+await loginFB();
 
-async function accessEventsPage(fbURL)
-{
+async function loginFB(){
+
     const browser = await puppeteer.launch({
         headless: false,
         defaultViewport: null,
-      });
-    
-      // Open a new page
-      const page = await browser.newPage();
-    
-      // On this new page:
-      // - open the "http://quotes.toscrape.com/" website
-      // - wait until the dom content is loaded (HTML is ready)
-      await page.goto(fbURL, {
-        waitUntil: "networkidle2",
-      });
+    });
+
+    let page = await browser.newPage();
+    await page.goto("https://www.facebook.com/", {
+        waitUntil: "networkidle2"
+    });
+    await page.type('#email', 'testing testing', {delay: 30});
+    await page.type('#pass', 'testing testing', {delay: 30});
+    await page.click('#u_0_5_xS');
+
+
+}
+
+async function accessEventsPage(orgData)
+{
+    //Not working for multiple pages, so i will try to do it for one 
+    /*
+    for(let org of orgData){
+        let fbURL = await checkFb(org.destinationURL);
+        let page = await browser.newPage();
+        await page.goto(fbURL, {
+            waitUntil: "networkidle2",
+          });
+    }
+    */
 }
 
 async function checkFb(orgURL){
     let eventPageURL = orgURL;
-
     //Checks if the URL is a link to facebook
     if(orgURL.includes("facebook"))
     {
@@ -42,12 +49,11 @@ async function checkFb(orgURL){
         if(orgURL.at(-1) === "/")
         {
             eventPageURL += "events";
-            accessEventsPage(eventPageURL);
         }else{
             eventPageURL += "/events";
-            accessEventsPage(eventPageURL);
         }
     }
+    return eventPageURL;
 }
 
 async function logEvents(orgData)
