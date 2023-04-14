@@ -1,10 +1,32 @@
 // Import
 
-const { throws } = require("assert");
-
 // Global variables
 let base_score = 100;
 let high_score = 200;
+
+// Checks if input is of the expected type. Returns true if correct
+function input_validation(input, expected) {
+    if (expected === "str") {
+        if (typeof input !== "string" || input === null || input === undefined) {
+            return false;
+        }
+    }
+
+    if (expected === "int") {
+        if (typeof input !== "number" || !Number.isInteger(input)) {
+            return false;
+        }
+    }
+
+    if (expected === "bool") {
+        if (typeof input !== "boolean") {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 // When event is happening relative to current time
 function when_event(date) {
@@ -19,10 +41,8 @@ function when_event(date) {
 // Formats string
 function format_address(address) {
     // Input validation
-    if (address === null || 
-        address === undefined ||
-        typeof address === 'string') {
-        throw new Error('Wrong input given');
+    if (!input_validation(address, "str")) {
+        throw new Error("Wrong input");
     }
 
     return ((address.replace(/\d+/g, '')).trim()).toLowerCase(); // Regex
@@ -36,10 +56,8 @@ function repeated_events() {
 // Determine if event are on campus
 function on_campus(location) {
     // Input validation
-    if (location === null || 
-        location === undefined ||
-        typeof location === 'string') {
-        throw new Error('Wrong input given');
+    if (!input_validation(location, "str")){
+        throw new Error("Wrong input");
     }
 
     // Example adressess
@@ -54,11 +72,10 @@ function on_campus(location) {
 
 function time_left_score(time_left) {
     // Input validation
-    if (time_left === null || 
-        time_left === undefined ||
-        Number.isInteger(time_left)) {
-        throw new Error('Wrong input given');
+    if (!input_validation(time_left, "int")){
+        throw new Error("Wrong input");
     }
+
     // Old event, already happened. Edge case
     if (time_left < 0) {
         return -1000;
@@ -68,15 +85,15 @@ function time_left_score(time_left) {
         return base_score;
     }
     // More than two weeks, less than 1 month
-    else if (time_left >= 14 && time_left <= 30 ) {
+    else if (time_left >= 14 && time_left <= 30) {
         return base_score * 1.5;
     }
     // less than 2 weeks
     return high_score;
 }
 
-class evnet_insert {
-    constructor(orgName, orgType,contactInfo, link, eventTitle, eventDate, participants, location, duration, isPrivate, description) {
+class event_insert {
+    constructor(orgName, orgType, contactInfo, link, eventTitle, eventDate, participants, location, duration, isPrivate, description) {
         this.orgName = orgName;
         this.orgType = orgType;
         this.contactInfo = contactInfo;
@@ -99,9 +116,9 @@ class evnet_insert {
         if (on_campus(this.location)) {
             a = high_score;
         }
-        if (this.repeated_events()) {
-            b = -base_score; // Minus points if repeated events
-        }
+        // if (repeated_events()) {
+        //     b = -base_score; // Minus points if repeated events
+        // }
         return (a + b + time_left_score(this.time_left) + this.participants);
     }
 
@@ -110,11 +127,16 @@ class evnet_insert {
 }
 
 // How to make an event
-const an_event = new evnet_insert(// Arguments
-                                                );
-
+const an_event = new event_insert("hanni", "something", "something", "something", "something", "2023-04-20", 112, "selmalagerløgsvej 12", 4, true, "asodjajsdamslda");
+console.log(an_event.relevancy_score);
 
 // Export
-exports.format_address = format_address;
-exports.when_event = when_event;
-
+module.exports = {
+    event_insert: event_insert,
+    input_validation: input_validation,
+    format_address: format_address,
+    time_left_score: time_left_score,
+    final_score: this.final_score,
+    high_score: high_score,
+    base_score: base_score
+}
