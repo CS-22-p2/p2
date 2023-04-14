@@ -1,9 +1,4 @@
-
 // Import
-
-// Export
-export {when_event, format_string, relevancy_score};
-
 
 // When event is happening relative to current time
 // Can be frequently update with var_name.when_event() function
@@ -21,7 +16,7 @@ function format_string(string) {
     return ((string.replace(/\d+/g, '')).trim()).toLowerCase();
 }
 
-class relevancy_score {
+class score {
     constructor(location, participants, date) {
         this.location = location;
         this.participants = participants;
@@ -59,10 +54,10 @@ class relevancy_score {
     on_campus() {
         // Example
         let campus_addresses = ["selmalagerløfsvej", "bertil ohtils vej", "frederik bajers vej"];
-        let check_location = format_string(this.location);
+        let trimmed_location = format_string(this.location); // Trims this.location
 
         // check if this.location is in campus_addresses
-        if (campus_addresses.includes(check_location)) {
+        if (campus_addresses.includes(trimmed_location)) {
             return true;
         }
         else {
@@ -90,4 +85,11 @@ class relevancy_score {
 }
 
 // How to make an event
-const an_event = new relevancy_score("Selmalagerløfsvej", 112, '2023-04-15');
+const an_event = new score("Selmalagerløfsvej", 112, '2023-04-15');
+
+
+// Export
+exports.format_string = format_string;
+exports.when_event = when_event;
+exports.score = score;
+

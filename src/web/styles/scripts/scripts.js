@@ -40,8 +40,19 @@ function create_section(title, description, date, participants, link) {
     document.body.appendChild(section);
 }
 
-window.addEventListener('load', function () {
-    for (let i = 0; i < 5; i++){
-        create_section(title = "Hello", "kjasnajsd", "2013 - 12 - 12", 112, "https://www.javatpoint.com/how-to-call-javascript-function-in-html");
-    }
+window.addEventListener('load', function (event_wrapper) {
+    
 })
+
+class event_wrapper{
+    constructor(events_arr) {
+        this.events_arr = events_arr;
+        this.wrapper_length = events_arr.length;
+    }
+    
+    call_function() {
+        for (let i = 0; i < this.wrapper_length; i++) {
+            create_section(title = this.events_arr[i].title, description = this.events_arr[i].description, this.events_arr[i].date, this.events_arr[i].participants, this.events_arr[i].link);
+        }
+    }
+}
