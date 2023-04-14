@@ -2,7 +2,7 @@
 import { MongoClient } from 'mongodb';
 
 // Exports
-export { insertEntry, getEntry }
+export { insertEntry, getEntry, establishConnection }
 
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
@@ -110,7 +110,7 @@ function createQuery(req) {
 
 }
 
-async function main() {
+/* async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Anna", "userdb");
     const result = await serchAllFields("m");
@@ -118,4 +118,4 @@ async function main() {
     console.log(result);
 }
 
-main();
+main(); */
