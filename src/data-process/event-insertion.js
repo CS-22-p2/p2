@@ -27,7 +27,6 @@ function input_validation(input, expected) {
     return true;
 }
 
-
 // When event is happening relative to current time
 function when_event(date) {
     const event_date = new Date(date); // needs to be formatted as { 'yyyy-mm-dd' }
