@@ -1,4 +1,16 @@
 // Import
+import { getEntry, insertEntry } from '../database/databaseHandler.js'
+
+// Export
+module.exports = {
+    event_insert: event_insert,
+    input_validation: input_validation,
+    format_address: format_address,
+    time_left_score: time_left_score,
+    final_score: this.final_score,
+    high_score: high_score,
+    base_score: base_score
+}
 
 // Global variables
 let base_score = 100;
@@ -6,25 +18,22 @@ let high_score = 200;
 
 // Checks if input is of the expected type. Returns true if correct
 function input_validation(input, expected) {
+    // Guard clause
     if (expected === "str") {
         if (typeof input !== "string" || input === null || input === undefined) {
             return false;
         }
-    }
-
-    if (expected === "int") {
+    } if (expected === "int") {
         if (typeof input !== "number" || !Number.isInteger(input)) {
             return false;
         }
-    }
-
-    if (expected === "bool") {
+    } if (expected === "bool") {
         if (typeof input !== "boolean") {
             return false;
         }
     }
 
-    return true;
+    return true; // Correct input
 }
 
 // When event is happening relative to current time
@@ -120,22 +129,42 @@ class event_insert {
         // }
         return (a + b + time_left_score(this.time_left) + this.participants);
     }
-
-    // Insert into DB
-    // Theissssss
 }
 
-// How to make an event
-const an_event = new event_insert("hanni", "something", "something", "something", "something", "2023-04-20", 112, "selmalagerløgsvej 12", 4, true, "asodjajsdamslda");
-console.log(an_event.relevancy_score);
+// How to insert an event into the database
 
-// Export
-module.exports = {
-    event_insert: event_insert,
-    input_validation: input_validation,
-    format_address: format_address,
-    time_left_score: time_left_score,
-    final_score: this.final_score,
-    high_score: high_score,
-    base_score: base_score
+// Create an instance
+const event_instance = new event_insert("hanni", "something", "something", "something", "something", "2023-04-20", 112, "selmalagerløgsvej 12", 4, true, "asodjajsdamslda");
+inserting_DB(event_instance);
+
+// Look if event already in DB
+async function check_duplicate_event(event_instance) {
+    const query = {
+        eventTitle: event_instance.eventTitle,
+        eventDate: event_instance.Date,
+        location: event_instance.location
+    }
+
+    const result = await getEntry(query, "events");
+    return result; // getEntry returns true if found, else false
 }
+
+async function inserting_DB(event_instance) {
+    // If it's duplicate, returns false. Do nothing
+    if (check_duplicate_event(event_instance)) {
+        if (!check_repeated_events(event_instance)) {
+            return false;
+        }
+        else {
+        }
+    }
+
+    // Instance to JSON stirng. Samy as object, just mutuable
+    const event_JSON_stirng = JSON.stringify(event_instance);
+
+    // Inserting event into MongoDB. Needs testing.
+    insertEntry(event_JSON_stirng, "events");
+    return true;
+}
+
+
