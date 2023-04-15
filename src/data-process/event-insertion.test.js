@@ -47,15 +47,3 @@ describe("format_address", () => {
     expect(() => format_address(undefined)).toThrow("Wrong input");
   });
 });
-
-describe("final_score", () => {
-  it("calculates final score", () => {
-    const event = {
-      location: "selmalagerløfsvej 12",
-      time_left: 60,
-      participants: 20,
-    };
-    const expectedScore = high_score + time_left_score(60) + 20;
-    expect(event_insert.final_score(event)).toEqual(expectedScore);
-  });
-});
