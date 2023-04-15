@@ -139,11 +139,7 @@ inserting_DB(event_instance);
 
 // Look if event already in DB
 async function check_duplicate_event(event_instance) {
-    const query = {
-        eventTitle: event_instance.eventTitle,
-        eventDate: event_instance.Date,
-        location: event_instance.location
-    }
+    const query = { link: event_instance.link };
 
     const result = await getEntry(query, "events");
     return result; // getEntry returns true if found, else false
