@@ -1,5 +1,5 @@
 // Import
-import { insertEntry, getEntry } from 'src/database/databaseHandler.js';
+import { insertEntry, getEntry } from '../database/databaseHandler'; // not importing correctly
 
 // Global variables
 let base_score = 100;
@@ -139,17 +139,17 @@ class event_insert {
 // How to insert an event into the database
 
 // Create an instance
-const event_instance = new event_insert("F-klub", 
-                                        "Official", 
-                                        "something", 
-                                        "something", 
-                                        "something", 
+const event_instance = new event_insert("Org name", 
+                                        "Event type", 
+                                        "Contact info", 
+                                        "link", 
+                                        "Event title", 
                                         "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 
                                         112, 
                                         "selmalagerløgsvej 12", 
-                                        4, 
-                                        true, 
-                                        "asodjajsdamslda");
+                                        "Duration", // Prob int instead 
+                                        true, // Prob a bool
+                                        "Description");
 inserting_DB(event_instance);
 
 // Look if event already in DB
