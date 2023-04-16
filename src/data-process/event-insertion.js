@@ -1,4 +1,5 @@
 // Import
+import { insertEntry, getEntry } from 'src/database/databaseHandler.js';
 
 // Global variables
 let base_score = 100;
@@ -6,25 +7,38 @@ let high_score = 200;
 
 // Checks if input is of the expected type. Returns true if correct
 function input_validation(input, expected) {
+    // Guard clause
     if (expected === "str") {
         if (typeof input !== "string" || input === null || input === undefined) {
             return false;
         }
-    }
-
-    if (expected === "int") {
+    } if (expected === "int") {
         if (typeof input !== "number" || !Number.isInteger(input)) {
             return false;
         }
-    }
-
-    if (expected === "bool") {
+    } if (expected === "bool") {
         if (typeof input !== "boolean") {
             return false;
         }
     }
 
-    return true;
+    return true; // Correct input
+}
+
+// Converts eventdate into usuable data
+function date_conversion_formatting(date_str) {
+    const parts = date_str.split(" ");
+    // The months abbreviated and full. Works like a dict
+    const the_months = {
+        JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
+        JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12,
+        JANUARY: 1, FEBRUARY: 2, MARCH: 3, APRIL: 4, MAY: 5, JUNE: 6,
+        JULY: 7, AUGUST: 8, SEPTEMBER: 9, OCTOBER: 10, NOVEMBER: 11, DECEMBER: 12
+    };
+    const month = the_months[parts[2].toUpperCase()];
+    const day = parts[1].padStart(2, "0");
+    const year = parts[3];
+    return `${year}-${month}-${day}`;
 }
 
 // When event is happening relative to current time
@@ -98,7 +112,7 @@ class event_insert {
         this.contactInfo = contactInfo;
         this.link = link;
         this.eventTitle = eventTitle;
-        this.date = eventDate;
+        this.date = date_conversion_formatting(eventDate);
         this.participants = participants;
         this.location = location;
         this.duration = duration;
@@ -120,14 +134,49 @@ class event_insert {
         // }
         return (a + b + time_left_score(this.time_left) + this.participants);
     }
-
-    // Insert into DB
-    // Theissssss
 }
 
-// How to make an event
-const an_event = new event_insert("hanni", "something", "something", "something", "something", "2023-04-20", 112, "selmalagerløgsvej 12", 4, true, "asodjajsdamslda");
-console.log(an_event.relevancy_score);
+// How to insert an event into the database
+
+// Create an instance
+const event_instance = new event_insert("F-klub", 
+                                        "Official", 
+                                        "something", 
+                                        "something", 
+                                        "something", 
+                                        "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 
+                                        112, 
+                                        "selmalagerløgsvej 12", 
+                                        4, 
+                                        true, 
+                                        "asodjajsdamslda");
+inserting_DB(event_instance);
+
+// Look if event already in DB
+async function check_duplicate_event(event_instance) {
+    const query = { link: event_instance.link };
+
+    const result = await getEntry(query, "events");
+    return result; // getEntry returns true if found, else false
+}
+
+async function inserting_DB(event_instance) {
+    // If it's duplicate, returns false. Do nothing
+    if (check_duplicate_event(event_instance)) {
+        if (!check_repeated_events(event_instance)) {
+            return false;
+        }
+        else {
+        }
+    }
+
+    // Instance to JSON stirng. Samy as object, just mutuable
+    const event_JSON_stirng = JSON.stringify(event_instance);
+
+    // Inserting event into MongoDB. Needs testing.
+    insertEntry(event_JSON_stirng, "events");
+    return true;
+}
 
 // Export
 module.exports = {
@@ -135,6 +184,7 @@ module.exports = {
     input_validation: input_validation,
     format_address: format_address,
     time_left_score: time_left_score,
+    date_conversion_formatting,
     final_score: this.final_score,
     high_score: high_score,
     base_score: base_score
