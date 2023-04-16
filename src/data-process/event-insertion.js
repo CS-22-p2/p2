@@ -1,16 +1,5 @@
 // Import
-import { getEntry, insertEntry } from '../database/databaseHandler.js'
-
-// Export
-module.exports = {
-    event_insert: event_insert,
-    input_validation: input_validation,
-    format_address: format_address,
-    time_left_score: time_left_score,
-    final_score: this.final_score,
-    high_score: high_score,
-    base_score: base_score
-}
+import { insertEntry, getEntry } from 'src/database/databaseHandler.js';
 
 // Global variables
 let base_score = 100;
@@ -34,6 +23,22 @@ function input_validation(input, expected) {
     }
 
     return true; // Correct input
+}
+
+// Converts eventdate into usuable data
+function date_conversion_formatting(date_str) {
+    const parts = date_str.split(" ");
+    // The months abbreviated and full. Works like a dict
+    const the_months = {
+        JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
+        JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12,
+        JANUARY: 1, FEBRUARY: 2, MARCH: 3, APRIL: 4, MAY: 5, JUNE: 6,
+        JULY: 7, AUGUST: 8, SEPTEMBER: 9, OCTOBER: 10, NOVEMBER: 11, DECEMBER: 12
+    };
+    const month = the_months[parts[2].toUpperCase()];
+    const day = parts[1].padStart(2, "0");
+    const year = parts[3];
+    return `${year}-${month}-${day}`;
 }
 
 // When event is happening relative to current time
@@ -107,7 +112,7 @@ class event_insert {
         this.contactInfo = contactInfo;
         this.link = link;
         this.eventTitle = eventTitle;
-        this.date = eventDate;
+        this.date = date_conversion_formatting(eventDate);
         this.participants = participants;
         this.location = location;
         this.duration = duration;
@@ -134,7 +139,17 @@ class event_insert {
 // How to insert an event into the database
 
 // Create an instance
-const event_instance = new event_insert("hanni", "something", "something", "something", "something", "2023-04-20", 112, "selmalagerløgsvej 12", 4, true, "asodjajsdamslda");
+const event_instance = new event_insert("F-klub", 
+                                        "Official", 
+                                        "something", 
+                                        "something", 
+                                        "something", 
+                                        "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 
+                                        112, 
+                                        "selmalagerløgsvej 12", 
+                                        4, 
+                                        true, 
+                                        "asodjajsdamslda");
 inserting_DB(event_instance);
 
 // Look if event already in DB
@@ -163,4 +178,14 @@ async function inserting_DB(event_instance) {
     return true;
 }
 
-
+// Export
+module.exports = {
+    event_insert: event_insert,
+    input_validation: input_validation,
+    format_address: format_address,
+    time_left_score: time_left_score,
+    date_conversion_formatting,
+    final_score: this.final_score,
+    high_score: high_score,
+    base_score: base_score
+}

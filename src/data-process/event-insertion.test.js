@@ -1,4 +1,4 @@
-const { input_validation, format_address, final_score, event_insert, time_left_score, high_score, base_score } = require("./event-insertion.js"); 
+const { input_validation, format_address, date_conversion_formatting, final_score, event_insert, time_left_score, high_score, base_score } = require("./event-insertion.js"); 
 
 describe("input_validation function", () => {
   test("return true", () => {
@@ -45,5 +45,13 @@ describe("format_address", () => {
     expect(() => format_address(null)).toThrow("Wrong input");
     expect(() => format_address(123)).toThrow("Wrong input");
     expect(() => format_address(undefined)).toThrow("Wrong input");
+  });
+});
+
+describe('date_conversion_formatting', () => {
+  test('Converts "WEDNESDAY, 19 APRIL 2023" to "2023-04-19"', () => {
+    const inputDate = "WEDNESDAY, 19 APRIL 2023";
+    const expectedOutput = "2023-04-19";
+    expect(date_conversion_formatting(inputDate)).toEqual(expectedOutput);
   });
 });
