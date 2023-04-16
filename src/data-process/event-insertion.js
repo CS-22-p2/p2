@@ -1,5 +1,4 @@
-// Import
-import { insertEntry, getEntry } from 'src/database/databaseHandler.js';
+
 
 // Global variables
 let base_score = 100;
@@ -27,7 +26,10 @@ function input_validation(input, expected) {
 
 // Converts eventdate into usuable data
 function date_conversion_formatting(date_str) {
-    const parts = date_str.split(" ");
+    const date_str_split = date_str.split(" ");
+    const date_part = {day: date_str_split[1],
+                        month: date_str_split[2],
+                        year: date_str_split[3]};
     // The months abbreviated and full. Works like a dict
     const the_months = {
         JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
@@ -35,14 +37,14 @@ function date_conversion_formatting(date_str) {
         JANUARY: 1, FEBRUARY: 2, MARCH: 3, APRIL: 4, MAY: 5, JUNE: 6,
         JULY: 7, AUGUST: 8, SEPTEMBER: 9, OCTOBER: 10, NOVEMBER: 11, DECEMBER: 12
     };
-    const month = the_months[parts[2].toUpperCase()];
-    const day = parts[1].padStart(2, "0");
-    const year = parts[3];
-    return `${year}-${month}-${day}`;
+    const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
+    const r_day = date_part.day.padStart(2, "0");
+    const r_year = date_part.year;
+    return `${r_year}-${r_month}-${r_day}`;
 }
 
 // When event is happening relative to current time
-function when_event(date) {
+function time_until_event(date) {
     const event_date = new Date(date); // needs to be formatted as { 'yyyy-mm-dd' }
     const current_date = new Date();
 
@@ -105,7 +107,7 @@ function time_left_score(time_left) {
     return high_score;
 }
 
-class event_insert {
+class event_data {
     constructor(orgName, orgType, contactInfo, link, eventTitle, eventDate, participants, location, duration, isPrivate, description) {
         this.orgName = orgName;
         this.orgType = orgType;
@@ -118,7 +120,7 @@ class event_insert {
         this.duration = duration;
         this.isPrivate = isPrivate;
         this.description = description;
-        this.time_left = when_event(this.date);
+        this.time_left = time_until_event(this.date);
         this.relevancy_score = this.final_score();
     }
 
@@ -129,9 +131,6 @@ class event_insert {
         if (on_campus(this.location)) {
             a = high_score;
         }
-        // if (repeated_events()) {
-        //     b = -base_score; // Minus points if repeated events
-        // }
         return (a + b + time_left_score(this.time_left) + this.participants);
     }
 }
@@ -139,18 +138,17 @@ class event_insert {
 // How to insert an event into the database
 
 // Create an instance
-const event_instance = new event_insert("F-klub", 
-                                        "Official", 
-                                        "something", 
-                                        "something", 
-                                        "something", 
+const event_instance = new event_data("Org name", 
+                                        "Event type", 
+                                        "Contact info", 
+                                        "link", 
+                                        "Event title", 
                                         "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 
                                         112, 
                                         "selmalagerløgsvej 12", 
-                                        4, 
-                                        true, 
-                                        "asodjajsdamslda");
-inserting_DB(event_instance);
+                                        "Duration", // Prob int instead 
+                                        true, // Prob a bool
+                                        "Description");
 
 // Look if event already in DB
 async function check_duplicate_event(event_instance) {
@@ -180,12 +178,12 @@ async function inserting_DB(event_instance) {
 
 // Export
 module.exports = {
-    event_insert: event_insert,
-    input_validation: input_validation,
-    format_address: format_address,
-    time_left_score: time_left_score,
+    input_validation,
     date_conversion_formatting,
-    final_score: this.final_score,
-    high_score: high_score,
-    base_score: base_score
-}
+    time_until_event,
+    format_address,
+    repeated_events,
+    on_campus,
+    time_left_score,
+    event_data
+  };
