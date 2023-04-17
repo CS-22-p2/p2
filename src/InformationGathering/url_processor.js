@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import {getData, processInformation, getElement, getElementsArray} from "./web_crawler.js";
-import { scrapeOrgData, scrape} from "./org_crawler.js";
+import {scrapeOrgData, scrape} from "./org_crawler.js";
+import { Event } from "./eventClass.js";
 
 //The classes of the HTML elements we want to read from the DOM
 // _click suffix indicates that it is a "clickable" DOM element
@@ -40,7 +41,7 @@ async function accessEventsPage(orgData, browser)
             if(await eventCheck(check_value))
             {
                 eventLinks =  await getElementsArray(page, event_link_class, "href");
-                await processEvents(eventLinks, page);
+                await processEvents(eventLinks, page, org);
             }else eventLinks = "None";
         }
     }
@@ -74,8 +75,9 @@ async function checkFb(orgURL){
 }
 
 
-async function processEvents(eventLinks, page)
+async function processEvents(eventLinks, page, org)
 {
+    
     if(eventLinks === "None"){
         console.log("NO DATA");
     }
@@ -90,8 +92,11 @@ async function processEvents(eventLinks, page)
             continue;
         }
         let processedData = await processInformation(unProcessedData);
+        processedData.orgName = org.name;
+        processedData.orgContactInfo = org.contactInfo;
         console.log(processedData);
     }
+    
 }
 
 async function logEvents(orgData)

@@ -1,11 +1,11 @@
 export class Event {
-  constructor(orgName, orgType, orgContactInfo, 
+  constructor(orgName, orgCategory, orgContactInfo, 
               eventLink, eventTitle, eventDate, 
               eventHosts, eventParticipants, eventLocation, 
               eventDuration, isPrivate, eventDescription, 
               eventTickets, eventImage) {
     this.orgName = orgName;
-    this.orgType = orgType;
+    this.orgCategory = orgCategory;
     this.orgContactInfo = orgContactInfo;
     this.eventLink = eventLink;
     this.eventTitle = eventTitle;
