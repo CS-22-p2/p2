@@ -176,6 +176,6 @@ const scrape = new OrgScrape("https://www.studerende.aau.dk/studieliv/fritid-og-
 })
 
 
-const orgData = await scrapeOrgData(scrape);
+/* const orgData = await scrapeOrgData(scrape);
 console.log(orgData)
-console.log(orgData.length)
+console.log(orgData.length) */
