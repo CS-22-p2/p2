@@ -31,8 +31,7 @@ async function getId() {
 }
 
 async function main() {
-    //const result = await getId();
-    const result = insertEntry({test:1}, "events");
+    const result = await getId();
 
     console.log(result);
 }
