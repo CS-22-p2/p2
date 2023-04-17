@@ -82,7 +82,13 @@ async function processEvents(eventLinks, page)
 
     for(let event of eventLinks)
     {
-        let unProcessedData = await getData(event, page);
+        let unProcessedData;
+        try{
+            unProcessedData = await getData(event, page);
+        }catch(error){
+            console.log("Unable Access Data: ", event, error, unProcessedData);
+            continue;
+        }
         let processedData = await processInformation(unProcessedData);
         console.log(processedData);
     }

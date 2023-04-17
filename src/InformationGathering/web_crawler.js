@@ -37,10 +37,19 @@ async function checkElement(page, selector)
   }else return true; 
 }
 
-async function clickElement(page, selector)
+async function clickElement(page, selector, identifier)
 {
   const clickableElement = await page.$$(selector);
-  await clickableElement.click();
+
+    for(let element in clickableElement)
+    {
+      let propertyHandler = await clickableElement[element].getProperty("innerText");
+      console.log(await propertyHandler.jsonValue());
+      if(await propertyHandler.jsonValue() === identifier)
+      {
+        await clickableElement[element].click();
+      }
+    }
 }
 
 async function getElementsArray(page, selector, attribute)
@@ -74,6 +83,13 @@ async function getImage(page, selector){
   return eventImage;
 }
 
+async function clickImage(page, selector)
+{
+  const clickableElement = await page.$$(selector);
+  //There are to clickable elements for the same image, but we need the 2'nd one every time
+  await clickableElement[1].click();
+}
+
 async function getData(link, page) {
   // Start a Puppeteer session with:
   // - a visible browser (`headless: false` - easier to debug because you'll see the browser in action)
@@ -81,13 +97,13 @@ async function getData(link, page) {
 
   //Commented out for now
 
-  /* const browser = await puppeteer.launch({
+/* const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
   });
 
   // Open a new page
-  const page = await browser.newPage(); */
+const page = await browser.newPage(); */
 
 
   await page.goto(link, {
@@ -97,25 +113,25 @@ async function getData(link, page) {
 //Clicks away from the popup if there is any
 if(await checkElement(page, popUp_click))
 {
-  await clickElement(page, popUp_click);
+  await clickElement(page, popUp_click, "Allow essential and optional cookies");
 }
 
 console.log(await page.$$(seeMore_click));
 //Opens the "See More" section of description
-await clickElement(page, seeMore_click);
+await clickElement(page, seeMore_click, "See more");
 
-const eventDate = await getElement(page, date_class, "innerHTML");
+const eventDate = await getElement(page, date_class, "textContent");
 const eventLink = await getURL(page);
-const eventTitle = await getElement(page, title_class, "innerHTML");
-const eventLocation = await getElement(page,location_class, "innerHTML");
-const eventParticipants = await getElement(page, participants_class, "innerHTML");
-const eventTickets = await getElement(page, tickets_class, "innerHTML");
-const eventDetails = await getElementsArray(page, details_class, "innerHTML");
-const eventHosts = await getElementsArray(page, hosts_class, "innerHTML");
-const eventDescription = await getElementsArray(page, description_class, "innerHTML");
+const eventTitle = await getElement(page, title_class, "textContent");
+const eventLocation = await getElement(page,location_class, "textContent");
+const eventParticipants = await getElement(page, participants_class, "textContent");
+const eventTickets = await getElement(page, tickets_class, "textContent");
+const eventDetails = await getElementsArray(page, details_class, "textContent");
+const eventHosts = await getElementsArray(page, hosts_class, "textContent");
+const eventDescription = await getElementsArray(page, description_class, "textContent");
 
 //To get the image we need to go to the image page... Otherwise encrypted :(
-await clickElement(page, image_click);
+await clickImage(page, image_click);
 
 const eventImage = await getImage(page, image_class);
 
@@ -164,7 +180,7 @@ async function processInformation(gatheredData)
 }
 
 // Start the scraping
-/* let gathered_data = await getData("https://www.facebook.com/events/155003607431682/?acontext=%7B%22event_action_history%22%3A[%7B%22mechanism%22%3A%22discovery_top_tab%22%2C%22surface%22%3A%22bookmark%22%7D]%2C%22ref_notif_type%22%3Anull%7D");
+/* let gathered_data = await getData("https://www.facebook.com/events/218255994227964/?ref=newsfeed");
 let output_event = await processInformation(gathered_data);
 console.log(output_event); */
 
