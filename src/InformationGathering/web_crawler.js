@@ -2,11 +2,12 @@ import puppeteer from 'puppeteer'
 import fs from 'fs';
 import { get } from 'http';
 import { Event } from "./eventClass.js";
-export {getData, processInformation};
+import { checkPrime } from 'crypto';
+export {getData, processInformation, getElement, getElementsArray};
  
-const popUp_click = "div.x1iorvi4.xdl72j9";
+const popUp_click = "div.x9f619.x1n2onr6.x1ja2u2z.x78zum5.xdt5ytf.x193iq5w.xeuugli.x1iyjqo2.xs83m0k.x150jy0e.x1e558r4.xjkvuk6.x1iorvi4.xdl72j9";
 const seeMore_click = "div.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.xt0b8zv.xzsf02u.x1s688f";
-const image_click = "div.x1qjc9v5.x1q0q8m5.x1qhh985.xu3j5b3.xcfux6l.x26u7qi.xm0m39n.x13fuv20.x972fbf.x1ey2m1c.x9f619.x78zum5.xds687c.xdt5ytf.x1iyjqo2.xs83m0k.x1qughib.xat24cr.x11i5rnm.x1mh8g0r.xdj266r.x2lwn1j.xeuugli.x18d9i69.x4uap5.xkhd6sd.xexx8yu.x10l6tqk.x17qophe.x13vifvy.x1ja2u2z";
+const image_click = "img.x1ey2m1c.x9f619.xds687c.x5yr21d.x10l6tqk.x17qophe.x13vifvy.xh8yej3";
 const date_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.x1xlr1w8.x1a1m0xk.x1yc453h";
 const title_class = "h1.x1heor9g.x1qlqyl8.x1pd3egz.x1a2a7pz.x193iq5w.xeuugli";
 const participants_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x41vudc.x1603h9y.x1u7k74.x1xlr1w8.xzsf02u.x2b8uid";
@@ -17,25 +18,38 @@ const hosts_class = "span.xt0psk2";
 const description_class = "div.x11i5rnm.xat24cr.x1mh8g0r.x1vvkbs.xtlvy1s";
 const image_class = "img.x85a59c.x193iq5w.x4fas0m.x19kjcj4";
 
-async function getElement(page, selector)
+async function getElement(page, selector, property)
 {
-  const element = await page.evaluate((selector) => {
+  const element = await page.evaluate((selector, property) => {
     let data = document.querySelector(selector);
     if(data !== null)
     {
-      return data.innerText;
+      return data[property];
     }else return undefined;
-  }, selector)
+  }, selector, property)
   return element;
 }
 
-async function getElementsArray(page, selector)
+async function checkElement(page, selector)
 {
-  const elements = await page.evaluate((selector) => {
+  if(getElement(page, selector, "outerHTML") === null){
+    return false;
+  }else return true; 
+}
+
+async function clickElement(page, selector)
+{
+  const clickableElement = await page.$$(selector);
+  await clickableElement.click();
+}
+
+async function getElementsArray(page, selector, attribute)
+{
+  const elements = await page.evaluate((selector, attribute) => {
     const element_list = document.querySelectorAll(selector);
-    let element_array = Array.from(element_list).map((element) => element.innerText);
+    let element_array = Array.from(element_list).map((element) => element[attribute]);
     return element_array;
-  }, selector);
+  }, selector, attribute);
   return elements;
 }
 
@@ -60,43 +74,49 @@ async function getImage(page, selector){
   return eventImage;
 }
 
-const getData = async (link) => {
+async function getData(link, page) {
   // Start a Puppeteer session with:
   // - a visible browser (`headless: false` - easier to debug because you'll see the browser in action)
   // - no default viewport (`defaultViewport: null` - website page will in full width and height)
 
-  const browser = await puppeteer.launch({
+  //Commented out for now
+
+  /* const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
   });
 
   // Open a new page
-  const page = await browser.newPage();
+  const page = await browser.newPage(); */
 
-  // On this new page:
-  // - open the "http://quotes.toscrape.com/" website
-  // - wait until the dom content is loaded (HTML is ready)
+
   await page.goto(link, {
     waitUntil: "networkidle2",
   });
   
-//Clicks away from the popup
-await page.click(popUp_click);
-//Opens the see more section of description
-await page.click(seeMore_click); 
+//Clicks away from the popup if there is any
+if(await checkElement(page, popUp_click))
+{
+  await clickElement(page, popUp_click);
+}
 
-const eventDate = await getElement(page, date_class);
+console.log(await page.$$(seeMore_click));
+//Opens the "See More" section of description
+await clickElement(page, seeMore_click);
+
+const eventDate = await getElement(page, date_class, "innerHTML");
 const eventLink = await getURL(page);
-const eventTitle = await getElement(page, title_class);
-const eventLocation = await getElement(page,location_class);
-const eventParticipants = await getElement(page, participants_class);
-const eventTickets = await getElement(page, tickets_class);
-const eventDetails = await getElementsArray(page, details_class);
-const eventHosts = await getElementsArray(page, hosts_class);
-const eventDescription = await getElementsArray(page, description_class);
+const eventTitle = await getElement(page, title_class, "innerHTML");
+const eventLocation = await getElement(page,location_class, "innerHTML");
+const eventParticipants = await getElement(page, participants_class, "innerHTML");
+const eventTickets = await getElement(page, tickets_class, "innerHTML");
+const eventDetails = await getElementsArray(page, details_class, "innerHTML");
+const eventHosts = await getElementsArray(page, hosts_class, "innerHTML");
+const eventDescription = await getElementsArray(page, description_class, "innerHTML");
 
 //To get the image we need to go to the image page... Otherwise encrypted :(
-await page.click(image_click);
+await clickElement(page, image_click);
+
 const eventImage = await getImage(page, image_class);
 
 return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescription, eventTickets, eventImage};
@@ -122,7 +142,7 @@ async function processInformation(gatheredData)
   //Processing details. Since details is an array, and often appears in a 
   for(let element of gatheredData.eventDetails)
   {
-    if(element.includes("Duration:") || element.includes("days")){
+    if(element.includes("Duration:") || element.includes("days") || (element.includes("hr")) && (element.includes("min"))){
       event_data.eventDuration = element;
     }else if(element.includes("Public"))
     {
@@ -140,14 +160,11 @@ async function processInformation(gatheredData)
  description = description.replace("See less","");
  event_data.eventDescription = description;
 
- console.log(event_data);
-
  return event_data; 
 }
 
-
 // Start the scraping
-/*
-let gathered_data = await getData("https://www.facebook.com/events/155003607431682/?acontext=%7B%22event_action_history%22%3A[%7B%22mechanism%22%3A%22discovery_top_tab%22%2C%22surface%22%3A%22bookmark%22%7D]%2C%22ref_notif_type%22%3Anull%7D");
+/* let gathered_data = await getData("https://www.facebook.com/events/155003607431682/?acontext=%7B%22event_action_history%22%3A[%7B%22mechanism%22%3A%22discovery_top_tab%22%2C%22surface%22%3A%22bookmark%22%7D]%2C%22ref_notif_type%22%3Anull%7D");
 let output_event = await processInformation(gathered_data);
-*/
+console.log(output_event); */
+
