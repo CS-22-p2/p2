@@ -57,10 +57,8 @@ async function ExtractContent(cardHandler, scrapeMember)
   }
   else
   {
-    console.log("Failed to evaluate handler for class ", scrapeMember.class)
+    console.log("Failed to evaluate handler for class:", scrapeMember.class)
   }
-
-  return "Unknown"
 }
 
 async function ExtractCardData(scrape, cardHandler, category)
