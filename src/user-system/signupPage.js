@@ -1,5 +1,5 @@
-import { user } from "./user.js";
-import { insertEntry } from "../database/databaseHandler.js";
+/* import { user } from "./user.js";
+import { insertEntry } from "../database/databaseHandler.js"; */
 
 let button = document.getElementsByName("button");
 console.log(button);
