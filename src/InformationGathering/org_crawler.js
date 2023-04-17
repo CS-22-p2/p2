@@ -3,12 +3,12 @@ export { scrapeOrgData, scrape};
 
 // Class representing data extracted from an organisation website
 class OrgData {
-  constructor(name, contactInfo, description, destinationURL, category)
+  constructor(name = '', contactInfo = '', description = '', destinationURL = '', category = '')
   {
-    this.name = name || ''
-    this.contactInfo = contactInfo || ''
-    this.description = description || ''
-    this.destinationURL = destinationURL || ''
+    this.name = name
+    this.contactInfo = contactInfo
+    this.description = description
+    this.destinationURL = destinationURL
     this.category = category
   }
 }
@@ -59,6 +59,8 @@ async function ExtractContent(cardHandler, scrapeMember)
   {
     console.log("Failed to evaluate handler for class:", scrapeMember.class)
   }
+
+  return ''
 }
 
 async function ExtractCardData(scrape, cardHandler, category)
@@ -133,7 +135,6 @@ const scrapeOrgData = async (scrape) => {
   });
 
   // Get all parents and extract data from all cards of the parent then
-  console.log(scrape)
   const parents = await page.$$(scrape.parent.class)
   const cards = await ExtractCards(scrape, parents)
 
@@ -173,6 +174,7 @@ const scrape = new OrgScrape("https://www.studerende.aau.dk/studieliv/fritid-og-
     content: "href"
   }
 })
+
 
 const orgData = await scrapeOrgData(scrape);
 console.log(orgData)
