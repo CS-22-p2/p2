@@ -11,6 +11,7 @@ const event_link_class = "a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9
 
 //EXECUTED COMMANDS
 const orgData = await scrapeOrgData(scrape);
+
 await logEvents(orgData);
 
 const browser = await puppeteer.launch({
@@ -56,7 +57,7 @@ async function eventCheck(string){
 
 async function checkFb(orgURL){
     let eventPageURL = orgURL;
-
+    
     //Checks if the URL is a link to facebook
     if(orgURL.includes("facebook"))
     {
