@@ -48,7 +48,7 @@ function date_conversion_formatting(date_str) {
 
 // When event is happening relative to current time
 function time_until_event(date) {
-    const event_date = new Date(date); // needs to be formatted as { 'yyyy-mm-dd' }
+    const event_date = date; // needs to be formatted as { 'yyyy-mm-dd' }
     const current_date = new Date();
 
     // getTime - gets time in milliseconds from your pc
@@ -117,7 +117,7 @@ class event_data {
         this.contactInfo = contactInfo;
         this.link = link;
         this.eventTitle = eventTitle;
-        this.date = date_conversion_formatting(eventDate);
+        this.date = new Date(date_conversion_formatting(eventDate));
         this.participants = participants;
         this.location = location;
         this.duration = duration;
@@ -153,16 +153,13 @@ async function check_duplicate_event(event_instance) {
 
 async function inserting_DB(event_instance) {
     // If it's duplicate, returns false. Do nothing
-    // if (check_duplicate_event(event_instance)) {
-    //     if (!check_repeated_events(event_instance)) {
-    //         return false;
-    //     }
-    //     else {
-    //     }
-    // }
-
-    // Instance to JSON stirng. Samy as object, just mutuable
-    // const event_JSON_stirng = JSON.stringify(event_instance);
+    if (check_duplicate_event(event_instance)) {
+        if (!check_repeated_events(event_instance)) {
+            return false;
+        }
+        else {
+        }
+    }
 
     // Inserting event into MongoDB. Needs testing.
     await insertEntry(event_instance, "events");
@@ -188,3 +185,43 @@ async function main() {
 }
 
 main();
+
+
+// Event {
+//     orgName: 'IDA Event',
+//     orgCategory: undefined,
+//     orgContactInfo: 'Kontaktperson: Nicolaj Boelt Pedersen, e-mail: nicolajp@stud.ida.dk',
+//     eventLink: 'https://www.facebook.com/events/2093782450805582/',
+//     eventTitle: 'IT-DAY Career Fair | Aalborg 2023',
+//     eventDate: 'THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02',
+//     eventHosts: [
+//       'IDA på AAU',
+//       'IDA for studerende',
+//       'AAU Case Competition',
+//       'International House North Denmark',
+//       'IDA på AU',
+//       'ITDAY Aalborg',
+//       'IDA NORD'
+//     ],
+//     eventParticipants: 170,
+//     eventLocation: '57.048455, 9.930240',
+//     eventDuration: undefined, 'Duration: 1 hr 30 min'
+//     isPrivate: false,
+//     eventDescription: "𝗪𝗵𝗮𝘁 𝘆𝗼𝘂 𝗰𝗮𝗻 𝗴𝗲𝘁 𝗼𝘂𝘁 𝗼𝗳 𝗜𝗧-𝗗𝗔𝗬 Experience the technologies that the companies will 
+// bring to the fair Find internships, graduate positions, student jobs, full time jobs and project 
+// collaborations  Talk with IT people who are in the positions you want to be in when you graduate Watch 
+// epic keynotes from industry leading companies Watch hyper presentations - 30 companies have 1-minute to 
+// pitch why you should find them interesting.  Win prizes And moreParticipate to get amazing insight in the 
+// ever changing development of IT, and network until all of your questions has been answered. Spark your 
+// curiosity, see what's out there! Maybe you'll discover something new?____𝗪𝗵𝗮𝘁: IT-DAY IT-Career fair. 
+// Throughout the day you can visit the booths of 50+ companies, watch a hyper presentation, watch 2 keynotes 
+// and win epic prizes.𝗪𝗵𝗲𝗻: 20th of April 2023 10:00-15:00𝗪𝗵𝗲𝗿𝗲: Create, Rendsburggade 14, 9000 Aalborg𝗪𝗵𝗼: 
+// For everyone who want's to work in IT/Tech. For IT-Students and IT-Graduates of AAU, UCN, AU, Tech College, 
+// EAAA, VIA - and any other IT-interested parties. 𝗣𝗿𝗶𝗰𝗲: FREE𝗚𝗿𝗮𝗯 𝘆𝗼𝘂𝗿 𝘁𝗶𝗰𝗸𝗲𝘁 
+//     eventTickets: 'www.itday.dk/aalborg-sign-up',
+//     eventImage: 'https://scontent-arn2-1.xx.fbcdn.net/v/t39.30808-6/311446577_1065590244252975_4407622500126317342_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=340051&_nc_ohc=CU3dnWvkH3kAX_2xe7j&_nc_ht=scontent-arn2-1.xx&oh=00_AfD9_-a6S_zmIPKJmCp6tRnsG-puc5sBg_keVrRfjLG4-g&oe=6442BBE1'
+//   }
+  
+// ROADMAP
+
+// Duration
