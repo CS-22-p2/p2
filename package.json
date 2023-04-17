@@ -2,7 +2,8 @@
   "dependencies": {
     "@types/node": "^18.15.11",
     "@types/mongodb": "^4.0.7",
-    "mongodb": "^5.1.0"
+    "mongodb": "^5.1.0",
+    "puppeteer": "^19.8.5"
   },
   "name": "p2",
   "version": "1.0.0",
