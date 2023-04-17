@@ -1,5 +1,5 @@
 // Imports
-import { establishConnection } from "../database/databaseHandler.js";
+import { establishConnection, insertEntry } from "../database/databaseHandler.js";
 
 // Exports
 
@@ -31,7 +31,8 @@ async function getId() {
 }
 
 async function main() {
-    const result = await getId();
+    //const result = await getId();
+    const result = insertEntry({test:1}, "events");
 
     console.log(result);
 }

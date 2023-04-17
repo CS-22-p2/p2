@@ -1,7 +1,6 @@
 h1 {
     text-align: center;
     font-size: 45px;
-    font-family:Arial, Helvetica, sans-serif;
 }
 
 select:invalid { 
@@ -45,7 +44,7 @@ select:invalid {
 }
 
 .formText {
-    width: 100%; /* width on input type text = 100% makes them expand past the form*/
+    width: 100%;
     font-size: 20px;
     padding: 0%;
     box-sizing: border-box;
