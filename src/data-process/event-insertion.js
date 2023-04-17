@@ -1,4 +1,5 @@
-
+// Import
+import { getEntry, insertEntry } from '../database/databaseHandler.js';
 
 // Global variables
 let base_score = 100;
@@ -27,9 +28,11 @@ function input_validation(input, expected) {
 // Converts eventdate into usuable data
 function date_conversion_formatting(date_str) {
     const date_str_split = date_str.split(" ");
-    const date_part = {day: date_str_split[1],
-                        month: date_str_split[2],
-                        year: date_str_split[3]};
+    const date_part = {
+        day: date_str_split[1],
+        month: date_str_split[2],
+        year: date_str_split[3]
+    };
     // The months abbreviated and full. Works like a dict
     const the_months = {
         JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
@@ -71,7 +74,7 @@ function repeated_events() {
 // Determine if event are on campus
 function on_campus(location) {
     // Input validation
-    if (!input_validation(location, "str")){
+    if (!input_validation(location, "str")) {
         throw new Error("Wrong input");
     }
 
@@ -87,7 +90,7 @@ function on_campus(location) {
 
 function time_left_score(time_left) {
     // Input validation
-    if (!input_validation(time_left, "int")){
+    if (!input_validation(time_left, "int")) {
         throw new Error("Wrong input");
     }
 
@@ -138,17 +141,7 @@ class event_data {
 // How to insert an event into the database
 
 // Create an instance
-const event_instance = new event_data("Org name", 
-                                        "Event type", 
-                                        "Contact info", 
-                                        "link", 
-                                        "Event title", 
-                                        "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 
-                                        112, 
-                                        "selmalagerløgsvej 12", 
-                                        "Duration", // Prob int instead 
-                                        true, // Prob a bool
-                                        "Description");
+
 
 // Look if event already in DB
 async function check_duplicate_event(event_instance) {
@@ -160,24 +153,24 @@ async function check_duplicate_event(event_instance) {
 
 async function inserting_DB(event_instance) {
     // If it's duplicate, returns false. Do nothing
-    if (check_duplicate_event(event_instance)) {
-        if (!check_repeated_events(event_instance)) {
-            return false;
-        }
-        else {
-        }
-    }
+    // if (check_duplicate_event(event_instance)) {
+    //     if (!check_repeated_events(event_instance)) {
+    //         return false;
+    //     }
+    //     else {
+    //     }
+    // }
 
     // Instance to JSON stirng. Samy as object, just mutuable
-    const event_JSON_stirng = JSON.stringify(event_instance);
+    // const event_JSON_stirng = JSON.stringify(event_instance);
 
     // Inserting event into MongoDB. Needs testing.
-    insertEntry(event_JSON_stirng, "events");
+    await insertEntry(event_instance, "events");
     return true;
 }
 
 // Export
-module.exports = {
+export default {
     input_validation,
     date_conversion_formatting,
     time_until_event,
@@ -186,4 +179,12 @@ module.exports = {
     on_campus,
     time_left_score,
     event_data
-  };
+};
+
+
+async function main() {
+    const event_instance = new event_data("Org name", "Event type", "Contact info", "link", "Event title", "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 112, "selmalagerløgsvej 12", "Duration", true, "Description");
+    await inserting_DB(event_instance);
+}
+
+main();

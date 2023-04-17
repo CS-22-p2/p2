@@ -110,7 +110,7 @@ function createQuery(req) {
 
 }
 
-async function main() {
+/* async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Anna", "userdb");
     const result = await serchAllFields("m");
@@ -118,4 +118,4 @@ async function main() {
     console.log(result);
 }
 
-main();
+main(); */
