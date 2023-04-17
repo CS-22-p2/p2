@@ -1,16 +1,15 @@
 import puppeteer from 'puppeteer'
-import fs from 'fs';
-import { title } from 'process';
 export { scrapeOrgData, scrape};
 
 // Class representing data extracted from an organisation website
 class OrgData {
-  constructor(name, contactInfo, description, destinationURL)
+  constructor(name, contactInfo, description, destinationURL, category)
   {
     this.name = name || ''
     this.contactInfo = contactInfo || ''
     this.description = description || ''
     this.destinationURL = destinationURL || ''
+    this.category = category
   }
 }
 
@@ -22,6 +21,8 @@ class OrgScrape {
 
     // These are object structures containing 'class' and 'content' members.
     this.expandable = scrape.expandable || {class: '', shouldClick: false} // Contains a "should click" member instead
+    this.parent = scrape.parent || {class: ''} // No second member
+    this.category = scrape.category || {class: '', content: ''}
     this.name = scrape.name || {class: '', content: ''}
     this.contactInfo = scrape.contactInfo || {class: '', content: ''}
     this.description = scrape.description || {class: '', content: ''}
@@ -35,6 +36,16 @@ function ClassToSearchableString(cls)
   return cls.replace(" ", ".")
 }
 
+async function ExtractProperty(handler, property)
+{
+  if (handler == null) return ''
+
+  const propertyHandler = await handler.getProperty(property)
+  if (propertyHandler == null) return ''
+
+  return await propertyHandler.jsonValue()
+}
+
 // Temporary handle variables
 async function ExtractContent(cardHandler, scrapeMember)
 {
@@ -42,22 +53,15 @@ async function ExtractContent(cardHandler, scrapeMember)
   const handler = await cardHandler.$(scrapeMember.class)
   if (handler != null)
   {
-    // Get the text
-    var propertyHandler = await handler.getProperty(scrapeMember.content)
-
-    if (propertyHandler != null)
-    {
-      // Return json value
-      return await propertyHandler.jsonValue()
-    }
-  else
-    console.log("Failed to evaluate handler for class ", scrapeMember.class)
+    return await ExtractProperty(handler, scrapeMember.content)
   }
-
-  return "Unknown"
+  else
+  {
+    console.log("Failed to evaluate handler for class:", scrapeMember.class)
+  }
 }
 
-async function ExtractCardData(scrape, cardHandler)
+async function ExtractCardData(scrape, cardHandler, category)
 {
   const data = new OrgData()
 
@@ -66,32 +70,44 @@ async function ExtractCardData(scrape, cardHandler)
   data.contactInfo = await ExtractContent(cardHandler, scrape.contactInfo)
   data.description = await ExtractContent(cardHandler, scrape.description)
   data.destinationURL = await ExtractContent(cardHandler, scrape.destinationURL)
+  data.category = category
 
   return data
 }
 
 // Extract data from all cards found on the org
-async function ExtractCards(scrape, cards)
+async function ExtractCards(scrape, parents)
 {
   const allOrgData = []
 
   // Loop over each card
-  for (var cardId in cards) {
-    const cardHandler = cards[cardId]
+  for (var parentId in parents) {
+    const parentHandler = parents[parentId]
 
-    // Expand the card
-    if (scrape.expandable.shouldClick)
-    {
-      try {
-        await cardHandler.click()
-      } catch (error) {
-        console.log("Failed to press expandable card...", cardHandler, error)
-        continue
+    // Get category
+    const categoryHandler = await parentHandler.$(scrape.category.class)
+    const category = await ExtractProperty(categoryHandler, scrape.category.content)
+
+    // Get cards
+    const cards = await parentHandler.$$(scrape.expandable.class)
+
+    // Extract cards
+    for (var cardId in cards) {
+      const cardHandler = cards[cardId]
+
+      // Click (expand) if indicated
+      if (scrape.expandable.shouldClick) {
+        try {
+          await cardHandler.click()
+        } catch (error) {
+          console.log("Failed to press expandable card...", cardHandler, error)
+          continue
+        }
       }
-    }
 
-    // Extract and push to org array
-    allOrgData.push(await ExtractCardData(scrape, cardHandler))
+      // Extract and push to org array
+      allOrgData.push(await ExtractCardData(scrape, cardHandler, category))
+    }
   }
 
   return allOrgData
@@ -116,14 +132,26 @@ const scrapeOrgData = async (scrape) => {
     waitUntil: "networkidle2",
   });
 
-  // Get all expandable cards
-  var cards = await page.$$(scrape.expandable.class)
-  
-  return await ExtractCards(scrape, cards)
+  // Get all parents and extract data from all cards of the parent then
+  console.log(scrape)
+  const parents = await page.$$(scrape.parent.class)
+  const cards = await ExtractCards(scrape, parents)
+
+  // Close the browser
+  await browser.close()
+
+  return cards;
 };
 
 // Start the scraping
 const scrape = new OrgScrape("https://www.studerende.aau.dk/studieliv/fritid-og-faellesskab/studenterorganisationer/oversigt", {
+  parent: {
+    class: "div.CardView_CardView_group__VgHob",
+  },
+  category: {
+    class: "h3.Heading_Heading__5IvtX.Heading_Heading___h5__i5794.CardView_CardView_groupHeading__CqwiT",
+    content: "textContent",
+  },
   expandable: {
     class: "div.ExpandableCard_ExpandableCard__P6qcZ",
     shouldClick: true,
@@ -146,8 +174,6 @@ const scrape = new OrgScrape("https://www.studerende.aau.dk/studieliv/fritid-og-
   }
 })
 
-/*
 const orgData = await scrapeOrgData(scrape);
 console.log(orgData)
 console.log(orgData.length)
-*/
