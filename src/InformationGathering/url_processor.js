@@ -17,6 +17,7 @@ await logEvents(orgData);
 const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
+    args: ['--lang=en-GB,en']
 });
 
 await accessEventsPage(orgData,browser);
