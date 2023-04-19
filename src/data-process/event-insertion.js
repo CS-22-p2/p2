@@ -110,6 +110,10 @@ function time_left_score(time_left) {
     return high_score;
 }
 
+function read_description(description) {
+    
+}
+
 class event_data {
     constructor(orgName, orgType, contactInfo, link, eventTitle, eventDate, participants, location, duration, isPrivate, description) {
         this.orgName = orgName;
