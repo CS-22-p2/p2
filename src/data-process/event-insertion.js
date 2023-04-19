@@ -111,6 +111,46 @@ function time_left_score(time_left) {
 }
 
 function read_description(description) {
+
+    let findwords=["sport","academic","paid","free","membership","alcohl","non alcohl","johan"]
+
+    for( let word of findwords){
+        if(Text.includes(word)){
+            console.log(`the word "${word}" is found`)
+        }
+    }
+    switch(findwords){
+        case "sport":
+            console.log("this event is about sport");
+             break;
+        case "academic":
+            console.log("this event is about the academic aspect");
+             break;
+        case "paid":
+            console.log("the event is free");
+             break;
+        case "free":
+            console.log("the event is free");
+             break;
+        case "paid":
+            console.log("the event is not for free");
+             break;
+         case "membership":
+             console.log("this event requires a membership ");
+             break;
+        case "alcohol":
+             console.log("there will be served alcohol ");
+            break;
+        case "non alcohl":
+             console.log("there will not be served alcohol ");
+            break;
+        case "johan":
+            console.log("he can not bench more than 10 kg")  
+            break;
+        default:
+            console.log("non of thoes word are in the descripation")      
+                            
+    }
     
 }
 
