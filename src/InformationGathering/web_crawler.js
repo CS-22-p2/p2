@@ -19,14 +19,11 @@ const description_class = "div.x11i5rnm.xat24cr.x1mh8g0r.x1vvkbs.xtlvy1s";
 const image_class = "img.x85a59c.x193iq5w.x4fas0m.x19kjcj4";
 
 /**
- * The getElement function can extract an element on ANY given Web-page, 
- * based on a provided selector(class, id, title etc.)
- * and on the user specified property of the selected 
- * DOM-element eg. innerText or textContent
+ * Extracts any HTML-element from any given Web-page
  * @param {"The current page, the browser is visitting through puppeteer"} page 
  * @param {"Provided selector (class, id, title etc.)"} selector 
- * @param {*} property 
- * @returns 
+ * @param {"User specified property of the selected DOM-element eg. innerText or textContent"} property 
+ * @returns String - Element Property
  */
 
 async function getElement(page, selector, property)
@@ -41,24 +38,36 @@ async function getElement(page, selector, property)
   return element;
 }
 
+//Checks if an element exists on the webpage
 async function checkElement(page, selector)
 {
-  if(getElement(page, selector, "outerHTML") === null){
-    return false;
-  }else return true; 
+  return getElement(page, selector, "outerHTML") !== null;
 }
 
+/** 
+ * Clicks on an element on a WebPage
+ * @param {"The current page, the browser is visitting through puppeteer"} page 
+ * @param {"Provided selector (class, id, title etc.)"} selector 
+ * @param {"A string that must match the innerText of the element"} identifier 
+ */
 async function clickElement(page, selector, identifier)
 {
-  const clickableElement = await page.$$(selector);
+  //Reason for providing identifier: 
+  //Different HTML-elements often have the same selector(Often 2-3 elements)
+  //We can select the specific element based on the provided innerText in the element
+  //If the innerText matches the identifier -> Click
 
-    for(let element in clickableElement)
+  //Element we can click based on selector
+  const clickableElements = await page.$$(selector);
+
+    for(let element in clickableElements)
     {
-      let propertyHandler = await clickableElement[element].getProperty("innerText");
+      //Handler for each element(needed to actually be able to click)
+      let propertyHandler = await clickableElements[element].getProperty("innerText");
 
       if(await propertyHandler.jsonValue() === identifier)
       {
-        await clickableElement[element].click();
+        await clickableElements[element].click();
       }
     }
 }
