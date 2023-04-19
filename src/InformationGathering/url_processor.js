@@ -4,8 +4,6 @@ import {scrapeOrgData, scrape} from "./org_crawler.js";
 import { Event } from "./eventClass.js";
 
 //The classes of the HTML elements we want to read from the DOM
-// _click suffix indicates that it is a "clickable" DOM element
-const popUp_click = "div.x1iorvi4.xdl72j9";
 const no_event_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x41vudc.x1603h9y.x1u7k74.x1xlr1w8.x12scifz.x2b8uid";
 const event_link_class = "a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.x1heor9g.xt0b8zv.x1s688f"; 
 

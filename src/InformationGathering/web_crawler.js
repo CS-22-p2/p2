@@ -3,6 +3,8 @@ import { Event } from "./eventClass.js";
 import { checkPrime } from 'crypto';
 export {getData, processInformation, getElement, getElementsArray};
  
+//The classes of the HTML elements we want to read from the DOM
+// _click suffix indicates that it is a "clickable" DOM element
 const popUp_click = "div.x9f619.x1n2onr6.x1ja2u2z.x78zum5.xdt5ytf.x193iq5w.xeuugli.x1iyjqo2.xs83m0k.x150jy0e.x1e558r4.xjkvuk6.x1iorvi4.xdl72j9";
 const seeMore_click = "div.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.xt0b8zv.xzsf02u.x1s688f";
 const image_click = "img.x1ey2m1c.x9f619.xds687c.x5yr21d.x10l6tqk.x17qophe.x13vifvy.xh8yej3";
@@ -16,6 +18,16 @@ const hosts_class = "span.xt0psk2";
 const description_class = "div.x11i5rnm.xat24cr.x1mh8g0r.x1vvkbs.xtlvy1s";
 const image_class = "img.x85a59c.x193iq5w.x4fas0m.x19kjcj4";
 
+/**
+ * The getElement function can extract an element on ANY given Web-page, 
+ * based on a provided selector(class, id, title etc.)
+ * and on the user specified property of the selected 
+ * DOM-element eg. innerText or textContent
+ * @param {"The current page, the browser is visitting through puppeteer"} page 
+ * @param {"Provided selector (class, id, title etc.)"} selector 
+ * @param {*} property 
+ * @returns 
+ */
 
 async function getElement(page, selector, property)
 {
