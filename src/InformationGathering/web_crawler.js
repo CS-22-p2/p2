@@ -16,6 +16,7 @@ const hosts_class = "span.xt0psk2";
 const description_class = "div.x11i5rnm.xat24cr.x1mh8g0r.x1vvkbs.xtlvy1s";
 const image_class = "img.x85a59c.x193iq5w.x4fas0m.x19kjcj4";
 
+
 async function getElement(page, selector, property)
 {
   const element = await page.evaluate((selector, property) => {
@@ -42,7 +43,7 @@ async function clickElement(page, selector, identifier)
     for(let element in clickableElement)
     {
       let propertyHandler = await clickableElement[element].getProperty("innerText");
-      console.log(await propertyHandler.jsonValue());
+
       if(await propertyHandler.jsonValue() === identifier)
       {
         await clickableElement[element].click();
@@ -93,47 +94,35 @@ async function getData(link, page) {
   // - a visible browser (`headless: false` - easier to debug because you'll see the browser in action)
   // - no default viewport (`defaultViewport: null` - website page will in full width and height)
 
-  //Commented out for now
-
-/* const browser = await puppeteer.launch({
-    headless: false,
-    defaultViewport: null,
-  });
-
-  // Open a new page
-const page = await browser.newPage(); */
-
-
   await page.goto(link, {
     waitUntil: "networkidle2",
   });
   
-//Clicks away from the popup if there is any
-if(await checkElement(page, popUp_click))
-{
-  await clickElement(page, popUp_click, "Allow essential and optional cookies");
-}
+  //Clicks away from the popup if there is any
+  if(await checkElement(page, popUp_click))
+  {
+    await clickElement(page, popUp_click, "Allow essential and optional cookies");
+  }
 
-console.log(await page.$$(seeMore_click));
-//Opens the "See More" section of description
-await clickElement(page, seeMore_click, "See more");
+  //Opens the "See More" section of description
+  await clickElement(page, seeMore_click, "See more");
 
-const eventDate = await getElement(page, date_class, "textContent");
-const eventLink = await getURL(page);
-const eventTitle = await getElement(page, title_class, "textContent");
-const eventLocation = await getElement(page,location_class, "textContent");
-const eventParticipants = await getElement(page, participants_class, "textContent");
-const eventTickets = await getElement(page, tickets_class, "textContent");
-const eventDetails = await getElementsArray(page, details_class, "textContent");
-const eventHosts = await getElementsArray(page, hosts_class, "textContent");
-const eventDescription = await getElementsArray(page, description_class, "textContent");
+  const eventDate = await getElement(page, date_class, "textContent");
+  const eventLink = await getURL(page);
+  const eventTitle = await getElement(page, title_class, "textContent");
+  const eventLocation = await getElement(page,location_class, "textContent");
+  const eventParticipants = await getElement(page, participants_class, "textContent");
+  const eventTickets = await getElement(page, tickets_class, "textContent");
+  const eventDetails = await getElementsArray(page, details_class, "textContent");
+  const eventHosts = await getElementsArray(page, hosts_class, "textContent");
+  const eventDescription = await getElementsArray(page, description_class, "textContent");
 
-//To get the image we need to go to the image page... Otherwise encrypted :(
-await clickImage(page, image_click);
+  //To get the image we need to go to the image page... Otherwise encrypted :(
+  await clickImage(page, image_click);
 
-const eventImage = await getImage(page, image_class);
+  const eventImage = await getImage(page, image_class);
 
-return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescription, eventTickets, eventImage};
+  return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescription, eventTickets, eventImage};
 };
 
 async function processInformation(gatheredData)

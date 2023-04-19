@@ -20,11 +20,13 @@ const browser = await puppeteer.launch({
     args: ['--lang=en-GB,en']
 });
 
-await accessEventsPage(orgData,browser);
+let eventList = await accessEventsPage(orgData,browser);
+console.log(eventList);
 
 
 async function accessEventsPage(orgData, browser)
 {
+    let eventList = []; // This array holds the events we want to export
     let eventLinks;
     const page = await browser.newPage();
 
@@ -47,10 +49,13 @@ async function accessEventsPage(orgData, browser)
             if(await eventCheck(check_value))
             {
                 eventLinks =  await getElementsArray(page, event_link_class, "href");
-                await processEvents(eventLinks, page, org);
+                let collectedEvents = await processEvents(eventLinks, page, org);
+                eventList = eventList.concat(collectedEvents);
             }else eventLinks = "None";
         }
     }
+    await browser.close();
+    return eventList;
 }
 
 // false = Page has NO upcoming events ; true = Page 
@@ -83,7 +88,7 @@ async function checkFb(orgURL){
 
 async function processEvents(eventLinks, page, org)
 {
-    
+    let eventsArray = [];
     if(eventLinks === "None"){
         console.log("NO DATA");
     }
@@ -100,9 +105,9 @@ async function processEvents(eventLinks, page, org)
         let processedData = await processInformation(unProcessedData);
         processedData.orgName = org.name;
         processedData.orgContactInfo = org.contactInfo;
-        console.log(processedData);
+        eventsArray.push(processedData);
     }
-    
+    return eventsArray;
 }
 
 async function logEvents(orgData)
