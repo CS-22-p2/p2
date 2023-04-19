@@ -21,6 +21,7 @@ class OrgScrape {
 
     // These are object structures containing 'class' and 'content' members.
     this.expandable = scrape.expandable || {class: '', shouldClick: false} // Contains a "should click" member instead
+    this.cookies = scrape.cookies || {class: '', shouldClick: false} // Contains a "should click" member instead
     this.parent = scrape.parent || {class: ''} // No second member
     this.category = scrape.category || {class: '', content: ''}
     this.name = scrape.name || {class: '', content: ''}
@@ -134,6 +135,10 @@ const scrapeOrgData = async (scrape) => {
     waitUntil: "networkidle2",
   });
 
+  // Click the cookie button if found
+  const cookie = await page.$(scrape.cookies.class)
+  await cookie.click()
+
   // Get all parents and extract data from all cards of the parent then
   const parents = await page.$$(scrape.parent.class)
   const cards = await ExtractCards(scrape, parents)
@@ -148,6 +153,10 @@ const scrapeOrgData = async (scrape) => {
 const scrape = new OrgScrape("https://www.studerende.aau.dk/studieliv/fritid-og-faellesskab/studenterorganisationer/oversigt", {
   parent: {
     class: "div.CardView_CardView_group__VgHob",
+  },
+  cookies: {
+    class: "button.coi-banner__accept",
+    shouldClick: true,
   },
   category: {
     class: "h3.Heading_Heading__5IvtX.Heading_Heading___h5__i5794.CardView_CardView_groupHeading__CqwiT",
