@@ -1,6 +1,4 @@
 import puppeteer from 'puppeteer'
-import fs from 'fs';
-import { get } from 'http';
 import { Event } from "./eventClass.js";
 import { checkPrime } from 'crypto';
 export {getData, processInformation, getElement, getElementsArray};

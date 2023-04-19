@@ -28,6 +28,10 @@ async function accessEventsPage(orgData, browser)
     let eventLinks;
     const page = await browser.newPage();
 
+    page.setExtraHTTPHeaders({
+        "Accept-Language": "en",
+    })
+
     for(let org of orgData){
         let fbURL = await checkFb(org.destinationURL);
         if(fbURL !== "Unknown")
