@@ -1,11 +1,17 @@
 {
+  "dependencies": {
+    "@types/node": "^18.15.11",
+    "@types/mongodb": "^4.0.7",
+    "mongodb": "^5.1.0",
+    "puppeteer": "^19.8.5"
+  },
   "name": "p2",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -23,7 +29,7 @@
     "@types/node": "^18.15.11",
     "mongodb": "^5.1.0"
   },
-    "devDependencies": {
+  "devDependencies": {
     "jest": "^29.5.0"
   }
 }
