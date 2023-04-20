@@ -21,7 +21,6 @@ function input_validation(input, expected) {
             return false;
         }
     }
-
     return true; // Correct input
 }
 
@@ -111,47 +110,24 @@ function time_left_score(time_left) {
 }
 
 function read_description(description) {
+    let tokens = description.split(" ");
+    const categories = {
+        'alcohol-free': ['non-alcoholic', 'sober', 'drug-free'],
+        'business': ['career', 'networking', 'professional', 'entrepreneurship'],
+        'sport': ['tennis']
+    };
 
-    let findwords=["sport","academic","paid","free","membership","alcohl","non alcohl","johan"]
+    let found_categories = [];
 
-    for( let word of findwords){
-        if(Text.includes(word)){
-            console.log(`the word "${word}" is found`)
+    for (const category in categories) {
+        let keywords = categories[category];
+        for (const keyword in keywords) {
+            if (tokens.includes(keywords[keyword])) {
+                found_categories.push(category);
+            }
         }
     }
-    switch(findwords){
-        case "sport":
-            console.log("this event is about sport");
-             break;
-        case "academic":
-            console.log("this event is about the academic aspect");
-             break;
-        case "paid":
-            console.log("the event is free");
-             break;
-        case "free":
-            console.log("the event is free");
-             break;
-        case "paid":
-            console.log("the event is not for free");
-             break;
-         case "membership":
-             console.log("this event requires a membership ");
-             break;
-        case "alcohol":
-             console.log("there will be served alcohol ");
-            break;
-        case "non alcohl":
-             console.log("there will not be served alcohol ");
-            break;
-        case "johan":
-            console.log("he can not bench more than 10 kg")  
-            break;
-        default:
-            console.log("non of thoes word are in the descripation")      
-                            
-    }
-    
+    return found_categories;
 }
 
 class event_data {
@@ -169,6 +145,7 @@ class event_data {
         this.description = description;
         this.time_left = time_until_event(this.date);
         this.relevancy_score = this.final_score();
+        this.categories = read_description(this.description);
     }
 
     final_score() {
@@ -182,12 +159,7 @@ class event_data {
     }
 }
 
-// How to insert an event into the database
-
-// Create an instance
-
-
-// Look if event already in DB
+// Look if event already in DB. 
 async function check_duplicate_event(event_instance) {
     const query = { link: event_instance.link };
 
@@ -227,8 +199,6 @@ async function main() {
     const event_instance = new event_data("Org name", "Event type", "Contact info", "link", "Event title", "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 112, "selmalagerløgsvej 12", "Duration", true, "Description");
     await inserting_DB(event_instance);
 }
-
-main();
 
 
 // Event {
