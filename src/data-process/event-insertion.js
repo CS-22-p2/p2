@@ -48,10 +48,17 @@ function date_conversion_formatting(date_str) {
 function get_duration(date_str) {
     const date_str_split = date_str.split(" ");
     const duration_str = date_str_split[5];
-    const duration_regex = `/\d[2]:\d[2]-\d[2]:\d[2]/`;
-    console.log(`Duration ${duration_str}`);
+    const start = parseInt(duration_str.split('-')[0].replace(':', ''));
+    const end = parseInt(duration_str.split('-')[1].replace(':', ''));
+    const difference = end - start;
+    const hours = Math.floor(difference / 100);
+    const minutes = ;
+    if ((difference / 100) - hours === 0) {
+        return `${hours} hour(s)`;
+    }
+    return `${hours} hour(s) and ${minutes} minutes`;
 }
-get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02');
+console.log(`Duration ${get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:30 UTC+02')}`);
 
 // When event is happening relative to current time
 function time_until_event(date) {
@@ -123,9 +130,12 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'alcohol': ['beverages', 'beer', 'drug'],
-        'career': ['career', 'networking', 'professional', 'entrepreneurship'],
-        'sport': ['tennis'],
+        'alcohol-free': ['non-alcoholic', 'sober', 'drug-free',"spirtis","Bars","booze","party"
+                        ,"alkoholfri","ædru","stoffri","spiritus","barer","alkohol","fest" ],
+        'business': ['career', 'networking', 'professional', 'entrepreneurship',"Management"
+                    ,"karriere","netværk","professionel","iværksætteri","ledelse"],
+        'sport':    ['tennis', "Football", "Basketball", "Baseball", "Cycling", "Volleyball", "Swimming"
+                    ,"tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
     };
 
     for (const category in categories) {
