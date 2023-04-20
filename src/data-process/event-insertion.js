@@ -45,13 +45,21 @@ function date_conversion_formatting(date_str) {
     return `${r_year}-${r_month}-${r_day}`;
 }
 
+function get_duration(date_str) {
+    const date_str_split = date_str.split(" ");
+    const duration_str = date_str_split[5];
+    const duration_regex = `/\d[2]:\d[2]-\d[2]:\d[2]/`;
+    console.log(`Duration ${duration_str}`);
+}
+get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02');
+
 // When event is happening relative to current time
 function time_until_event(date) {
     const event_date = date; // needs to be formatted as { 'yyyy-mm-dd' }
     const current_date = new Date();
 
     // getTime - gets time in milliseconds from your pc
-    let difference_milliseconds = event_date.getTime() - current_date.getTime();
+    const difference_milliseconds = event_date.getTime() - current_date.getTime();
     return Math.ceil(difference_milliseconds / (1000 * 3600 * 24));
 }
 
@@ -78,7 +86,9 @@ function on_campus(location) {
     }
 
     // Example adressess
-    let campus_addresses = ["selmalagerløfsvej", "bertil ohtils vej", "frederik bajers vej"];
+    const campus_addresses = ["selmalagerløfsvej", 
+                            "bertil ohtils vej", 
+                            "frederik bajers vej"];
 
     // check if this.location is in campus_addresses
     if (campus_addresses.includes(format_address(location))) {
@@ -110,14 +120,13 @@ function time_left_score(time_left) {
 }
 
 function read_description(description) {
-    let tokens = description.split(" ");
-    const categories = {
-        'alcohol-free': ['non-alcoholic', 'sober', 'drug-free'],
-        'business': ['career', 'networking', 'professional', 'entrepreneurship'],
-        'sport': ['tennis']
-    };
-
+    const tokens = description.split(" ");
     let found_categories = [];
+    const categories = {
+        'alcohol': ['beverages', 'beer', 'drug'],
+        'career': ['career', 'networking', 'professional', 'entrepreneurship'],
+        'sport': ['tennis'],
+    };
 
     for (const category in categories) {
         let keywords = categories[category];
