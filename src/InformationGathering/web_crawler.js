@@ -28,8 +28,11 @@ const image_class = "img.x85a59c.x193iq5w.x4fas0m.x19kjcj4";
 
 async function getElement(page, selector, property)
 {
+  //page.evaluate() evalute, allows processing of HTML elements on the Web-page
   const element = await page.evaluate((selector, property) => {
     let data = document.querySelector(selector);
+    
+    //If no element is found
     if(data !== null)
     {
       return data[property];
@@ -64,24 +67,27 @@ async function clickElement(page, selector, identifier)
     {
       //Handler for each element(needed to actually be able to click)
       let propertyHandler = await clickableElements[element].getProperty("innerText");
-
+      
       if(await propertyHandler.jsonValue() === identifier)
       {
-        await clickableElements[element].click();
+        await clickableElements[element].click(); //It clicks
       }
     }
 }
 
-async function getElementsArray(page, selector, attribute)
+//Works identically to getElement(above), however returns an array of elements
+//-> Since the selector applies to multiple HTML-elements
+async function getElementsArray(page, selector, property)
 {
-  const elements = await page.evaluate((selector, attribute) => {
+  const elements = await page.evaluate((selector, property) => {
     const element_list = document.querySelectorAll(selector);
-    let element_array = Array.from(element_list).map((element) => element[attribute]);
+    let element_array = Array.from(element_list).map((element) => element[property]);
     return element_array;
-  }, selector, attribute);
+  }, selector, property);
   return elements;
 }
 
+//Gets the URL to the current Web-page 
 async function getURL(page){
   let url = await page.evaluate(() => {
     let link = window.location.href;
@@ -90,19 +96,23 @@ async function getURL(page){
   return url;
 }
 
+//It is not possible to get the image directly form the event page
+//Hence firstly we need to navigate to the image page -> Then extract the image
 async function getImage(page, selector){
-  const image_url = await getURL(page);
+  const image_url = await getURL(page); //Gets the URL of where the image is located
+
   await page.goto(image_url, {
     waitUntil: "networkidle2",
   });
-  
-  const eventImage = await page.evaluate((selector) => {
-    let image = document.querySelector(selector).currentSrc;
-    return image;
-  }, selector)
+  //Extract the "currentSrc"(Image link) of the image element
+  const eventImage = await getElement(page, selector, "currentSrc");
+
   return eventImage;
 }
 
+//Special Case: The images on the event-page have the same selector
+//However, there are no other ways of identifying the image we need(so no additional properties)
+//Therefore, we always click the second image, as it is the one we need
 async function clickImage(page, selector)
 {
   const clickableElement = await page.$$(selector);
@@ -110,12 +120,19 @@ async function clickImage(page, selector)
   await clickableElement[1].click();
 }
 
-async function getData(link, page) {
-  // Start a Puppeteer session with:
-  // - a visible browser (`headless: false` - easier to debug because you'll see the browser in action)
-  // - no default viewport (`defaultViewport: null` - website page will in full width and height)
-
-  await page.goto(link, {
+/**
+ * 
+ * @param {"Link to a given event of an organisation with a Facebook group"} eventPageLink 
+ * @param {"The page, object initialised by the browser"} page 
+ * @returns "Information about the event: 
+ * eventLink, eventTitle, eventDate, 
+ * eventHosts, eventParticipants, eventLocation,
+ * eventDetails, eventDescription, eventTickets, eventImage"
+ */
+async function getData(eventPageLink, page) {
+  
+  //We go to the event page, on the page handle created by the browser
+  await page.goto(eventPageLink, {
     waitUntil: "networkidle2",
   });
   
@@ -145,6 +162,7 @@ async function getData(link, page) {
 
   return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescription, eventTickets, eventImage};
 };
+
 
 async function processInformation(gatheredData)
 {
@@ -186,9 +204,4 @@ async function processInformation(gatheredData)
 
  return event_data; 
 }
-
-// Start the scraping
-/* let gathered_data = await getData("https://www.facebook.com/events/218255994227964/?ref=newsfeed");
-let output_event = await processInformation(gathered_data);
-console.log(output_event); */
 
