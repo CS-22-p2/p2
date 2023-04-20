@@ -52,10 +52,7 @@ function get_duration(date_str) {
     const end = parseInt(duration_str.split('-')[1].replace(':', ''));
     const difference = end - start;
     const hours = Math.floor(difference / 100);
-    const minutes = ;
-    if ((difference / 100) - hours === 0) {
-        return `${hours} hour(s)`;
-    }
+    const minutes = difference - (hours * 100);
     return `${hours} hour(s) and ${minutes} minutes`;
 }
 console.log(`Duration ${get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:30 UTC+02')}`);
