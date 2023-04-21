@@ -4,7 +4,7 @@ import url from 'url';
 import path from 'path';
 
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = 80;
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const publicDirectoryPath = path.join(__dirname, 'public');
 
