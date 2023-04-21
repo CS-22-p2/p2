@@ -1,0 +1,60 @@
+h1 {
+    text-align: center;
+    font-size: 45px;
+}
+
+select:invalid { 
+    color: gray; 
+}
+
+.boxLogin {
+    width: 30%;
+    background-color: #FEF9D9;
+    height: auto;
+    border-radius: 25px;
+    padding-bottom: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    opacity: 90%;
+}
+
+.boxSignUp {
+    width: 30%;
+    background-color: #FEF9D9;
+    height: auto;
+    border-radius: 25px;
+    padding-bottom: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    opacity: 90%;
+}
+
+.center {
+    margin: auto;
+}
+
+.right {
+    margin-left: 65%;
+}
+
+.formItem {
+    display: block;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.formText {
+    width: 100%;
+    font-size: 20px;
+    padding: 0%;
+    box-sizing: border-box;
+}
+
+.formTextInline {
+    font-size: 20px;
+    width: 45%;
+}
+
+.formButton {
+    width: 150px;
+}
