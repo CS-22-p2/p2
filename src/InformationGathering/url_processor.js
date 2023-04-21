@@ -2,6 +2,7 @@ import puppeteer from "puppeteer";
 import {getData, processInformation, getElement, getElementsArray} from "./web_crawler.js";
 import {scrapeOrgData, scrape} from "./org_crawler.js";
 import { Event } from "./eventClass.js";
+import { assignEventScrapeWorkers } from "./scrape_worker_main.js";
 
 //The classes of the HTML elements we want to read from the DOM
 const no_event_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x41vudc.x1603h9y.x1u7k74.x1xlr1w8.x12scifz.x2b8uid";
@@ -91,20 +92,18 @@ async function processEvents(eventLinks, page, org)
         console.log("NO DATA");
     }
 
-    for(let event of eventLinks)
+    // Get event data from workers
+    let unProcessedData;
+    await assignEventScrapeWorkers(eventLinks).then((data) => unProcessedData = data)
+
+    for (let data of unProcessedData)
     {
-        let unProcessedData;
-        try{
-            unProcessedData = await getData(event, page);
-        }catch(error){
-            console.log("Unable Access Data: ", event, error, unProcessedData);
-            continue;
-        }
-        let processedData = await processInformation(unProcessedData);
+        let processedData = await processInformation(data);
         processedData.orgName = org.name;
         processedData.orgContactInfo = org.contactInfo;
         eventsArray.push(processedData);
     }
+
     return eventsArray;
 }
 
