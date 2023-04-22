@@ -36,6 +36,7 @@ async function insertEntry(newEntry, collection) {
     if (collectionNames.includes(collection)) {
         const result = await client.db("p2").collection(collection).insertOne(newEntry);
         console.log(`New entry created with the following id: ${result.insertedId}`);
+        return true;
     }
     console.log("Nothing happend");
     return false;

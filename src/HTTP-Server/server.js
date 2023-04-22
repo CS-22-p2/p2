@@ -1,3 +1,5 @@
+// Imports
+import { createUser } from '../user-system/userHandler.js';
 import http from 'http';
 import fs  from 'fs';
 import url from 'url';
@@ -11,7 +13,7 @@ const publicDirectoryPath = path.join(__dirname, 'public');
 const server = http.createServer((req, res) => {
     if (req.method === 'GET') {
         // This part handels GET methods, providing the user with the requested documents
-        const filePath = path.join(publicDirectoryPath, path.normalize(req.url === '/' ? 'loginPage.html' : req.url));
+        const filePath = path.join(publicDirectoryPath, path.normalize(req.url === '/' ? 'index.html' : req.url));
         const extname = path.extname(filePath);
         let contentType = 'text/html';
     
@@ -37,8 +39,19 @@ const server = http.createServer((req, res) => {
         let body = '';
         req.on('data', (chunk) => {
             body += chunk.toString();
+            body = JSON.parse(body);
         });
         req.on('end', () => {
+            console.log(body);
+            if (body.type === "login") {
+                // Do login stuff
+                console.log("Trying to log in");
+                // checkLogin(body), this function needs to be created
+            } else if (body.type === "signUp") {
+                // createUser(body); // Remove the first comment then this should work
+                console.log("Trying to sign up");
+                // createNewUser(body), this function needs to take create a user obj, and encrypt the password
+            }
             console.log(`Received PUT request with body: ${body}`)
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('PUT request successful');
