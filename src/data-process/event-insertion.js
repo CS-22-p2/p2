@@ -24,7 +24,7 @@ function input_validation(input, expected) {
     return true; // Correct input
 }
 
-// Converts eventdate into usuable data
+// Converts eventdate into useable data
 function date_conversion_formatting(date_str) {
     const date_str_split = date_str.split(" ");
     const date_part = {
