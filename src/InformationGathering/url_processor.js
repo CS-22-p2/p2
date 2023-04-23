@@ -2,6 +2,7 @@ import puppeteer from "puppeteer";
 import {getData, processInformation, getElement, getElementsArray} from "./web_crawler.js";
 import {scrapeOrgData, scrape} from "./org_crawler.js";
 import { Event } from "./eventClass.js";
+import { assignEventScrapeWorkers } from "./scrape_worker_main.js";
 
 //The classes of the HTML elements we want to read from the DOM - Facebook Organisation Page
 const no_event_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x41vudc.x1603h9y.x1u7k74.x1xlr1w8.x12scifz.x2b8uid";
@@ -113,23 +114,19 @@ async function processEvents(eventLinks, page, org)
 {
     let eventsArray = []; //Holds the colled events
 
-    //Goes into each specific event page
-    for(let event of eventLinks)
-    {
-        let unProcessedData; //Holds "raw" event data
+    // Get event data from workers
+    let unProcessedData;
+    await assignEventScrapeWorkers(eventLinks).then((data) => unProcessedData = data)
 
-        try{ //Try to scrape information
-            unProcessedData = await getData(event, page); //Call the the Web Scraper on the given event page
-        }catch(error){ //Otherwise: log error, and on what page this error occured
-            console.log("Unable Access Data: ", event, error, unProcessedData);
-            continue; //Go to next event
-        }
-        let processedData = await processInformation(unProcessedData);
+    for (let data of unProcessedData)
+    {
+        let processedData = await processInformation(data);
         processedData.orgName = org.name;
         processedData.orgCategory = org.category;
         processedData.orgContactInfo = org.contactInfo;
         eventsArray.push(processedData); //Store the event in the event array
     }
+
     return eventsArray;
 }
 
