@@ -3,66 +3,85 @@ import {getData, processInformation, getElement, getElementsArray} from "./web_c
 import {scrapeOrgData, scrape} from "./org_crawler.js";
 import { Event } from "./eventClass.js";
 
-//The classes of the HTML elements we want to read from the DOM
+//The classes of the HTML elements we want to read from the DOM - Facebook Organisation Page
 const no_event_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x41vudc.x1603h9y.x1u7k74.x1xlr1w8.x12scifz.x2b8uid";
 const event_link_class = "a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.x1heor9g.xt0b8zv.x1s688f"; 
 
-//EXECUTED COMMANDS
-const orgData = await scrapeOrgData(scrape);
-
+//---------------EXECUTED COMMANDS--------------
+const orgData = await scrapeOrgData(scrape); //Collects the organisations Web-page URLs
 await logEvents(orgData);
 
-const browser = await puppeteer.launch({
-    headless: false,
-    defaultViewport: null,
-    args: ['--lang=en-GB,en']
-});
-
-let eventList = await accessEventsPage(orgData,browser);
+//eventList will hold an array of instances of the eventClass, which are later stored in the database
+let eventList = await accessEventsPage(orgData);
 console.log(eventList);
+console.log(eventList.length);
+//--------------------------------------------------------
 
-
-async function accessEventsPage(orgData, browser)
+/**
+ * Enters each Facebook group/organisation -> Checks for upcomming events
+ * If found: Scrapes all the events(by calling processEvents) and stores them in eventList
+ * Not found: Moves onto the next organisation
+ * @param {"The object containing all the Organisation URLs, but also orgName and orgCategory"} orgData 
+ * @returns an array of eventClass objects
+ */
+async function accessEventsPage(orgData)
 {
+
+    //Launches an empty browser
+    const browser = await puppeteer.launch({
+        headless: false, //Headless = "true": We do not want to see all the processing in the browser (set to "false" for easier debugging)
+        defaultViewport: null, //We do not set a specific viewport(Size of the window)
+        args: ['--lang=en-GB,en'] //Browser language is set to English(Consistency, as some users might have different languages set in the browser)
+    });
+
     let eventList = []; // This array holds the events we want to export
-    let eventLinks;
+    let eventLinks; // Will hold the links to the event pages(array)
+
+    //Create a page handler, which will be used to acess all the necessary sites
     const page = await browser.newPage();
 
+    //Again force the language to be English
     page.setExtraHTTPHeaders({
         "Accept-Language": "en",
     })
 
+    //Loops over all of the organisation URLs
     for(let org of orgData){
+        //If URL is to a facebook group -> Appends path string "/upcoming_hosted_events"
+        //Otherwise: fbURL is set to "Unknown"
         let fbURL = await checkFb(org.destinationURL);
+        
         if(fbURL !== "Unknown")
         {
+            //Enter event overview page for the organisation
             await page.goto(fbURL, {
             waitUntil: "networkidle2",
             });
 
             //If we try to go to https://www.facebook.com/someorganisation/upcoming_hosted_events
-            //The element called "no_event_class" will have the value of "No events to show"
+            //The element called "no_event_class" will have the value of "No events to show" if the are no upcomming events
             let check_value = await getElement(page, no_event_class, "innerHTML");
 
             if(await eventCheck(check_value))
             {
+                //Extracts all links from the organisation event overview page
                 eventLinks =  await getElementsArray(page, event_link_class, "href");
-                let collectedEvents = await processEvents(eventLinks, page, org);
-                eventList = eventList.concat(collectedEvents);
+                let collectedEvents = await processEvents(eventLinks, page, org); //Scrapes event pages
+                eventList = eventList.concat(collectedEvents); //Append the collected events to eventList
             }else eventLinks = "None";
         }
     }
-    await browser.close();
-    return eventList;
+    await browser.close(); //Close the browser
+    return eventList; //Return collected events
 }
 
-// false = Page has NO upcoming events ; true = Page 
+// false = page has NO upcoming events
+// true = page has upcomming events
 async function eventCheck(string){
-    if(string === "No events to show"){
-        return false;
-    }else return true;
+    return string !== "No events to show";
 }
 
+//Checks if facebook link, and appends necessary path
 async function checkFb(orgURL){
     let eventPageURL = orgURL;
     
@@ -78,36 +97,43 @@ async function checkFb(orgURL){
         }
     }else
     {
-        eventPageURL = "Unknown"; //Just for now
+        eventPageURL = "Unknown"; //The URL is not a link to a facebook page
     }
-    return eventPageURL;
+    return eventPageURL; //Return processed URL
 }
 
-
+/**
+ * 
+ * @param {"Links to the events hosted by the given organisation"} eventLinks
+ * @param {"Page handler"} page 
+ * @param {"Contains the necessary information for the given organisation"} org 
+ * @returns "All the events associated with the given organisation on facebook"
+ */
 async function processEvents(eventLinks, page, org)
 {
-    let eventsArray = [];
-    if(eventLinks === "None"){
-        console.log("NO DATA");
-    }
+    let eventsArray = []; //Holds the colled events
 
+    //Goes into each specific event page
     for(let event of eventLinks)
     {
-        let unProcessedData;
-        try{
-            unProcessedData = await getData(event, page);
-        }catch(error){
+        let unProcessedData; //Holds "raw" event data
+
+        try{ //Try to scrape information
+            unProcessedData = await getData(event, page); //Call the the Web Scraper on the given event page
+        }catch(error){ //Otherwise: log error, and on what page this error occured
             console.log("Unable Access Data: ", event, error, unProcessedData);
-            continue;
+            continue; //Go to next event
         }
         let processedData = await processInformation(unProcessedData);
         processedData.orgName = org.name;
+        processedData.orgCategory = org.category;
         processedData.orgContactInfo = org.contactInfo;
-        eventsArray.push(processedData);
+        eventsArray.push(processedData); //Store the event in the event array
     }
     return eventsArray;
 }
 
+//Used for debugging and overview of collected links
 async function logEvents(orgData)
 {
     for(let org of orgData)

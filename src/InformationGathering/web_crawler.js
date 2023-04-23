@@ -136,7 +136,7 @@ async function getData(eventPageLink, page) {
     waitUntil: "networkidle2",
   });
   
-  //Clicks away from the popup if there is any
+  //Clicks away from the popup if there is any(Otherwise unable to scrape)
   if(await checkElement(page, popUp_click))
   {
     await clickElement(page, popUp_click, "Allow essential and optional cookies");
@@ -145,6 +145,7 @@ async function getData(eventPageLink, page) {
   //Opens the "See More" section of description
   await clickElement(page, seeMore_click, "See more");
 
+  //Calls the functions needed to scrape all the relevant information
   const eventDate = await getElement(page, date_class, "textContent");
   const eventLink = await getURL(page);
   const eventTitle = await getElement(page, title_class, "textContent");
@@ -157,13 +158,19 @@ async function getData(eventPageLink, page) {
 
   //To get the image we need to go to the image page... Otherwise encrypted :(
   await clickImage(page, image_click);
-
   const eventImage = await getImage(page, image_class);
-
+  
   return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescription, eventTickets, eventImage};
 };
 
-
+/**
+ * processInformation processes the raw event data from the facebook page and stores them in an event object
+ * The description comes as an array of strings -> Converted into one long string
+ * Participants are collected as strings -> Converted into integer
+ * Details also come as an array of strings -> Extract duration and if an event is private
+ * @param {"The raw data from the facebook event page"} gatheredData 
+ * @returns "Event Object, with all the relevant information from the event-class model"
+ */
 async function processInformation(gatheredData)
 {
   let event_data = new Event();
@@ -181,7 +188,7 @@ async function processInformation(gatheredData)
   //Converting participants from string to integer
   event_data.eventParticipants = parseInt(gatheredData.eventParticipants);
 
-  //Processing details. Since details is an array, and often appears in a 
+  //Processing details. Since details is an array of strings
   for(let element of gatheredData.eventDetails)
   {
     if(element.includes("Duration:") || element.includes("days") || (element.includes("hr")) && (element.includes("min"))){
@@ -197,9 +204,9 @@ async function processInformation(gatheredData)
  //Processing Event Description
  for(let element of gatheredData.eventDescription)
  {
-  description += element;
+  description += element; //Append each part of description into one long string
  }
- description = description.replace("See less","");
+ description = description.replace("See less",""); //Removes unwanted string("See less")
  event_data.eventDescription = description;
 
  return event_data; 
