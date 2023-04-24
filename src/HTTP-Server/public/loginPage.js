@@ -28,6 +28,7 @@ function submit(){
         body: JSON.stringify(data)
     }).then(response => {
         console.log('PUT request successful');
+        // Forward the user to the landing page
     }).catch(error => {
         console.error('Error sending PUT request:', error);
     });
