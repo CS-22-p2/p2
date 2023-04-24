@@ -79,4 +79,4 @@ async function assignEventScrapeWorkers(links)
     })
 }
 
-await assignEventScrapeWorkers(new Array(10).fill("https://www.facebook.com/events/205729292181399/")).then((data) => console.log(data))
+//await assignEventScrapeWorkers(new Array(10).fill("https://www.facebook.com/events/205729292181399/")).then((data) => console.log(data))
