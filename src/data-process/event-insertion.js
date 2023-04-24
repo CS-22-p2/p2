@@ -1,5 +1,6 @@
 // Import
 import { getEntry, insertEntry } from '../database/databaseHandler.js';
+export {date_conversion_formatting};
 
 // Global variables
 let base_score = 100;
@@ -55,7 +56,7 @@ function get_duration(date_str) {
     const minutes = difference - (hours * 100);
     return `${hours} hour(s) and ${minutes} minutes`;
 }
-console.log(`Duration ${get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:30 UTC+02')}`);
+//console.log(`Duration ${get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:30 UTC+02')}`);
 
 // When event is happening relative to current time
 function time_until_event(date) {
