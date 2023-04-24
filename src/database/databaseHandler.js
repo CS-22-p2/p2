@@ -79,6 +79,7 @@ async function getEntry (query, collection) {
 
 async function getNewestEntries(collection) {
     let client;
+    let result = [];
     try {
     client = await establishConnection();
 
@@ -89,13 +90,15 @@ async function getNewestEntries(collection) {
     // If the specified collection is present we serch for the query and return true if present
     // else it returns false
     if (collectionNames.includes(collection)) {
-        const result = await client.db("p2").collection(collection).find().sort({_id:1}).limit(10);
+        let cursor = await client.db("p2").collection(collection).find().sort({_id:1}).limit(10);
 
-        if (result) {
+        await cursor.forEach(doc => result.push(doc));
+
+        if (result.length > 0) {
             return result;
-        } else {
-            return false
         }
+
+        return "No entries found";
     }
     } catch (error) {
         console.error(error);
@@ -130,12 +133,13 @@ async function serchAllFields(searchTerm) {
     }
 }
 
-/* async function main() {
+async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Anna", "userdb");
-    const result = await serchAllFields("m");
+    //const result = await serchAllFields("m");
+    const result = await getNewestEntries("events")
     
     console.log(result);
 }
 
-main(); */
+main();
