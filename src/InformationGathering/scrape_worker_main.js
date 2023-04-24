@@ -2,6 +2,13 @@ import {
     Worker
 } from "worker_threads"
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename)
+const __childname = __dirname + "/scrape_worker_child.js"
+
 export {assignEventScrapeWorkers}
 
 const maxWorkerCount = 2
@@ -37,7 +44,7 @@ async function assignEventScrapeWorkers(links)
         for (let i = 0; i < workerCount; i++)
         {
             // Give the worker access to the same array of links and the page object, we uses indexes to tell the worker which link to work with
-            const worker = new Worker("./scrape_worker_child.js", {
+            const worker = new Worker(__childname, {
                 // Shared data that exists both on the main and child threads. In this case we just want the child threads to know links
                 workerData: {
                     links: links,
@@ -72,4 +79,4 @@ async function assignEventScrapeWorkers(links)
     })
 }
 
-//await assignEventScrapeWorkers(new Array(10).fill("https://www.facebook.com/events/205729292181399/")).then((data) => console.log(data))
+await assignEventScrapeWorkers(new Array(10).fill("https://www.facebook.com/events/205729292181399/")).then((data) => console.log(data))
