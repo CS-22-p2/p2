@@ -92,6 +92,10 @@ function determine_event_date_type(date_str) {
 }
 
 function get_duration(date_str) {
+    let first_element = date_str.split(" ")[0];
+    if (!isNaN(Number(first_element))) {
+        return "";
+    }
     // This is illegal, don't look
     const date_str_split = date_str.split(" "); // Splits at ' '
     const duration_str = date_str_split[5]; // Element that contains 10:00-15:00
@@ -204,26 +208,33 @@ function read_description(description) {
                 found_categories.push(category);
             }
         }
-    }    
+    }
     return found_categories;
 }
 
 class event_data {
-    constructor(orgName, orgType, contactInfo, link, eventTitle, eventDate, participants, location, duration, isPrivate, description) {
+    constructor(orgName, orgCategory, orgContactInfo, 
+        eventLink, eventTitle, eventDate, 
+        eventHosts, eventParticipants, eventLocation, 
+        eventDuration, isPrivate, eventDescription, 
+        eventTickets, eventImage) {
         this.orgName = orgName;
-        this.orgType = orgType;
-        this.contactInfo = contactInfo;
-        this.link = link;
+        this.orgCategory = orgCategory;
+        this.orgContactInfo = orgContactInfo;
+        this.eventLink = eventLink;
         this.eventTitle = eventTitle;
+        this.eventHost = eventHosts;
         this.date = determine_event_date_type(eventDate);
-        this.participants = participants;
-        this.location = location;
+        this.participants = eventParticipants;
+        this.location = eventLocation;
         this.duration = get_duration(eventDate);
         this.isPrivate = isPrivate;
-        this.description = description;
+        this.description = eventDescription;
         this.time_left = time_until_event(this.date);
         this.relevancy_score = this.final_score();
         this.categories = read_description(this.description);
+        this.tickets = eventTickets;
+        this.image = eventImage;
     }
 
     final_score() {
@@ -245,24 +256,42 @@ async function check_duplicate_event(event_instance) {
     return result; // getEntry returns true if found, else false
 }
 
-async function inserting_DB(event_instance) {
+async function inserting_DB(event_class) {
     // If it's duplicate, returns false. Do nothing
-    if (check_duplicate_event(event_instance)) {
-        if (!check_repeated_events(event_instance)) {
-            return false;
-        }
-        else {
-        }
+    if (!check_duplicate_event(event_class)) {
+        return false;
     }
-
-    // Inserting event into MongoDB. Needs testing.
-    await insertEntry(event_instance, "events");
+    
+    let temp = await insertEntry(event_instance, "events");
     return true;
 }
 
 async function main() {
     let event_arr = await accessEventsPage();
-    console.log(event_arr);
+    let event_arr_size = event_arr.length;
+
+    for (let i = 0; i < event_arr_size; i++) {
+        const event_temp = new event_data(
+            event_arr[i].orgName,
+            event_arr[i].orgCategory,
+            event_arr[i].orgContactInfo,
+            event_arr[i].eventLink,
+            event_arr[i].eventTitle,
+            event_arr[i].eventDate,
+            event_arr[i].eventHosts,
+            event_arr[i].eventParticipants,
+            event_arr[i].eventLocation,
+            event_arr[i].eventDuration,
+            event_arr[i].isPrivate,
+            event_arr[i].eventDescription,
+            event_arr[i].eventTickets,
+            event_arr[i].eventImage
+        )
+        let a = inserting_DB(event_temp);
+        if (a === false) {
+            console.log("Event failed to insert");
+        }
+    }
 }
 
 main()

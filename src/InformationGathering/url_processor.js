@@ -33,7 +33,7 @@ async function accessEventsPage()
 
     //Launches an empty browser
     const browser = await puppeteer.launch({
-        headless: false, //Headless = "true": We do not want to see all the processing in the browser (set to "false" for easier debugging)
+        headless: true, //Headless = "true": We do not want to see all the processing in the browser (set to "false" for easier debugging)
         defaultViewport: null, //We do not set a specific viewport(Size of the window)
         args: ['--lang=en-GB,en'] //Browser language is set to English(Consistency, as some users might have different languages set in the browser)
     });
