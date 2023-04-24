@@ -46,13 +46,38 @@ function date_conversion_formatting(date_str) {
     return new Date(`${r_year}-${r_month}-${r_day}`);
 }
 
-function determine_event_date_type(date_str) {
-    if (date_str.split(" ")[0])
-    date_conversion_formatting(date_str);
+// "17 JUN AT 16:00 – 18 JUN AT 02:00 UTC+02"
+
+
+function date_conversion_formatting_multiple_days(date_str) {
+    const date_str_split = date_str.split(" ");
+    const date_part = {
+        day: date_str_split[0],
+        month: date_str_split[1],
+        year: 2023
+    };
+    const the_months = {
+        JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
+        JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12,
+        JANUARY: 1, FEBRUARY: 2, MARCH: 3, APRIL: 4, MAY: 5, JUNE: 6,
+        JULY: 7, AUGUST: 8, SEPTEMBER: 9, OCTOBER: 10, NOVEMBER: 11, DECEMBER: 12
+    };
+    const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
+    const r_day = date_part.day.padStart(2, "0");
+    const r_year = date_part.year;
+    return new Date(`${r_year}-${r_month}-${r_day}`);
 }
 
-console.log(date_conversion_formatting('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02'));
+function determine_event_date_type(date_str) {
+    let first_element = date_str.split(" ")[0];
+    if (!isNaN(Number(first_element))) {
+        return date_conversion_formatting_multiple_days(date_str);
+    }
+    return date_conversion_formatting(date_str);
+}
 
+console.log(determine_event_date_type("17 JUN AT 16:00 – 18 JUN AT 02:00 UTC+02"));
+console.log(determine_event_date_type('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02'));
 function get_duration(date_str) {
     // This is illegal, don't look
     const date_str_split = date_str.split(" "); // Splits at ' '
@@ -177,7 +202,7 @@ class event_data {
         this.contactInfo = contactInfo;
         this.link = link;
         this.eventTitle = eventTitle;
-        this.date = date_conversion_formatting(eventDate);
+        this.date = determine_event_date_type(eventDate);
         this.participants = participants;
         this.location = location;
         this.duration = get_duration(eventDate);
