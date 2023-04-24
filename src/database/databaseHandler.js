@@ -2,7 +2,7 @@
 import { MongoClient } from 'mongodb';
 
 // Exports
-export { insertEntry, getEntry }
+export { insertEntry, getEntry, checkDuplicate }
 
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
@@ -36,6 +36,7 @@ async function insertEntry(newEntry, collection) {
     if (collectionNames.includes(collection)) {
         const result = await client.db("p2").collection(collection).insertOne(newEntry);
         console.log(`New entry created with the following id: ${result.insertedId}`);
+        return true;
     }
     console.log("Nothing happend");
     return false;
@@ -103,11 +104,25 @@ async function serchAllFields(searchTerm) {
     }
 }
 
-// TODO: Figure out how to make querrys easy
-function createQuery(req) {
-    let query = {};
-    let andConditions = {};
+async function checkDuplicate(eventLink, collection) {
+    let client;
 
+    try {
+        client = await establishConnection();
+        
+        const result = client.db("p2").collection(collection).findOne({link: {$regex: eventLink, $options: "i"}});
+
+        if (result) {
+            console.log("Duplicate");
+            return true;
+        } 
+        return false;
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
 }
 
 /* async function main() {
