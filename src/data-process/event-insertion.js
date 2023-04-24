@@ -42,7 +42,7 @@ function date_conversion_formatting(date_str) {
     const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
     const r_day = date_part.day.padStart(2, "0");
     const r_year = date_part.year;
-    return `${r_year}-${r_month}-${r_day}`;
+    return new Date('year-month-day');
 }
 
 function get_duration(date_str) {
@@ -59,11 +59,10 @@ console.log(`Duration ${get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:30 U
 
 // When event is happening relative to current time
 function time_until_event(date) {
-    const event_date = date; // needs to be formatted as { 'yyyy-mm-dd' }
     const current_date = new Date();
 
     // getTime - gets time in milliseconds from your pc
-    const difference_milliseconds = event_date.getTime() - current_date.getTime();
+    const difference_milliseconds = date.getTime() - current_date.getTime();
     return Math.ceil(difference_milliseconds / (1000 * 3600 * 24));
 }
 
@@ -123,26 +122,43 @@ function time_left_score(time_left) {
     return high_score;
 }
 
+function strip_and_trim(string) {
+    return (string.replace(/[^a-zA-Z]/g, '')).toLowerCase();
+}
+
 function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'alcohol-free': ['non-alcoholic', 'sober', 'drug-free',"spirtis","Bars","booze","party"
+        'alcohol-free': ['nonalcoholic', 'sober', 'drugfree',"spirtis","bars","booze","party"
                         ,"alkoholfri","ædru","stoffri","spiritus","barer","alkohol","fest" ],
-        'business': ['career', 'networking', 'professional', 'entrepreneurship',"Management"
+        'business': ['career', 'networking', 'professional', 'entrepreneurship',"management", "jobs", "job",
                     ,"karriere","netværk","professionel","iværksætteri","ledelse"],
-        'sport':    ['tennis', "Football", "Basketball", "Baseball", "Cycling", "Volleyball", "Swimming"
+        'sport':    ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
                     ,"tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
     };
+    
+    // strips and trims array
+    for (let i = 0; i < tokens.length; i++) {
+        tokens[i] = strip_and_trim(tokens[i]);
+    }
+
+    // Remove generic words
+    const removeable_words = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'person', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us'];
+    for (let i = tokens.length - 1; i >= 0; i--) {
+        if (tokens[i] === '' || removeable_words.includes(tokens[i])) {
+            tokens.splice(i, 1);
+        }
+    }
 
     for (const category in categories) {
         let keywords = categories[category];
-        for (const keyword in keywords) {
-            if (tokens.includes(keywords[keyword])) {
+        for (const keyword of keywords) {
+            if (tokens.includes(keyword)) {
                 found_categories.push(category);
             }
         }
-    }
+    }    
     return found_categories;
 }
 
