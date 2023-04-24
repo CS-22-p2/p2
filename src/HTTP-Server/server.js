@@ -55,6 +55,10 @@ const server = http.createServer(async (req, res) => {
                     console.log("Wrong!");
                     return false;
                 }
+                res.writeHead(200);
+                res.end(JSON.stringify({message: 'PUT request unsuccessful', cookie: result}));
+
+                return true;
             } else if (body.type === "signUp") {
                 let result = await createUser(body);
                 console.log("Trying to sign up");

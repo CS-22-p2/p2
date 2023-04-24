@@ -1,4 +1,5 @@
 // Imports
+import cookieParser from 'cookie-parser';
 import {user, getId} from "./user.js";
 import { establishConnection, insertEntry} from "../database/databaseHandler.js";
 
@@ -57,7 +58,7 @@ async function checkLogin(body) {
         const result = await client.db("p2").collection("userdb").findOne({email: body.email});
         
         if (result.userPass == body.password){
-            return true; // This needs to return user id instead, such that a cookie can be created  keeping the user logged in.
+            return createCookie(result); // This needs to return user id instead, such that a cookie can be created  keeping the user logged in.
         }
         return false;
     } catch (error) {
@@ -67,13 +68,37 @@ async function checkLogin(body) {
     }
 }
 
+function createCookie(user) {
+    const userData = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        userPass: user.userPass,
+        campus: user.campus,
+        favorittes: user.favorittes,
+        userId: user.userId
+    };
+
+    const cookieOptions = {
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax'
+    };
+    const cookieValue = JSON.stringify(userData);
+  
+    const signedCookie = cookieParser.signedCookie(cookieValue, process.env.COOKIE_SECRET);
+    
+    return { cookieName: 'currentUser', cookieValue: signedCookie, cookieOptions };
+}
+
 const userData = { type: 'login', email: 'tmnj21@student.aau.dk', password: '123456789'};
 
-async function main() {
+/* async function main() {
     //await createUser(userData);
     const result = await checkLogin(userData)
 
     console.log(result);
 }
 
-main();
+main(); */

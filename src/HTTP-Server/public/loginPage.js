@@ -31,8 +31,14 @@ function submit(){
             throw new Error('Network response was not ok');
         }
         let res = response.json()
-        console.log(res);
         return res;
+    }).then((res) => {
+        console.log(res.cookie);
+        
+        document.cookie = "username=John Doe";
+        
+        document.cookie = `${res.cookie.cookieName}=${res.cookie.cookieValue};` +
+        `max-age=${res.cookie.cookieOptions.maxAge};`
         // Forward the user to the landing page
     }).catch(error => {
         console.error('Error sending PUT request:', error);
