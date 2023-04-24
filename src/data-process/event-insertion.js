@@ -1,6 +1,6 @@
 // Import
 import { getEntry, insertEntry } from '../database/databaseHandler.js';
-export {date_conversion_formatting};
+
 
 // Global variables
 let base_score = 100;
@@ -43,8 +43,10 @@ function date_conversion_formatting(date_str) {
     const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
     const r_day = date_part.day.padStart(2, "0");
     const r_year = date_part.year;
-    return new Date('year-month-day');
+    return new Date(`${r_year}-${r_month}-${r_day}`);
 }
+
+console.log(date_conversion_formatting('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02'));
 
 function get_duration(date_str) {
     const date_str_split = date_str.split(" ");
@@ -56,7 +58,6 @@ function get_duration(date_str) {
     const minutes = difference - (hours * 100);
     return `${hours} hour(s) and ${minutes} minutes`;
 }
-//console.log(`Duration ${get_duration('THURSDAY, 20 APRIL 2023 FROM 10:00-15:30 UTC+02')}`);
 
 // When event is happening relative to current time
 function time_until_event(date) {
@@ -170,10 +171,10 @@ class event_data {
         this.contactInfo = contactInfo;
         this.link = link;
         this.eventTitle = eventTitle;
-        this.date = new Date(date_conversion_formatting(eventDate));
+        this.date = date_conversion_formatting(eventDate);
         this.participants = participants;
         this.location = location;
-        this.duration = duration;
+        this.duration = get_duration(eventDate);
         this.isPrivate = isPrivate;
         this.description = description;
         this.time_left = time_until_event(this.date);
@@ -215,23 +216,25 @@ async function inserting_DB(event_instance) {
     return true;
 }
 
-// Export
-export default {
-    input_validation,
-    date_conversion_formatting,
-    time_until_event,
-    format_address,
-    repeated_events,
-    on_campus,
-    time_left_score,
-    event_data
-};
-
 
 async function main() {
     const event_instance = new event_data("Org name", "Event type", "Contact info", "link", "Event title", "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 112, "selmalagerløgsvej 12", "Duration", true, "Description");
     await inserting_DB(event_instance);
 }
+
+export default {
+    input_validation,
+    date_conversion_formatting,
+    get_duration,
+    time_until_event,
+    format_address,
+    repeated_events,
+    on_campus,
+    time_left_score,
+    strip_and_trim,
+    read_description,
+    event_data
+};
 
 
 // Event {
