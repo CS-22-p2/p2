@@ -1,9 +1,9 @@
 // Imports
 import {user, getId} from "./user.js";
-import { establishConnection, insertEntry } from "../database/databaseHandler.js";
+import { establishConnection, insertEntry} from "../database/databaseHandler.js";
 
 // Exports
-export { createUser }
+export { createUser, checkLogin }
 
 async function createUser(userData) {
     const idNumber = await getId();
@@ -49,17 +49,31 @@ async function checkForDuplicates(newUser) {
     }
 }
 
-/* const userData = {
-    type: 'signUp',
-    name: 'Theis',
-    lastName: 'Jensen',
-    email: 'tmnj21@student.aau.dk',
-    password: '123456789',
-    campus: 'AAU Aalborg SØ'
-};
+async function checkLogin(body) {
+    let client;
+    try {
+        client = await establishConnection();
 
-async function main() {
-    await createUser(userData);
+        const result = await client.db("p2").collection("userdb").findOne({email: body.email});
+        
+        if (result.userPass == body.password){
+            return true; // This needs to return user id instead, such that a cookie can be created  keeping the user logged in.
+        }
+        return false;
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
 }
 
-main(); */
+const userData = { type: 'login', email: 'tmnj21@student.aau.dk', password: '123456789'};
+
+async function main() {
+    //await createUser(userData);
+    const result = await checkLogin(userData)
+
+    console.log(result);
+}
+
+main();

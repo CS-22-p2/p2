@@ -1,5 +1,5 @@
 // Imports
-import { createUser } from '../user-system/userHandler.js';
+import { createUser, checkLogin } from '../user-system/userHandler.js';
 import http from 'http';
 import fs  from 'fs';
 import url from 'url';
@@ -10,7 +10,7 @@ const port = 3000;
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const publicDirectoryPath = path.join(__dirname, 'public');
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     if (req.method === 'GET') {
         // This part handels GET methods, providing the user with the requested documents
         const filePath = path.join(publicDirectoryPath, path.normalize(req.url === '/' ? 'index.html' : req.url));
@@ -18,8 +18,7 @@ const server = http.createServer((req, res) => {
         let contentType = 'text/html';
     
         contentType = getContentType(extname);
-    
-        fs.readFile(filePath, (err, content) => {
+        fs.readFile(filePath, async (err, content) => {
                 if (err) {
                     if (err.code === 'ENOENT') {
                         res.writeHead(404);
@@ -41,20 +40,29 @@ const server = http.createServer((req, res) => {
             body += chunk.toString();
             body = JSON.parse(body);
         });
-        req.on('end', () => {
+        req.on('end', async () => {
             console.log(body);
             if (body.type === "login") {
                 // Do login stuff
                 console.log("Trying to log in");
-                // checkLogin(body), this function needs to be created
+
+                let result = await checkLogin(body);
+                console.log(result);
+
+                if (result == false) {
+                    res.writeHead(406);
+                    res.end(JSON.stringify({message: 'PUT request unsuccessful'}));
+                    console.log("Wrong!");
+                    return false;
+                }
             } else if (body.type === "signUp") {
-                // createUser(body); // Remove the first comment then this should work
+                let result = await createUser(body);
                 console.log("Trying to sign up");
                 // createNewUser(body), this function needs to take create a user obj, and encrypt the password
             }
             console.log(`Received PUT request with body: ${body}`)
-            res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end('PUT request successful');
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({message: 'PUT request successful'}));
         });
     } else {
         res.statusCode = 405;

@@ -27,7 +27,12 @@ function submit(){
         },
         body: JSON.stringify(data)
     }).then(response => {
-        console.log('PUT request successful');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        let res = response.json()
+        console.log(res);
+        return res;
         // Forward the user to the landing page
     }).catch(error => {
         console.error('Error sending PUT request:', error);
