@@ -2,7 +2,7 @@
 import { MongoClient } from 'mongodb';
 
 // Exports
-export { insertEntry, getEntry }
+export { insertEntry, getEntry, getNewestEntries }
 
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
@@ -46,6 +46,7 @@ async function insertEntry(newEntry, collection) {
     } 
 }
 
+// This function might be deprecated
 // This function returns an entry specified by name and collection
 async function getEntry (query, collection) {
     let client;
@@ -72,8 +73,34 @@ async function getEntry (query, collection) {
     } catch (error) {
         console.error(error);
     } finally {
-        setTimeout(() => {client.close()}, 1500)
-        //await client.close();
+        setTimeout(() => {client.close()}, 1500);
+    }
+}
+
+async function getNewestEntries(collection) {
+    let client;
+    try {
+    client = await establishConnection();
+
+    // Get all the collections present in the database and extract their names
+    const collections = await client.db("p2").listCollections().toArray();
+    const collectionNames = [];
+    collections.forEach(ele => collectionNames.push(ele.name));
+    // If the specified collection is present we serch for the query and return true if present
+    // else it returns false
+    if (collectionNames.includes(collection)) {
+        const result = await client.db("p2").collection(collection).find().sort({_id:1}).limit(10);
+
+        if (result) {
+            return result;
+        } else {
+            return false
+        }
+    }
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setTimeout(() => {client.close()}, 1500);
     }
 }
 
@@ -86,7 +113,7 @@ async function serchAllFields(searchTerm) {
         client = await establishConnection();
         
         // This function call returns a cursor containing the searched entrys 
-        let cursor =  client.db("p2").collection("userdb").find({$or: [{fName: {$regex: searchTerm, $options: "i"}},
+        let cursor =  client.db("p2").collection("events").find({$or: [{fName: {$regex: searchTerm, $options: "i"}}, // This needs to be updated
                                                                                                                                       {lName: {$regex: searchTerm, $options: "i"}}
                                                                                                                         ]});
         await cursor.forEach(doc => result.push(doc));
