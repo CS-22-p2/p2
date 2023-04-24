@@ -261,7 +261,8 @@ async function inserting_DB(event_instance) {
 }
 
 async function main() {
-    console.log(accessEventsPage());
+    let event_arr = await accessEventsPage();
+    console.log(event_arr);
 }
 
 main()
