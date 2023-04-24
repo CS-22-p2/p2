@@ -1,5 +1,5 @@
 import {
-    Worker, workerData, parentPort
+    Worker
 } from "worker_threads"
 
 export {assignEventScrapeWorkers}
@@ -8,10 +8,9 @@ const maxWorkerCount = 2
 
 async function assignEventScrapeWorkers(links)
 {
-    // Create a clone of the original array so as to not alter it
     let linkCount = links.length
 
-    // Extracted events
+    // Prepare an array with room for data for every link
     let events = new Array(linkCount).fill(undefined)
 
     console.log("Scraping %d links: ", linkCount, links)
@@ -39,6 +38,7 @@ async function assignEventScrapeWorkers(links)
         {
             // Give the worker access to the same array of links and the page object, we uses indexes to tell the worker which link to work with
             const worker = new Worker("./scrape_worker_child.js", {
+                // Shared data that exists both on the main and child threads. In this case we just want the child threads to know links
                 workerData: {
                     links: links,
                 }

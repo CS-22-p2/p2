@@ -4,6 +4,7 @@ import {
 
 import { getData } from "./web_crawler.js"
 import puppeteer from "puppeteer"
+import { DeleteFirstPage } from "./org_crawler.js";
 
 // Create a new browser
 const browser = await puppeteer.launch({
@@ -13,10 +14,12 @@ const browser = await puppeteer.launch({
 });
 
 const page = await browser.newPage()
+DeleteFirstPage(browser)
 
 // We have recieved an index from the main thread to process
 parentPort.on("message", async (index) => {
     console.log("Index: ", index)
+
     if (index >= workerData.links.length) {
         await browser.close()
         process.exit()

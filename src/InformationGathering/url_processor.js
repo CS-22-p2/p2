@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import {getData, processInformation, getElement, getElementsArray} from "./web_crawler.js";
-import {scrapeOrgData, scrape} from "./org_crawler.js";
+import {scrapeOrgData, scrape, DeleteFirstPage} from "./org_crawler.js";
 import { Event } from "./eventClass.js";
 import { assignEventScrapeWorkers } from "./scrape_worker_main.js";
 
@@ -9,11 +9,9 @@ const no_event_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x
 const event_link_class = "a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.x1heor9g.xt0b8zv.x1s688f"; 
 
 //---------------EXECUTED COMMANDS--------------
-const orgData = await scrapeOrgData(scrape); //Collects the organisations Web-page URLs
-await logEvents(orgData);
 
 //eventList will hold an array of instances of the eventClass, which are later stored in the database
-let eventList = await accessEventsPage(orgData);
+let eventList = await accessEventsPage();
 console.log(eventList);
 console.log(eventList.length);
 //--------------------------------------------------------
@@ -25,8 +23,11 @@ console.log(eventList.length);
  * @param {"The object containing all the Organisation URLs, but also orgName and orgCategory"} orgData 
  * @returns an array of eventClass objects
  */
-async function accessEventsPage(orgData)
+async function accessEventsPage()
 {
+    // Collects the organisations Web-page URLs
+    const orgData = await scrapeOrgData(scrape);
+    await logEvents(orgData);
 
     //Launches an empty browser
     const browser = await puppeteer.launch({
@@ -40,6 +41,7 @@ async function accessEventsPage(orgData)
 
     //Create a page handler, which will be used to acess all the necessary sites
     const page = await browser.newPage();
+    DeleteFirstPage(browser)
 
     //Again force the language to be English
     page.setExtraHTTPHeaders({
@@ -67,7 +69,7 @@ async function accessEventsPage(orgData)
             {
                 //Extracts all links from the organisation event overview page
                 eventLinks =  await getElementsArray(page, event_link_class, "href");
-                let collectedEvents = await processEvents(eventLinks, page, org); //Scrapes event pages
+                let collectedEvents = await processEvents(eventLinks, org); //Scrapes event pages
                 eventList = eventList.concat(collectedEvents); //Append the collected events to eventList
             }else eventLinks = "None";
         }
@@ -110,7 +112,7 @@ async function checkFb(orgURL){
  * @param {"Contains the necessary information for the given organisation"} org 
  * @returns "All the events associated with the given organisation on facebook"
  */
-async function processEvents(eventLinks, page, org)
+async function processEvents(eventLinks, org)
 {
     let eventsArray = []; //Holds the colled events
 
