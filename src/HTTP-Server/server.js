@@ -17,9 +17,11 @@ const server = http.createServer(async (req, res) => {
         const extname = path.extname(filePath);
         let contentType = 'text/html';
     
+        // Gets the extension name e.g. ".js"
         contentType = getContentType(extname);
         fs.readFile(filePath, async (err, content) => {
                 if (err) {
+                    // Responds with error if there is any
                     if (err.code === 'ENOENT') {
                         res.writeHead(404);
                         res.end(`File not found: ${req.url}`);
@@ -27,7 +29,7 @@ const server = http.createServer(async (req, res) => {
                         res.writeHead(500);
                         res.end(`Server error: ${err.code}`);
                     }
-                } else {
+                } else { // Responds with the request content
                     console.log(contentType);
                     res.writeHead(200, {'contentType': contentType});
                     res.end(content, 'utf-8');
@@ -36,10 +38,12 @@ const server = http.createServer(async (req, res) => {
     } else if (req.method === 'PUT') {
         // This part handels the PUT methods letting the user return data to the http server
         let body = '';
+        // Grabs the data sent by the fetch request
         req.on('data', (chunk) => {
             body += chunk.toString();
             body = JSON.parse(body);
         });
+        // When the full request is received it gets processed
         req.on('end', async () => {
             console.log(body);
             if (body.type === "login") {
@@ -49,20 +53,21 @@ const server = http.createServer(async (req, res) => {
                 let result = await checkLogin(body);
                 console.log(result);
 
+                // If the login info provided does not match anything in the userDb it responds with an error
                 if (result == false) {
                     res.writeHead(406);
                     res.end(JSON.stringify({message: 'PUT request unsuccessful'}));
                     console.log("Wrong!");
                     return false;
                 }
+                // Else it returns a successful message + a coockie containing the user credentials
                 res.writeHead(200);
-                res.end(JSON.stringify({message: 'PUT request unsuccessful', cookie: result}));
+                res.end(JSON.stringify({message: 'PUT request successful', cookie: result}));
 
                 return true;
-            } else if (body.type === "signUp") {
+            } else if (body.type === "signUp") { // if the request type is signup it creates a new user
                 let result = await createUser(body);
                 console.log("Trying to sign up");
-                // createNewUser(body), this function needs to take create a user obj, and encrypt the password
             }
             console.log(`Received PUT request with body: ${body}`)
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -75,6 +80,7 @@ const server = http.createServer(async (req, res) => {
       }
 }); 
 
+// This returns the http doctype based on the provided extension name e.g. ".html" = text/html
 function getContentType(extname) {
     switch (extname) {
         case '.js':
