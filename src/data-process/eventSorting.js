@@ -5,6 +5,7 @@ import { test } from "node:test";
 
 const testDates = [
     "WEDNESDAY, 26 APRIL 2023 AT 18:30 UTC+02",
+    "17 JUN AT 16:00 – 18 JUN AT 02:00 UTC+02",
     "THURSDAY, 27 APRIL 2023 AT 17:15 UTC+02",
     "TUESDAY, 2 MAY 2023 FROM 18:30-00:00 UTC+02",
     "SATURDAY, 29 APRIL 2023 AT 17:00 UTC+02",
@@ -38,7 +39,7 @@ function setTestDates(testDates)
 
     for(let date of testDates)
     {
-        processedDateArray.push(new Date(date_conversion_formatting(date)));
+        processedDateArray.push(date_conversion_formatting(date));
     }
 
     return processedDateArray;
@@ -46,14 +47,7 @@ function setTestDates(testDates)
 
 function InsertionSort(array)
 {
-    //Check if an invalid date is passed into the array
-    for(let element of array)
-    {
-        if(element === "Invalid Date") //If an invalid date is passed it is removed form the array
-        {
-            array.pop(element);
-        }
-    }
+    invalidDateChecker(array);
     
     //Insertion Sort --- See CLRS ch. 2.1
     for(let j = 1; j < array.length; j++)
@@ -63,11 +57,23 @@ function InsertionSort(array)
         while(i >= 0 && array[i] > key)
         {
             array[i + 1] = array[i]
-            i = i-1;
+            i = i - 1;
         }
-        array[i+1]=key;
+        array[i + 1]=key;
     }
 
+}
+
+function invalidDateChecker(array){
+    
+    //Check if an invalid date is passed into the array
+    for(let element of array)
+    {
+        if(element.toString() === "Invalid Date") //If an invalid date is passed it is removed form the array
+        {
+            array.splice(element,1);
+        }
+    }
 }
 
 //-------Executed Commands-----
