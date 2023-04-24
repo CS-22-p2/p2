@@ -1,5 +1,6 @@
 // Import
 import { getEntry, insertEntry } from '../database/databaseHandler.js';
+export {date_conversion_formatting};
 
 
 // Global variables
