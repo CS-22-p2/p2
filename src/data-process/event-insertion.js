@@ -47,18 +47,23 @@ function date_conversion_formatting(date_str) {
     return new Date(`${r_year}-${r_month}-${r_day}`);
 }
 
+function determine_event_date_type(date_str) {
+    if (date_str.split(" ")[0])
+    date_conversion_formatting(date_str);
+}
+
 console.log(date_conversion_formatting('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02'));
 
 function get_duration(date_str) {
     // This is illegal, don't look
-    const date_str_split = date_str.split(" ");
-    const duration_str = date_str_split[5];
-    const start = parseInt(duration_str.split('-')[0].replace(':', ''));
+    const date_str_split = date_str.split(" "); // Splits at ' '
+    const duration_str = date_str_split[5]; // Element that contains 10:00-15:00
+    const start = parseInt(duration_str.split('-')[0].replace(':', '')); // splits at -, and remove :, so 10:00 becomes 1000
     const end = parseInt(duration_str.split('-')[1].replace(':', ''));
     const difference = end - start;
-    const hours = Math.floor(difference / 100);
+    const hours = Math.floor(difference / 100); 
     const minutes = difference - (hours * 100);
-    return `${hours} hour(s) and ${minutes} minutes`;
+    return `${hours} hour(s) and ${minutes} minutes`; // Returns string, only for visual
 }
 
 // When event is happening relative to current time
