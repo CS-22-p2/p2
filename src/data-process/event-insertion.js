@@ -1,7 +1,20 @@
 // Import
 import { getEntry, insertEntry } from '../database/databaseHandler.js';
-export {date_conversion_formatting};
+import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
+// Export
+export default {
+    input_validation,
+    date_conversion_formatting,
+    get_duration,
+    time_until_event,
+    format_address,
+    repeated_events,
+    on_campus,
+    time_left_score,
+    strip_and_trim,
+    read_description
+};
 
 // Global variables
 let base_score = 100;
@@ -23,6 +36,7 @@ function input_validation(input, expected) {
             return false;
         }
     }
+
     return true; // Correct input
 }
 
@@ -44,11 +58,9 @@ function date_conversion_formatting(date_str) {
     const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
     const r_day = date_part.day.padStart(2, "0");
     const r_year = date_part.year;
+
     return new Date(`${r_year}-${r_month}-${r_day}`);
 }
-
-// "17 JUN AT 16:00 – 18 JUN AT 02:00 UTC+02"
-
 
 function date_conversion_formatting_multiple_days(date_str) {
     const date_str_split = date_str.split(" ");
@@ -66,6 +78,7 @@ function date_conversion_formatting_multiple_days(date_str) {
     const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
     const r_day = date_part.day.padStart(2, "0");
     const r_year = date_part.year;
+
     return new Date(`${r_year}-${r_month}-${r_day}`);
 }
 
@@ -74,11 +87,10 @@ function determine_event_date_type(date_str) {
     if (!isNaN(Number(first_element))) {
         return date_conversion_formatting_multiple_days(date_str);
     }
+
     return date_conversion_formatting(date_str);
 }
 
-console.log(determine_event_date_type("17 JUN AT 16:00 – 18 JUN AT 02:00 UTC+02"));
-console.log(determine_event_date_type('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02'));
 function get_duration(date_str) {
     // This is illegal, don't look
     const date_str_split = date_str.split(" "); // Splits at ' '
@@ -248,62 +260,8 @@ async function inserting_DB(event_instance) {
     return true;
 }
 
-
 async function main() {
-    const event_instance = new event_data("Org name", "Event type", "Contact info", "link", "Event title", "WEDNESDAY, 19 APRIL 2023 FROM 15:00-16:30 UTC+02", 112, "selmalagerløgsvej 12", "Duration", true, "Description");
-    await inserting_DB(event_instance);
+    console.log(accessEventsPage());
 }
 
-export default {
-    input_validation,
-    date_conversion_formatting,
-    get_duration,
-    time_until_event,
-    format_address,
-    repeated_events,
-    on_campus,
-    time_left_score,
-    strip_and_trim,
-    read_description,
-    event_data
-};
-
-
-// Event {
-//     orgName: 'IDA Event',
-//     orgCategory: undefined,
-//     orgContactInfo: 'Kontaktperson: Nicolaj Boelt Pedersen, e-mail: nicolajp@stud.ida.dk',
-//     eventLink: 'https://www.facebook.com/events/2093782450805582/',
-//     eventTitle: 'IT-DAY Career Fair | Aalborg 2023',
-//     eventDate: 'THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02',
-//     eventHosts: [
-//       'IDA på AAU',
-//       'IDA for studerende',
-//       'AAU Case Competition',
-//       'International House North Denmark',
-//       'IDA på AU',
-//       'ITDAY Aalborg',
-//       'IDA NORD'
-//     ],
-//     eventParticipants: 170,
-//     eventLocation: '57.048455, 9.930240',
-//     eventDuration: undefined, 'Duration: 1 hr 30 min'
-//     isPrivate: false,
-//     eventDescription: "𝗪𝗵𝗮𝘁 𝘆𝗼𝘂 𝗰𝗮𝗻 𝗴𝗲𝘁 𝗼𝘂𝘁 𝗼𝗳 𝗜𝗧-𝗗𝗔𝗬 Experience the technologies that the companies will 
-// bring to the fair Find internships, graduate positions, student jobs, full time jobs and project 
-// collaborations  Talk with IT people who are in the positions you want to be in when you graduate Watch 
-// epic keynotes from industry leading companies Watch hyper presentations - 30 companies have 1-minute to 
-// pitch why you should find them interesting.  Win prizes And moreParticipate to get amazing insight in the 
-// ever changing development of IT, and network until all of your questions has been answered. Spark your 
-// curiosity, see what's out there! Maybe you'll discover something new?____𝗪𝗵𝗮𝘁: IT-DAY IT-Career fair. 
-// Throughout the day you can visit the booths of 50+ companies, watch a hyper presentation, watch 2 keynotes 
-// and win epic prizes.𝗪𝗵𝗲𝗻: 20th of April 2023 10:00-15:00𝗪𝗵𝗲𝗿𝗲: Create, Rendsburggade 14, 9000 Aalborg𝗪𝗵𝗼: 
-// For everyone who want's to work in IT/Tech. For IT-Students and IT-Graduates of AAU, UCN, AU, Tech College, 
-// EAAA, VIA - and any other IT-interested parties. 𝗣𝗿𝗶𝗰𝗲: FREE𝗚𝗿𝗮𝗯 𝘆𝗼𝘂𝗿 𝘁𝗶𝗰𝗸𝗲𝘁 
-//     eventTickets: 'www.itday.dk/aalborg-sign-up',
-//     eventImage: 'https://scontent-arn2-1.xx.fbcdn.net/v/t39.30808-6/311446577_1065590244252975_4407622500126317342_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=340051&_nc_ohc=CU3dnWvkH3kAX_2xe7j&_nc_ht=scontent-arn2-1.xx&oh=00_AfD9_-a6S_zmIPKJmCp6tRnsG-puc5sBg_keVrRfjLG4-g&oe=6442BBE1'
-//   }
-  
-// ROADMAP
-
-// Duration
+main()
