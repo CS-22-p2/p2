@@ -49,6 +49,7 @@ function date_conversion_formatting(date_str) {
 console.log(date_conversion_formatting('THURSDAY, 20 APRIL 2023 FROM 10:00-15:00 UTC+02'));
 
 function get_duration(date_str) {
+    // This is illegal, don't look
     const date_str_split = date_str.split(" ");
     const duration_str = date_str_split[5];
     const start = parseInt(duration_str.split('-')[0].replace(':', ''));
