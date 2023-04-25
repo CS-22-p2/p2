@@ -1,12 +1,14 @@
 // Imports
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
 
 // Exports
 export { insertEntry, getEntry, establishConnection }
 
+dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
-    const uri = "mongodb://p2Access:cs23sw202@bmpnj.duckdns.org/p2?retryWrites=true&w=majority";
+    const uri = process.env.database_url;
     const client = new MongoClient(uri);
 
     try {

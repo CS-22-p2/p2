@@ -4,9 +4,12 @@ import http from 'http';
 import fs  from 'fs';
 import url from 'url';
 import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const hostname = '127.0.0.1';
-const port = 3000;
+
+const hostname = process.env.hostname;
+const port = process.env.port;
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const publicDirectoryPath = path.join(__dirname, 'public');
 
