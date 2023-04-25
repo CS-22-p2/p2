@@ -6,10 +6,10 @@ function changePage(name) {
 
     switch (name) {
         case "login":
-            url = "/loginPage.html"
+            url = "./html/loginPage.html"
             break;
         case "signUp":
-            url = "/signUpPage.html"
+            url = "./html/signUpPage.html"
             break;
         default:
             break;
