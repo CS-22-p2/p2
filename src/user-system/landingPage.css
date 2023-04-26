@@ -1,6 +1,5 @@
 #logo_header{
     border-radius: 5px;
-    height: 200px;
     color: #2C5E80;
     border: 3px solid #000000;
 }
@@ -18,13 +17,14 @@ body{
 
 .event-container{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr 2fr 1fr 1fr;
     justify-content: center;
     grid-template-areas: 
-    "header header"
-    "image image"
-    "image image";
+    "header header header header"
+    "image image image organisation"
+    "image image image organisation"
+    "link link favorite date";
     height: 400px;
     width: 600px;
     margin: 20px auto;
@@ -35,14 +35,38 @@ body{
     background-color:white;
 }
 
+.event-image{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
 .event-item{
     border: 3px solid black;
     border-radius: 15px;
     text-align: center;
 }
 
-.event-item-1{
-    border: 3px solid black;
-    border-radius: 15px;
-    text-align: center;
+.event-item-title{
+    grid-area: header;
+}
+
+.event-item-image{
+    grid-area: image;
+}
+
+.event-item-favorite{
+    grid-area: favorite;
+}
+
+.event-item-link{
+    grid-area: link;
+}
+
+.event-item-organisation{
+    grid-area: organisation;
+}
+
+.event-item-date{
+    grid-area: date;
 }
