@@ -1,8 +1,8 @@
-// Import
+// Import ES6 modules
 import { getEntry, insertEntry, checkDuplicate} from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
-// Export
+// Export ES6 modules
 export default {
     input_validation,
     date_conversion_formatting,
@@ -39,7 +39,8 @@ function input_validation(input, expected) {
         }
     }
 
-    return true; // Correct input
+    // Correct input
+    return true; 
 }
 
 // Gets date from these 3 possible combinations of input
@@ -52,6 +53,13 @@ function date_conversion_formatting(date_str) {
     }
 
     // Different ways the date string can be formatted
+    // - ^: Matches the start of a string
+    // - .*?: Matches any character, "?" means optionally
+    // - \d: Matches a digit (0-9)
+    // - \w: Matches any word character (alphanumeric and underscore)
+    // - {}, (): Quantifiers, i.e {1,2} = one or two digits, {4} precise 4 digits
+    // - +: Matches next letter one or more time
+    // - A-Z: Matches uppercase letter
     const formats = [
         { regex: /^(.*?), (.*?)( \d+)?, (\d{4}).*?$/, format: 'MMMM D, YYYY' },
         { regex: /^(.*?), (.*?)( \d+)?, (\d{4}) AT (\d+):(\d+) (AM|PM).*?$/, format: 'MMMM D, YYYY h:mm A' },
@@ -61,12 +69,16 @@ function date_conversion_formatting(date_str) {
     ];
     
     for (let i = 0; i < formats.length; i++) {
+        // Tries to match with the regex's
         const match = date_str.match(formats[i].regex);
+        // If found
         if (match) {
-            const format = formats[i].format;
+            // Format the match
             const dateStringFormatted = match.slice(1).join(' ').replace('AT', '').trim();
             let date = new Date(dateStringFormatted);
+            // Plus one day. Apperantly JS counts from 0 in this case (so 1. Apri 2023) == (2023-04-00)
             date.setDate(date.getDate() + 1);
+            // Checks if valid date. JS returns NaN (not a number) if date.getTime() isn't valid
             const isValid = !isNaN(date.getTime());
             if (isValid) {
                 return date;
@@ -79,23 +91,28 @@ function date_conversion_formatting(date_str) {
 
 // Gets duration from string
 // String example:
-// 'Duration: 1 hr 30 min'
+// 'Duration: 1 hr 30 min' or
 // 'Duration: 1 hr'
 function get_duration(event_duration) {
     console.log(event_duration);
     if (!input_validation(event_duration, "str")) {
         return null;
     }
-
-    const regex = /^Duration:\s*(\d+)\s*(hr)(?:\s*(\d+)\s*(min))?$/i;
+    // - i = flag for case sensitive. Lower and uppercase is the same
+    // - (?:\s*(\d+)\s*(min))? = optional
+    // - \s* = one or more spaces
+    // - $ = end of string
+    const regex = /^Duration:\s*(\d+)\s*(hr)(?:\s*(\d+)\s*(min))?$/i; // Good luck.
     // Gets the expression from event duration, [1] is hour and [3] is minutes (may not be present)
     const result_expression = event_duration.match(regex);
     let hours = result_expression[1];
     let minutes = 0;
-    if (result_expression[3] !== undefined) {
+    // Checks if there is minutes
+    if (!isNaN(result_expression[3])) {
         minutes = result_expression[3];
+        return `${hours} hour(s) and ${minutes} minute(s)`;
     }
-    return `${hours} hour(s) and ${minutes} minute(s)`;
+    return `${hours} hour(s)`;
 }
 
 // When event is happening relative to current time
@@ -112,6 +129,7 @@ function time_until_event(date) {
 
 // Formats string
 function format_address(address) {
+    // - g = All occurences
     return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase(); 
 }
 
@@ -121,7 +139,7 @@ function on_campus(location) {
         return false;
     }
 
-    // Example adressess
+    // Example adressess, expandable
     const campus_addresses = ["selmalagerløfsvej", 
                             "bertil ohtils vej", 
                             "frederik bajers vej"];
@@ -156,6 +174,7 @@ function time_left_score(time_left) {
 }
 
 function strip_and_trim(string) {
+    // - ^ = negation
     return (string.replace(/[^a-zA-Z]/g, '')).toLowerCase();
 }
 
@@ -163,7 +182,7 @@ function read_description(description) {
     if (!input_validation(description, "str")) {
         return null;
     }
-
+    // Array with the description
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
@@ -188,6 +207,7 @@ function read_description(description) {
         }
     }
 
+    // Checks if the keywords in categories array is present in the description
     for (const category in categories) {
         let keywords = categories[category];
         for (const keyword of keywords) {
@@ -289,5 +309,3 @@ async function main() {
 
     return true;
 }
-
-main();
