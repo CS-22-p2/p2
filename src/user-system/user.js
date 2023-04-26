@@ -2,17 +2,17 @@
 import { establishConnection, insertEntry } from "../database/databaseHandler.js";
 
 // Exports
-export {user};
+export {user, getId};
 
 class user {
-    constructor (firstName, lastName, eMail, userPass, campus) {
+    constructor (firstName, lastName, email, userPass, campus, id) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.eMail = eMail;
+        this.email = email;
         this.userPass = userPass;
         this.campus = campus;
         this.favorittes = [];
-        this.userId = getId();
+        this.userId = id;
     }
 }
 
@@ -34,10 +34,10 @@ async function getId() {
     }
 }
 
-async function main() {
+/* async function main() {
     const result = await getId();
 
     console.log(result);
 }
 
-main();
+main(); */
