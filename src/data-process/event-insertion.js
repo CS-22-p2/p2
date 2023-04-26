@@ -6,10 +6,8 @@ import { accessEventsPage } from '../InformationGathering/url_processor.js';
 export default {
     input_validation,
     date_conversion_formatting,
-    get_duration,
     time_until_event,
     format_address,
-    repeated_events,
     on_campus,
     time_left_score,
     strip_and_trim,
@@ -35,82 +33,78 @@ function input_validation(input, expected) {
         if (typeof input !== "boolean") {
             return false;
         }
+    } if (expected === "obj") {
+        if (typeof input !== 'object' || input === null) {
+            return false;
+        }
     }
 
     return true; // Correct input
 }
 
-// Converts eventdate into useable data
+// Gets date from these 3 possible combinations of input
+// 'TUESDAY, MAY 2, 2023 AT 5:30 PM – 7:00 PM UTC+02',
+// 'WEDNESDAY, APRIL 26, 2023 AT 6:30 PM UTC+02',
+// 'JUN 17 AT 4:00 PM – JUN 18 AT 2:00 AM UTC+02',
 function date_conversion_formatting(date_str) {
-    const date_str_split = date_str.split(" ");
-    const date_part = {
-        day: date_str_split[1],
-        month: date_str_split[2],
-        year: date_str_split[3]
-    };
-    // The months abbreviated and full. Works like a dict
-    const the_months = {
-        JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-        JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12,
-        JANUARY: 1, FEBRUARY: 2, MARCH: 3, APRIL: 4, MAY: 5, JUNE: 6,
-        JULY: 7, AUGUST: 8, SEPTEMBER: 9, OCTOBER: 10, NOVEMBER: 11, DECEMBER: 12
-    };
-    const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
-    const r_day = date_part.day.padStart(2, "0");
-    const r_year = date_part.year;
-
-    return new Date(`${r_year}-${r_month}-${r_day}`);
-}
-
-function date_conversion_formatting_multiple_days(date_str) {
-    const date_str_split = date_str.split(" ");
-    const date_part = {
-        day: date_str_split[0],
-        month: date_str_split[1],
-        year: 2023
-    };
-    const the_months = {
-        JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
-        JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12,
-        JANUARY: 1, FEBRUARY: 2, MARCH: 3, APRIL: 4, MAY: 5, JUNE: 6,
-        JULY: 7, AUGUST: 8, SEPTEMBER: 9, OCTOBER: 10, NOVEMBER: 11, DECEMBER: 12
-    };
-    const r_month = String(the_months[date_part.month.toUpperCase()]).padStart(2, '0');
-    const r_day = date_part.day.padStart(2, "0");
-    const r_year = date_part.year;
-
-    return new Date(`${r_year}-${r_month}-${r_day}`);
-}
-
-function determine_event_date_type(date_str) {
-    let first_element = date_str.split(" ")[0];
-    if (!isNaN(Number(first_element))) {
-        return date_conversion_formatting_multiple_days(date_str);
+    if (!input_validation(date_str, "str")) {
+        return false;
     }
 
-    return date_conversion_formatting(date_str);
+    // Different ways the date string can be formatted
+    const formats = [
+        { regex: /^(.*?), (.*?)( \d+)?, (\d{4}).*?$/, format: 'MMMM D, YYYY' },
+        { regex: /^(.*?), (.*?)( \d+)?, (\d{4}) AT (\d+):(\d+) (AM|PM).*?$/, format: 'MMMM D, YYYY h:mm A' },
+        { regex: /^(.*?), (\w{3}) (\d+).*?$/, format: 'MMM D, YYYY' },
+        { regex: /^(\w{3}) (\d+) AT (\d+):(\d+).*?$/, format: 'MMM D, YYYY h:mm A' },
+        { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' }
+    ];
+    
+    for (let i = 0; i < formats.length; i++) {
+        const match = date_str.match(formats[i].regex);
+        if (match) {
+            const format = formats[i].format;
+            const dateStringFormatted = match.slice(1).join(' ').replace('AT', '').trim();
+            let date = new Date(dateStringFormatted);
+            date.setDate(date.getDate() + 1);
+            const isValid = !isNaN(date.getTime());
+            if (isValid) {
+                return date;
+            }   
+        }
+    }
+    // No matching date format
+    return null;
 }
 
-function get_duration(date_str) {
-    let first_element = date_str.split(" ")[0];
-    if (!isNaN(Number(first_element)) || first_element === undefined) {
-        return "";
+// Gets duration from string
+// String example:
+// 'Duration: 1 hr 30 min'
+// 'Duration: 1 hr'
+function get_duration(event_duration) {
+    console.log(event_duration);
+    if (!input_validation(event_duration, "str")) {
+        return null;
     }
-    // This is illegal, don't look
-    const date_str_split = date_str.split(" "); // Splits at ' '
-    const duration_str = date_str_split[5]; // Element that contains 10:00-15:00
-    const start = parseInt(duration_str.split('-')[0].replace(':', '')); // splits at -, and remove :, so 10:00 becomes 1000
-    const end = parseInt(duration_str.split('-')[1].replace(':', ''));
-    const difference = end - start;
-    const hours = Math.floor(difference / 100); 
-    const minutes = difference - (hours * 100);
-    return `${hours} hour(s) and ${minutes} minutes`; // Returns string, only for visual
+
+    const regex = /^Duration:\s*(\d+)\s*(hr)(?:\s*(\d+)\s*(min))?$/i;
+    // Gets the expression from event duration, [1] is hour and [3] is minutes (may not be present)
+    const result_expression = event_duration.match(regex);
+    let hours = result_expression[1];
+    let minutes = 0;
+    if (result_expression[3] !== undefined) {
+        minutes = result_expression[3];
+    }
+    return `${hours} hour(s) and ${minutes} minute(s)`;
 }
 
 // When event is happening relative to current time
 function time_until_event(date) {
-    const current_date = new Date();
+    if (!input_validation(date, "obj")) {
+        return null;
+    }
 
+    const current_date = new Date();
     // getTime - gets time in milliseconds from your pc
     const difference_milliseconds = date.getTime() - current_date.getTime();
     return Math.ceil(difference_milliseconds / (1000 * 3600 * 24));
@@ -118,24 +112,13 @@ function time_until_event(date) {
 
 // Formats string
 function format_address(address) {
-    // Input validation
-    if (!input_validation(address, "str")) {
-        throw new Error("Wrong input");
-    }
-
-    return ((address.replace(/\d+/g, '')).trim()).toLowerCase(); // Regex
-}
-
-// Determine if event are repeated
-function repeated_events() {
-    // Check DB if there's prior events, with matching 
+    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase(); 
 }
 
 // Determine if event are on campus
 function on_campus(location) {
-    // Input validation
     if (!input_validation(location, "str")) {
-        throw new Error("Wrong input");
+        return false;
     }
 
     // Example adressess
@@ -152,8 +135,8 @@ function on_campus(location) {
 
 function time_left_score(time_left) {
     // Input validation
-    if (!input_validation(time_left, "int")) {
-        throw new Error("Wrong input");
+    if (!input_validation(time_left, "obj")) {
+        return null;
     }
 
     // Old event, already happened. Edge case
@@ -177,6 +160,10 @@ function strip_and_trim(string) {
 }
 
 function read_description(description) {
+    if (!input_validation(description, "str")) {
+        return null;
+    }
+
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
@@ -224,31 +211,31 @@ class event_data {
         this.eventLink = eventLink;
         this.eventTitle = eventTitle;
         this.eventHost = eventHosts;
-        this.date = determine_event_date_type(eventDate);
+        this.date = date_conversion_formatting(eventDate);
         this.participants = eventParticipants;
         this.location = eventLocation;
-        this.duration = get_duration(eventDate);
+        this.duration = get_duration(eventDuration);
         this.isPrivate = isPrivate;
         this.description = eventDescription;
         this.time_left = time_until_event(this.date);
-        this.relevancy_score = this.final_score();
         this.categories = read_description(this.description);
         this.tickets = eventTickets;
         this.image = eventImage;
+        this.relevancy_score = this.final_score();
     }
 
     final_score() {
         // Basic score, maybe change later
-        let a = 0;
-        let b = 0;
-        if (on_campus(this.location)) {
-            a = high_score;
-        }
-        return (a + b + time_left_score(this.time_left) + this.participants);
-    }
+        let basic_score = 0;
 
-    debug() {
-        
+        if (on_campus(this.location)) {
+            basic_score += high_score * 5;
+        }
+        if (!input_validation(time_left_score(this.time_left), "int")) {
+            basic_score += time_left_score(this.time_left);
+        }
+        basic_score += this.participants;
+        return basic_score;
     }
 }
 
@@ -263,8 +250,9 @@ async function inserting_DB(event_class) {
 async function main() {
     let event_arr = await accessEventsPage();
     let event_arr_size = event_arr.length;
-    console.log(`Array size: ${event_arr_size}`);
-    console.log(`Array: ${event_arr}`);
+    // Debug
+    // console.log(`Array size: ${event_arr_size}`);
+    // console.log(event_arr);
 
     // guard clause
     if (event_arr_size <= 0) {
@@ -288,13 +276,18 @@ async function main() {
             event_arr[i].eventTickets,
             event_arr[i].eventImage
         )
-        let a = await inserting_DB(event_temp);
-        if (a === false) {
-            console.log("Event failed to insert");
-        }
+        console.log(event_temp);
+        // let a = await inserting_DB(event_temp);
+        // if (a === false) {
+        //     console.log("Event failed to insert");
+        // }
+        // else {
+        //     console.log("Event inserted");
+        //     console.log(event_temp);
+        // }
     }
 
     return true;
 }
 
-main()
+main();
