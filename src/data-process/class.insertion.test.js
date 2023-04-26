@@ -1,4 +1,4 @@
-import { input_validation, date_conversion_formatting, get_duration, time_until_event, format_address, repeated_events, on_campus, time_left_score, strip_and_trim, read_description } from './event-insertion';
+import { input_validation, date_conversion_formatting, get_duration, time_until_event, format_address, repeated_events, on_campus, time_left_score, strip_and_trim, read_description } from './class-insertion';
 
 describe("input_validation function", () => {
   test("return true", () => {
