@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@types/node": "^18.15.11",
     "@types/mongodb": "^4.0.7",
+    "@types/node": "^18.15.11",
     "mongodb": "^5.1.0",
-    "puppeteer": "^19.8.5"
+    "puppeteer": "^19.10.1"
   },
   "name": "p2",
   "version": "1.0.0",
@@ -24,11 +24,6 @@
     "url": "https://github.com/CS-22-p2/p2/issues"
   },
   "homepage": "https://github.com/CS-22-p2/p2#readme",
-  "dependencies": {
-    "@types/mongodb": "^4.0.7",
-    "@types/node": "^18.15.11",
-    "mongodb": "^5.1.0"
-  },
   "devDependencies": {
     "jest": "^29.5.0"
   }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>landingpage</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="landingPage.css">
+    </head>
+    
+    <body style="background-color: black; background-size: cover;">
+
+        <script src="landingPage.js">
+            const wrap = document.body.createElement("div");
+            wrap.id = "wrapperEvent";
+
+            const wrapper = document.createElement("div");
+            wrapper.id = "wrapperEventLeft";
+
+            const imageWrapper = document.createElement("div");
+            imageWrapper.id = "ImageLeft";
+
+            const textWrapper = document.createElement("div");
+            textWrapper.id = "TextBoxLeft";
+
+            const descriptionWrapper = document.createElement("div");
+            descriptionWrapper.id = "DescriptionBoxLeft";
+
+            document.body.appendChild(wrap);
+            wrap.appendChild(wrapper);
+            wrapper.appendChild(imageWrapper);
+            wrapper.appendChild(textWrapper);
+            wrapper.appendChild(descriptionWrapper);
+
+            wrap.style.color = "red";
+            wrap.style.border = "1px solid blue";
+
+        </script> 
+</body>
+</html>
