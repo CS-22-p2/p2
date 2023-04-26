@@ -34,10 +34,10 @@ async function getId() {
     }
 }
 
-async function main() {
+/* async function main() {
     const result = await getId();
 
     console.log(result);
 }
 
-main();
+main(); */
