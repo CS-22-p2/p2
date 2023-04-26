@@ -565,9 +565,11 @@ let EventTemplate = [
     }
   ]
 
+
 function createEvent(eventObject)
 {
-    document.createElement("div")
+    let container = document.createElement("div")
+    
 }
 
 

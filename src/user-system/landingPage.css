@@ -1,11 +1,30 @@
+body{
+    background-color: #DDDDDD;
+}
+
+ul{
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+    list-style-type: none;
+}
+
+button{
+    border: none;
+    cursor: pointer;
+    appearance: none;
+    background-color: inherit;
+    transition: transform 0.7s ease-in-out;
+}
+
+button:active{
+    transform: rotate(360deg);
+}
+
 #logo_header{
     border-radius: 5px;
     color: #2C5E80;
     border: 3px solid #000000;
-}
-
-body{
-    background-color: #DDDDDD;
 }
 
 .title{
@@ -29,10 +48,14 @@ body{
     width: 600px;
     margin: 20px auto;
     margin-top:20px;
-    border-radius: 15px;
     border: 3px solid black;
     box-shadow: 1px 2px 10px 0px rgba(0,0,0,0.3);
     background-color:white;
+}
+
+.favorite-image{
+    width: 50%;
+    height: 50%;
 }
 
 .event-image{
@@ -43,7 +66,6 @@ body{
 
 .event-item{
     border: 3px solid black;
-    border-radius: 15px;
     text-align: center;
 }
 
