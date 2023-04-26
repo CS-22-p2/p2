@@ -104,6 +104,7 @@ async function serchAllFields(searchTerm) {
     }
 }
 
+// This function only works for the "events" collection
 async function checkDuplicate(eventLink, collection) {
     let client;
 
