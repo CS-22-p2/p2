@@ -7,7 +7,7 @@ const {
   on_campus,
   time_left_score,
   event_data
-} = require('./event-insertion');
+} = require('./event-insertion').default;
 
 describe("input_validation function", () => {
   test("return true", () => {
