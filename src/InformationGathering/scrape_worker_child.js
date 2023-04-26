@@ -8,7 +8,7 @@ import { DeleteFirstPage } from "./org_crawler.js";
 
 // Create a new browser
 const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     defaultViewport: null,
     args: ['--lang=en-GB,en']
 });

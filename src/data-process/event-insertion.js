@@ -1,5 +1,5 @@
 // Import
-import { getEntry, insertEntry } from '../database/databaseHandler.js';
+import { getEntry, insertEntry, checkDuplicate} from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
 // Export
@@ -93,7 +93,7 @@ function determine_event_date_type(date_str) {
 
 function get_duration(date_str) {
     let first_element = date_str.split(" ")[0];
-    if (!isNaN(Number(first_element))) {
+    if (!isNaN(Number(first_element)) || first_element === undefined) {
         return "";
     }
     // This is illegal, don't look
@@ -246,29 +246,30 @@ class event_data {
         }
         return (a + b + time_left_score(this.time_left) + this.participants);
     }
-}
 
-// Look if event already in DB. 
-async function check_duplicate_event(event_instance) {
-    const query = { link: event_instance.link };
-
-    const result = await getEntry(query, "events");
-    return result; // getEntry returns true if found, else false
+    debug() {
+        
+    }
 }
 
 async function inserting_DB(event_class) {
-    // If it's duplicate, returns false. Do nothing
-    if (!check_duplicate_event(event_class)) {
+    if (await checkDuplicate(event_class.eventLink, "events")) {
         return false;
     }
-    
-    let temp = await insertEntry(event_instance, "events");
+    await insertEntry(event_class, "events");
     return true;
 }
 
 async function main() {
     let event_arr = await accessEventsPage();
     let event_arr_size = event_arr.length;
+    console.log(`Array size: ${event_arr_size}`);
+    console.log(`Array: ${event_arr}`);
+
+    // guard clause
+    if (event_arr_size <= 0) {
+        return false;
+    }
 
     for (let i = 0; i < event_arr_size; i++) {
         const event_temp = new event_data(
@@ -287,11 +288,13 @@ async function main() {
             event_arr[i].eventTickets,
             event_arr[i].eventImage
         )
-        let a = inserting_DB(event_temp);
+        let a = await inserting_DB(event_temp);
         if (a === false) {
             console.log("Event failed to insert");
         }
     }
+
+    return true;
 }
 
 main()
