@@ -1,5 +1,5 @@
 // Import ES6 modules
-import { getEntry, insertEntry, checkDuplicateLink, checkDuplicateData } from '../database/databaseHandler.js';
+import { insertEntry, checkDuplicateLink, update_existing_event, getAllEvents } from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
 // Export ES6 modules
@@ -40,7 +40,7 @@ function input_validation(input, expected) {
     }
 
     // Correct input
-    return true; 
+    return true;
 }
 
 // Gets date from these 3 possible combinations of input
@@ -67,7 +67,7 @@ function date_conversion_formatting(date_str) {
         { regex: /^(\w{3}) (\d+) AT (\d+):(\d+).*?$/, format: 'MMM D, YYYY h:mm A' },
         { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' }
     ];
-    
+
     for (let i = 0; i < formats.length; i++) {
         // Tries to match with the regex's
         const match = date_str.match(formats[i].regex);
@@ -82,7 +82,7 @@ function date_conversion_formatting(date_str) {
             const isValid = !isNaN(date.getTime());
             if (isValid) {
                 return date;
-            }   
+            }
         }
     }
     // No matching date format
@@ -130,7 +130,7 @@ function time_until_event(date) {
 // Formats string
 function format_address(address) {
     // - g = All occurences
-    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase(); 
+    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase();
 }
 
 // Determine if event are on campus
@@ -140,9 +140,9 @@ function on_campus(location) {
     }
 
     // Example adressess, expandable
-    const campus_addresses = ["selmalagerløfsvej", 
-                            "bertil ohtils vej", 
-                            "frederik bajers vej"];
+    const campus_addresses = ["selmalagerløfsvej",
+        "bertil ohtils vej",
+        "frederik bajers vej"];
 
     // check if this.location is in campus_addresses
     if (campus_addresses.includes(format_address(location))) {
@@ -186,14 +186,14 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'alcohol-free': ['nonalcoholic', 'sober', 'drugfree',"spirtis","bars","booze","party"
-                        ,"alkoholfri","ædru","stoffri","spiritus","barer","alkohol","fest" ],
-        'business': ['career', 'networking', 'professional', 'entrepreneurship',"management", "jobs", "job",
-                    ,"karriere","netværk","professionel","iværksætteri","ledelse"],
-        'sport':    ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
-                    ,"tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
+        'alcohol-free': ['nonalcoholic', 'sober', 'drugfree', "spirtis", "bars", "booze", "party"
+            , "alkoholfri", "ædru", "stoffri", "spiritus", "barer", "alkohol", "fest"],
+        'business': ['career', 'networking', 'professional', 'entrepreneurship', "management", "jobs", "job",
+            , "karriere", "netværk", "professionel", "iværksætteri", "ledelse"],
+        'sport': ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
+            , "tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
     };
-    
+
     // strips and trims array
     for (let i = 0; i < tokens.length; i++) {
         tokens[i] = strip_and_trim(tokens[i]);
@@ -220,10 +220,10 @@ function read_description(description) {
 }
 
 class event_data {
-    constructor(orgName, orgCategory, orgContactInfo, 
-        eventLink, eventTitle, eventDate, 
-        eventHosts, eventParticipants, eventLocation, 
-        eventDuration, isPrivate, eventDescription, 
+    constructor(orgName, orgCategory, orgContactInfo,
+        eventLink, eventTitle, eventDate,
+        eventHosts, eventParticipants, eventLocation,
+        eventDuration, isPrivate, eventDescription,
         eventTickets, eventImage) {
         this.orgName = orgName;
         this.orgCategory = orgCategory;
@@ -260,30 +260,42 @@ class event_data {
 }
 
 async function inserting_DB(event_class) {
-    if (await checkDuplicateLink(event_class.eventLink, "events")) {
-        const changes = await checkDuplicateData(event_class, "events"); // checkDuplicateData returns true if some data have been changed
-        if (changes === false) {
-            return false
+    try {
+        // checks for duplicate
+        const duplicate = await checkDuplicateLink(event_class.eventLink, "events");
+        if (duplicate) {
+            // Updates existing entry
+            const changes = await update_existing_event(event_class, "events");
+            if (changes) {
+                return true;
+            }
+            // Something went wrong
+            throw new Error("Couldn't update event");
         }
-        return true;
+        // If not duplicate, insert entry
+        const result = await insertEntry(event_class, "events");
+        if (!result) {
+            throw new Error("Couldn't insert event");
+        }
+        return result;
+    } catch (error) {
+        console.error(error);
     }
-    const results = await insertEntry(event_class, "events");
-    return results;
 }
 
 async function main() {
-    let event_arr = await accessEventsPage();
-    let event_arr_size = event_arr.length;
-    // DEBUG
-    // console.log(`Array size: ${event_arr_size}`);
-    // console.log(event_arr);
-
-    // guard clause
-    if (event_arr_size <= 0) {
+    let event_arr;
+    try {
+        event_arr = await accessEventsPage();
+        if (event_arr.length <= 0) {
+            throw new Error("Couldn't get array from webcrawler");
+        }
+    } catch (error) {
+        console.error(error);
         return false;
     }
 
-    for (let i = 0; i < event_arr_size; i++) {
+    for (let i = 0; i < event_arr.length; i++) {
         const event_temp = new event_data(
             event_arr[i].orgName,
             event_arr[i].orgCategory,
@@ -300,17 +312,7 @@ async function main() {
             event_arr[i].eventTickets,
             event_arr[i].eventImage
         );
-
-        try {
-            let insert_results = await inserting_DB(event_temp);
-            if (insert_results === false) {
-                throw new Error("Failed to insert event");
-            }
-            console.log("Event inserted");
-            console.log(event_temp);
-        } catch (error) {
-            continue;
-        }
+        await inserting_DB(event_temp);
     }
     return true;
 }

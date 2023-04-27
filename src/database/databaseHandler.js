@@ -3,7 +3,14 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
 // Exports
-export { insertEntry, getEntry, checkDuplicateLink as checkDuplicate, establishConnection }
+export {
+    insertEntry,
+    getEntry,
+    update_existing_event,
+    establishConnection,
+    checkDuplicateLink,
+    getAllEvents
+};
 
 dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions
@@ -14,8 +21,8 @@ async function establishConnection() {
     try {
         await client.connect();
         console.log("We in!");
-
         return client;
+
     } catch (error) {
         console.error(error);
     }
@@ -108,6 +115,23 @@ async function serchAllFields(searchTerm) {
     }
 }
 
+async function getAllEvents(collection) {
+    let client;
+
+    try {
+        client = await establishConnection();
+        const all_events = client.db("p2").collection(collection).find();
+        if (all_events.length <= 0) {
+            throw new Error("Database empty");
+        }
+        return all_events;
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
+}
+
 // This function only works for the "events" collection
 async function checkDuplicateLink(eventLink, collection) {
     let client;
@@ -115,10 +139,9 @@ async function checkDuplicateLink(eventLink, collection) {
     try {
         client = await establishConnection();
 
-        const result = client.db("p2").collection(collection).findOne({ eventLink: { $regex: eventLink, $options: "i" } });
+        const result = client.db("p2").collection(collection).findOne({ eventLink: { $regex: eventLink } });
 
         if (result) {
-           const update = client.db("p2").collection(collection).update
             return true;
         }
         return false;
@@ -130,15 +153,15 @@ async function checkDuplicateLink(eventLink, collection) {
     }
 }
 
-async function checkDuplicateData(eventClass, collection) {
+async function update_existing_event(eventClass, collection) {
     let client;
 
     try {
         client = await establishConnection();
-        const results = await collection.findOne({ link: { $regex: eventClass.eventLink, $options: "i"}});
+        const results = await collection.findOne({ link: { $regex: eventClass.eventLink } });
         if (results) {
             client.db("p2").collection(collection).updateOne(
-                {_id: results._id},
+                { _id: results._id },
                 {
                     "eventTitle": eventClass.eventTitle,
                     "date": eventClass.date,
