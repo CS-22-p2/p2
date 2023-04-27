@@ -2,7 +2,7 @@
 import { MongoClient } from 'mongodb';
 
 // Exports
-export { insertEntry, getEntry, getNewestEntries }
+export { insertEntry, getEntry, getNewestEntries, establishConnection }
 
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
