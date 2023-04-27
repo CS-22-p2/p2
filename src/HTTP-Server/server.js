@@ -8,8 +8,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-const hostname = process.env.hostname;
-const port = process.env.port;
+const hostname = process.env.HOSTNAME;
+const port = process.env.PORT;
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const publicDirectoryPath = path.join(__dirname, 'public');
 
