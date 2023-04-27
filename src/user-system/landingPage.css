@@ -59,11 +59,11 @@ body {
     margin: 20px;
     float: left;
     min-width: 15%;
-  flex-grow: 1;
-  flex-shrink: 3;
-  background-color: #C9DAD0;
-  box-shadow: 5px 8px #a3a3a3;
-  border-radius: 15px;
+    flex-grow: 1;
+    flex-shrink: 3;
+    background-color: #C9DAD0;
+    border-radius: 15px;
+    box-shadow: 5px 10px #9fafa6;
 }
 
 #Image {
@@ -118,7 +118,7 @@ body {
     float: left;
     flex-grow: 1;
     flex: 1;
-    color: black
+    color: black;
     overflow: auto;
     font-style: normal;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
