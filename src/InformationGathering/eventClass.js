@@ -1,3 +1,5 @@
+//This is the event class the entirety of the implemented program makes use of
+
 export class Event {
   constructor(orgName, orgCategory, orgContactInfo, 
               eventLink, eventTitle, eventDate, 

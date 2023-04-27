@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
 // Exports
-export { insertEntry, getEntry, establishConnection }
+export { insertEntry, getEntry }
 
 dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions
@@ -106,11 +106,26 @@ async function serchAllFields(searchTerm) {
     }
 }
 
-// TODO: Figure out how to make querrys easy
-function createQuery(req) {
-    let query = {};
-    let andConditions = {};
+// This function only works for the "events" collection
+async function checkDuplicate(eventLink, collection) {
+    let client;
 
+    try {
+        client = await establishConnection();
+        
+        const result = client.db("p2").collection(collection).findOne({link: {$regex: eventLink, $options: "i"}});
+
+        if (result) {
+            console.log("Duplicate");
+            return true;
+        } 
+        return false;
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
 }
 
 /* async function main() {

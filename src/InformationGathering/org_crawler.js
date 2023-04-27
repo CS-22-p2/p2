@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-export { scrapeOrgData, scrape};
+export { scrapeOrgData, scrape, DeleteFirstPage };
 
 // Class representing data extracted from an organisation website
 class OrgData {
@@ -35,6 +35,17 @@ class OrgScrape {
 function ClassToSearchableString(cls)
 {
   return cls.replace(" ", ".")
+}
+
+// It is very inconsistent to wait for the browser to initialize and use the inital page created. Instead, create a new page
+// and call this after to delete the first page so resources aren't wasted on multiple pages
+async function DeleteFirstPage(browser)
+{
+
+  const pages = await browser.pages()
+  const page = pages.shift()
+  
+  if (page != null) await page.close()
 }
 
 async function ExtractProperty(handler, property)
@@ -127,6 +138,7 @@ const scrapeOrgData = async (scrape) => {
 
   // Open a new page
   const page = await browser.newPage();
+  DeleteFirstPage(browser)
 
   // On this new page:
   // - open the "http://quotes.toscrape.com/" website
