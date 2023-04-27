@@ -83,7 +83,7 @@
     float: left;
     flex-grow: 1;
     color: white;
-    overflow: hidden;
+    overflow: auto;
 }
 
 div p {
