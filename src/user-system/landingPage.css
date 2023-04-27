@@ -1,8 +1,14 @@
+body{
+    background-color: #F2FAE1; 
+    background-size: cover;
+}
+
 #logoBox{
     color: black;
     text-align: center;
     width: 100%;
     display: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 #FlexBoxWrapper {
@@ -29,9 +35,11 @@
     margin: 20px;
     float: left;
     min-width: 15%;
-  flex-grow: 1;
-  flex-shrink: 3;
-  background-color: whitesmoke;
+    flex-grow: 1;
+    flex-shrink: 3;
+    background-color: #C9DAD0;
+    border-radius: 15px;
+    box-shadow: 5px 10px #9fafa6;
 }
 
 #Image {
@@ -83,7 +91,7 @@
     float: left;
     flex-grow: 1;
     flex: 1;
-    color: black
+    color: black;
     overflow: auto;
     font-style: normal;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;

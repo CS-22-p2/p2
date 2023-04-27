@@ -603,10 +603,14 @@ function checkExistance(node, idArray){
   for(let id of idArray){
     //Removes all undefined elements in the TextBox
     if(node.querySelector(id).innerText === "undefined"){
-      console.log(node.querySelector(id).parentElement);
       node.querySelector(id).parentElement.remove();
     }
   }
+  //Removes unwanted descriptions
+  if(node.querySelector("#DescriptionBox").innerText === "") 
+    {
+      node.querySelector("#DescriptionBox").remove();
+    }
 }
 
 
