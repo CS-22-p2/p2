@@ -40,8 +40,14 @@ function create_section(title, description, date, participants, link) {
     document.body.appendChild(section);
 }
 
-window.addEventListener('load', function () {
-    for (let i = 0; i < 5; i++){
-        create_section(title = "Hello", "kjasnajsd", "2013 - 12 - 12", 112, "https://www.javatpoint.com/how-to-call-javascript-function-in-html");
-    }
+window.addEventListener('load', function (event_wrapper) {
+    
 })
+
+// Get 10 events from DB
+class display {
+    constructor() {
+
+    }
+
+}
