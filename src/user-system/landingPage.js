@@ -1,14 +1,5 @@
-let parent = document.querySelector('#FlexBoxWrapper');
-let elem = parent.querySelector('.elem');
 
-
-for (let index = 0; index < EventTemplate.length; index++) {
-    let clone = elem.cloneNode(true);
-    parent.appendChild(clone);
-
-}
-
-let EventTemplate = [
+let EventData = [
     {
       orgName: 'Connect INTL (Studentersamfundet)',
       orgCategory: 'Sociale foreninger',
@@ -575,11 +566,42 @@ let EventTemplate = [
     }
   ]
 
+const idArray = ["#EventTitle", "#Location", "#Date",
+                 "#Participants","#Host","#Link",
+                 "#ImageLink","#DescriptionBox"];
+
+let parent = document.querySelector('#FlexBoxWrapper');
+let elem = parent.querySelector('.elem');
+
+eventInitializer(EventData);
+
+function eventInitializer(eventData){
+  for (let event of eventData) 
+  {
+    createEvent(event);
+  }
+}
 
 function createEvent(eventObject)
 {
-    let container = document.createElement("div")
-    
+  let clone = elem.cloneNode(true);
+  clone.querySelector("#EventTitle").innerText = eventObject.eventTitle;
+  clone.querySelector("#Location").innerText = eventObject.eventLocation;
+  clone.querySelector("#Date").innerText = eventObject.eventDate;
+  clone.querySelector("#Participants").innerText = eventObject.eventParticipants;
+  clone.querySelector("#Host").innerText = eventObject.orgName;
+  clone.querySelector("#Link").href = eventObject.eventLink;
+  clone.querySelector("#ImageLink").src = eventObject.eventImage;
+  clone.querySelector("#DescriptionBox").innerText = eventObject.eventDescription;
+  parent.appendChild(clone);
+}
+
+function checkExistance(node, eventObject, idArray){
+  for(let id of idArray){
+    if(clone.querySelector(id) == null){
+      clone.querySelector(id).remove();
+    }
+  }
 }
 
 
