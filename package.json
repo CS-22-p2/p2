@@ -3,6 +3,7 @@
     "@types/mongodb": "^4.0.7",
     "@types/node": "^18.15.11",
     "ci": "^2.2.0",
+    "cookie-parser": "^1.4.6",
     "cpi": "^0.0.10",
     "dotenv": "^16.0.3",
     "mongodb": "^5.1.0",
