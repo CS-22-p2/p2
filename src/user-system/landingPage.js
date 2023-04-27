@@ -571,9 +571,11 @@ const idArray = ["#EventTitle", "#Location", "#Date",
                  "#ImageLink","#DescriptionBox"];
 
 let parent = document.querySelector('#FlexBoxWrapper');
+let template = document.querySelector("#FlexBox");
 let elem = parent.querySelector('.elem');
 
 eventInitializer(EventData);
+template.remove();
 
 function eventInitializer(eventData){
   for (let event of eventData) 
@@ -593,13 +595,16 @@ function createEvent(eventObject)
   clone.querySelector("#Link").href = eventObject.eventLink;
   clone.querySelector("#ImageLink").src = eventObject.eventImage;
   clone.querySelector("#DescriptionBox").innerText = eventObject.eventDescription;
+  checkExistance(clone,idArray);
   parent.appendChild(clone);
 }
 
-function checkExistance(node, eventObject, idArray){
+function checkExistance(node, idArray){
   for(let id of idArray){
-    if(clone.querySelector(id) == null){
-      clone.querySelector(id).remove();
+    //Removes all undefined elements in the TextBox
+    if(node.querySelector(id).innerText === "undefined"){
+      console.log(node.querySelector(id).parentElement);
+      node.querySelector(id).parentElement.remove();
     }
   }
 }
