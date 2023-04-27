@@ -1,5 +1,5 @@
 // Import ES6 modules
-import { getEntry, insertEntry, checkDuplicate} from '../database/databaseHandler.js';
+import { getEntry, insertEntry, checkDuplicateLink, checkDuplicateData } from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
 // Export ES6 modules
@@ -260,17 +260,21 @@ class event_data {
 }
 
 async function inserting_DB(event_class) {
-    if (await checkDuplicate(event_class.eventLink, "events")) {
-        return false;
+    if (await checkDuplicateLink(event_class.eventLink, "events")) {
+        const changes = await checkDuplicateData(event_class, "events"); // checkDuplicateData returns true if some data have been changed
+        if (changes === false) {
+            return false
+        }
+        return true;
     }
-    await insertEntry(event_class, "events");
-    return true;
+    const results = await insertEntry(event_class, "events");
+    return results;
 }
 
 async function main() {
     let event_arr = await accessEventsPage();
     let event_arr_size = event_arr.length;
-    // Debug
+    // DEBUG
     // console.log(`Array size: ${event_arr_size}`);
     // console.log(event_arr);
 
@@ -295,17 +299,20 @@ async function main() {
             event_arr[i].eventDescription,
             event_arr[i].eventTickets,
             event_arr[i].eventImage
-        )
-        console.log(event_temp);
-        // let a = await inserting_DB(event_temp);
-        // if (a === false) {
-        //     console.log("Event failed to insert");
-        // }
-        // else {
-        //     console.log("Event inserted");
-        //     console.log(event_temp);
-        // }
-    }
+        );
 
+        try {
+            let insert_results = await inserting_DB(event_temp);
+            if (insert_results === false) {
+                throw new Error("Failed to insert event");
+            }
+            console.log("Event inserted");
+            console.log(event_temp);
+        } catch (error) {
+            continue;
+        }
+    }
     return true;
 }
+
+main();
