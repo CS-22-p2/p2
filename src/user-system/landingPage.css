@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 body{
     background-color: #DDDDDD;
 }
@@ -93,7 +93,7 @@ button:active{
 .event-item-date{
     grid-area: date;
 }
-=======
+
 #logoBox{
     color: white;
     text-align: center;
@@ -148,6 +148,7 @@ button:active{
 }
 
 #TextboxLeft {
+    border: 1px solid blue;
     width: 38%;
     margin: 5px;
     height: 98%;
@@ -172,7 +173,7 @@ button:active{
 }
 
 #DescriptionBoxLeft {
-    
+    border: 1px solid green;
     width: 58%;
     margin: 5px;
     height: 42%;
@@ -181,13 +182,3 @@ button:active{
     color: white;
     overflow: hidden;
 }
-
-div p {
-    margin-top: 10px;
-    margin-left: 10px;
-    color: white;
-
-}
-
-
->>>>>>> 98fec89b78efd02fb4ef280b302daf0fa291152d
