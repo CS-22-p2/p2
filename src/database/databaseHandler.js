@@ -149,7 +149,7 @@ async function checkDuplicateLink(eventLink, collection) {
     } catch (error) {
         console.error(error);
     } finally {
-        await client.close();
+        setTimeout(() => {client.close()}, 1);
     }
 }
 
@@ -158,7 +158,7 @@ async function update_existing_event(eventClass, collection) {
 
     try {
         client = await establishConnection();
-        const results = await collection.findOne({ link: { $regex: eventClass.eventLink } });
+        const results = await client.db("p2").collection(collection).findOne({ link: { $regex: eventClass.eventLink } });
         if (results) {
             client.db("p2").collection(collection).updateOne(
                 { _id: results._id },
