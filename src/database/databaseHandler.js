@@ -139,7 +139,7 @@ async function checkDuplicateLink(eventLink, collection) {
     try {
         client = await establishConnection();
 
-        const result = client.db("p2").collection(collection).findOne({ eventLink: { $regex: eventLink } });
+        const result = await client.db("p2").collection(collection).findOne({ eventLink: { $regex: eventLink } });
 
         if (result) {
             return true;
