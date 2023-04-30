@@ -94,7 +94,6 @@ function date_conversion_formatting(date_str) {
 // 'Duration: 1 hr 30 min' or
 // 'Duration: 1 hr'
 function get_duration(event_duration) {
-    console.log(event_duration);
     if (!input_validation(event_duration, "str")) {
         return null;
     }
