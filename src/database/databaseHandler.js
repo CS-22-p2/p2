@@ -1,12 +1,14 @@
 // Imports
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
 
 // Exports
 export { insertEntry, getEntry, getNewestEntries, establishConnection }
 
+dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
-    const uri = "mongodb://p2Access:cs23sw202@bmpnj.duckdns.org/p2?retryWrites=true&w=majority";
+    const uri = process.env.database_url;
     const client = new MongoClient(uri);
 
     try {
@@ -36,6 +38,7 @@ async function insertEntry(newEntry, collection) {
     if (collectionNames.includes(collection)) {
         const result = await client.db("p2").collection(collection).insertOne(newEntry);
         console.log(`New entry created with the following id: ${result.insertedId}`);
+        return true;
     }
     console.log("Nothing happend");
     return false;
@@ -143,7 +146,7 @@ async function serchAllFields(searchTerm) {
     }
 }
 
-// This is purely for testing purpose
+/* This is purely for testing purpose
 async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Anna", "userdb");
@@ -153,4 +156,4 @@ async function main() {
     //console.log(result);
 }
 
-main();
+main(); */
