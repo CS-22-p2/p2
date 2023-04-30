@@ -80,7 +80,9 @@ async function getEntry (query, collection) {
     }
 }
 
-async function getNewestEntries(collection) {
+// When calling for entries for the main page start from 0, and increment when ever button pressed
+
+async function getNewestEntries(collection, skip) {
     let client;
     let result = [];
     try {
@@ -93,7 +95,7 @@ async function getNewestEntries(collection) {
     // If the specified collection is present we serch for the query and return true if present
     // else it returns false
     if (collectionNames.includes(collection)) {
-        let cursor = await client.db("p2").collection(collection).find().sort({_id:1}).limit(10);
+        let cursor = await client.db("p2").collection(collection).find().sort({_id:1}).limit(10).skip(skip);
 
         await cursor.forEach(doc => result.push(doc));
 
@@ -119,9 +121,17 @@ async function serchAllFields(searchTerm) {
         client = await establishConnection();
         
         // This function call returns a cursor containing the searched entrys 
-        let cursor =  client.db("p2").collection("events").find({$or: [{fName: {$regex: searchTerm, $options: "i"}}, // This needs to be updated
-                                                                                                                                      {lName: {$regex: searchTerm, $options: "i"}}
-                                                                                                                        ]});
+        let cursor =  client.db("p2").collection("events").find(
+            {$or: [
+                {orgName: {$regex: searchTerm, $options: "i"}},
+                {orgCategory: {$regex: searchTerm, $options: "i"}},
+                {eventTitle: {$regex: searchTerm, $options: "i"}},
+                {eventHost: {$regex: searchTerm, $options: "i"}},
+                {location: {$regex: searchTerm, $options: "i"}},
+                {description: {$regex: searchTerm, $options: "i"}},
+                {categories: {$regex: searchTerm, $options: "i"}}
+            ]
+        });
         await cursor.forEach(doc => result.push(doc));
 
         if (result.length > 0) {
@@ -136,35 +146,14 @@ async function serchAllFields(searchTerm) {
     }
 }
 
-// This function only works for the "events" collection
-async function checkDuplicate(eventLink, collection) {
-    let client;
-
-    try {
-        client = await establishConnection();
-        
-        const result = client.db("p2").collection(collection).findOne({link: {$regex: eventLink, $options: "i"}});
-
-        if (result) {
-            console.log("Duplicate");
-            return true;
-        } 
-        return false;
-
-    } catch (error) {
-        console.error(error);
-    } finally {
-        await client.close();
-    }
-}
-
-/* async function main() {
+/* This is purely for testing purpose
+async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Anna", "userdb");
     //const result = await serchAllFields("m");
-    const result = await getNewestEntries("events")
+    //const result = await getNewestEntries("events")
     
-    console.log(result);
+    //console.log(result);
 }
 
 main(); */
