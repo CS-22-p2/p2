@@ -9,7 +9,7 @@ function changePage(name) {
             url = "./html/loginPage.html"
             break;
         case "signUp":
-            url = "./html/signUpPage.html"
+            url = "./html/signupPage.html"
             break;
         default:
             break;
