@@ -6,6 +6,7 @@ homeButton.addEventListener('click', goToPage);
 favoritesButton.addEventListener('click', goToPage);
 loginButton.addEventListener('click', goToPage);
 
+
 function goToPage(event)
 {
   let url = "";

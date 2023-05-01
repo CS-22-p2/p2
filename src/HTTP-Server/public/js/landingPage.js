@@ -641,7 +641,7 @@ function goToPage(event)
       url = "../html/favoritesPage.html"
       break;
     case 'Login':
-      console.log("login");
+      url = "../html/loginPage.html"
       break;
   }
 
