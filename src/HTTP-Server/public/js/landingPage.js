@@ -1,4 +1,3 @@
-
 let EventData = [
     {
       orgName: 'Connect INTL (Studentersamfundet)',
@@ -573,6 +572,8 @@ const idArray = ["#EventTitle", "#Location", "#Date",
                  "#Participants","#Host","#Link",
                  "#ImageLink","#DescriptionBox"];
 
+let events = [];
+
 let parent = document.querySelector('#FlexBoxWrapper');
 let template = document.querySelector("#FlexBox");
 let elem = parent.querySelector('.elem');
@@ -584,6 +585,14 @@ homeButton.addEventListener('click', goToPage);
 favoritesButton.addEventListener('click', goToPage);
 loginButton.addEventListener('click', goToPage);
 
+fetch('/getEvents', { method: 'GET'})
+.then(response => response.json())
+.then(data => {
+  console.log(data);
+  //events = JSON.parse(data);
+  //eventInitializer(events);
+})
+.catch(error => console.error(error));
 
 eventInitializer(EventData);
 template.remove();
@@ -602,6 +611,8 @@ function eventInitializer(eventData){
 function createEvent(eventObject)
 {
   let clone = elem.cloneNode(true);
+  clone.dataset.eventid = (Math.random() * 100)%100 // this sets the data-eventid when creating a new event card
+  console.log(clone.dataset.eventid);
   clone.querySelector("#EventTitle").innerText = eventObject.eventTitle;
   clone.querySelector("#Location").innerText = eventObject.eventLocation;
   clone.querySelector("#Date").innerText = eventObject.eventDate;

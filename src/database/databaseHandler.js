@@ -63,7 +63,7 @@ async function getEntry (query, collection) {
     // If the specified collection is present we serch for the query and return true if present
     // else it returns false
     if (collectionNames.includes(collection)) {
-        const result = await client.db("p2").collection(collection).findOne({fName: query}); // We need to figure out how to make  dynamic querys: https://stackoverflow.com/questions/39986639/dynamic-query-mongodb
+        const result = await client.db("p2").collection(collection).findOne({firstName: query}); // We need to figure out how to make  dynamic querys: https://stackoverflow.com/questions/39986639/dynamic-query-mongodb
 
         if (result) {
             console.log(`Found a entry in the collection with the name '${query}':`);
@@ -88,12 +88,12 @@ async function getNewestEntries(collection) {
 
     // Get all the collections present in the database and extract their names
     const collections = await client.db("p2").listCollections().toArray();
-    const collectionNames = [];
+    let collectionNames = [];
     collections.forEach(ele => collectionNames.push(ele.name));
     // If the specified collection is present we serch for the query and return true if present
     // else it returns false
     if (collectionNames.includes(collection)) {
-        let cursor = await client.db("p2").collection(collection).find().sort({_id:1}).limit(10);
+        let cursor = await client.db("p2").collection(collection).find({ setup: { $exists: false } }).sort({_id: 1, setup: -1}).limit(10);
 
         await cursor.forEach(doc => result.push(doc));
 
@@ -106,7 +106,7 @@ async function getNewestEntries(collection) {
     } catch (error) {
         console.error(error);
     } finally {
-        setTimeout(() => {client.close()}, 1500);
+        setTimeout(() => {client.close()}, 1);
     }
 }
 
@@ -160,11 +160,11 @@ async function checkDuplicate(eventLink, collection) {
 
 /* async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
-    //const result = await getEntry("Anna", "userdb");
+    //const result = await getEntry("Theis", "userdb");
     //const result = await serchAllFields("m");
     const result = await getNewestEntries("events")
     
     console.log(result);
 }
 
-main(); */
+main();  */
