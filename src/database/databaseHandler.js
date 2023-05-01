@@ -160,7 +160,7 @@ async function update_existing_event(eventClass, collection) {
         client = await establishConnection();
         const results = await client.db("p2").collection(collection).findOne({ link: { $regex: eventClass.eventLink } });
         if (results) {
-            client.db("p2").collection(collection).updateOne(
+            await client.db("p2").collection(collection).updateOne(
                 { _id: results._id },
                 {
                     "eventTitle": eventClass.eventTitle,
