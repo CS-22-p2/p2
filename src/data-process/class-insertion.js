@@ -185,8 +185,7 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'alcohol-free': ['nonalcoholic', 'sober', 'drugfree', "spirtis", "bars", "booze", "party"
-            , "alkoholfri", "ædru", "stoffri", "spiritus", "barer", "alkohol", "fest"],
+        'Party': ['alcoholic', 'alkohol', 'beer', 'øl', "spirtis", "bars", "booze", 'sprut', "party", 'fest'],
         'business': ['career', 'networking', 'professional', 'entrepreneurship', "management", "jobs", "job",
             , "karriere", "netværk", "professionel", "iværksætteri", "ledelse"],
         'sport': ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
@@ -199,7 +198,13 @@ function read_description(description) {
     }
 
     // Remove generic words
-    const removeable_words = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'person', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us'];
+    const removeable_words = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an',
+        'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'person', 'into', 'year', 'your',
+        'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any',
+        'these', 'give', 'day', 'most', 'us', 'den', 'være', 'til', 'af', 'og', 'en', 'i', 'denne', 'have', 'jeg', 'det', 'for', 'ikke', 'på', 'med', 'han', 'som', 'du', 'gøre', 'ved', 'dette', 'men', 'hans', 'af', 'fra', 'de', 'vi', 'sige', 'hende', 'hun',
+        'eller', 'en', 'vil', 'min', 'en', 'alle', 'ville', 'der', 'deres', 'hvad', 'sådan', 'op', 'ud', 'hvis', 'om', 'hvem', 'få', 'hvilket', 'gå', 'mig', 'når', 'lave', 'kan', 'lige', 'tid', 'ingen', 'bare', 'ham', 'vide', 'tage', 'person', 'ind', 'år',
+        'din', 'god', 'nogle', 'kunne', 'dem', 'se', 'andet', 'end', 'så', 'nu', 'se', 'kun', 'komme', 'sin', 'over', 'tænke', 'også', 'tilbage', 'efter', 'bruge', 'to', 'hvordan', 'vores', 'arbejde', 'første', 'godt', 'måde', 'selv', 'ny', 'vil', 'fordi',
+        'enhver', 'disse', 'give', 'dag', 'mest', 'os'];
     for (let i = tokens.length - 1; i >= 0; i--) {
         if (tokens[i] === '' || removeable_words.includes(tokens[i])) {
             tokens.splice(i, 1);
