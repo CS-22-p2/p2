@@ -7,21 +7,19 @@ body {
 
     float: left; 
     display: center;
-    width: 10%;
+    width: 20%;
     margin-top: 0px;
-
-    
-    
 }
 
-#TopNavLogo {
+.TopNavLogo {
     font-size: 150%;
 }
-#TopNavbutton {
+
+.TopNavbutton {
     size: 100px;
     font-size: 150%;
-
 }
+
 #logoBox{
     color: black;
     text-align: center;

@@ -566,6 +566,9 @@ let EventData = [
     }
   ]
 
+
+
+//Executed code
 const idArray = ["#EventTitle", "#Location", "#Date",
                  "#Participants","#Host","#Link",
                  "#ImageLink","#DescriptionBox"];
@@ -573,9 +576,20 @@ const idArray = ["#EventTitle", "#Location", "#Date",
 let parent = document.querySelector('#FlexBoxWrapper');
 let template = document.querySelector("#FlexBox");
 let elem = parent.querySelector('.elem');
+let homeButton = document.querySelector('#homePage');
+let favoritesButton = document.querySelector('#favoritesPage');
+let loginButton = document.querySelector('#loginPage');
+
+homeButton.addEventListener('click', goToPage);
+favoritesButton.addEventListener('click', goToPage);
+loginButton.addEventListener('click', goToPage);
+
 
 eventInitializer(EventData);
 template.remove();
+
+
+//---------------------------------------------------------------------
 
 function eventInitializer(eventData){
   for (let event of eventData) 
@@ -583,6 +597,7 @@ function eventInitializer(eventData){
     createEvent(event);
   }
 }
+
 
 function createEvent(eventObject)
 {
@@ -612,6 +627,27 @@ function checkExistance(node, idArray){
       node.querySelector("#DescriptionBox").remove();
     }
 }
+
+function goToPage(event)
+{
+  let url = "";
+
+  switch(event.target.innerText)
+  {
+    case 'Home':
+      url = "../html/landingPage.html"
+      break;
+    case 'Favorites':
+      url = "../html/favoritesPage.html"
+      break;
+    case 'Login':
+      console.log("login");
+      break;
+  }
+
+  window.location.href = url;
+}
+
 
 
 

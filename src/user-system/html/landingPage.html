@@ -3,19 +3,18 @@
     <head>
     <title>Login</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="landingPage.css">
+    <link rel="stylesheet" href="../css/landingPage.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     </head>
     <body>
-               <div id="logoBox">
+        <div id="logoBox">
             <h1>Campus Connect</h1> 
             <span id="topnavBar">
-                <button id="TopNavButton" href="#Home"><i class="ri-home-line" id="TopNavLogo"></i></button>
-                <button id="TopNavButton" href="#Favorites"><i class="ri-star-line" id="TopNavLogo"></i></button>
-                <button id="TopNavButton" href="#UserInformation"><i class="ri-user-settings-fill" id="TopNavLogo"></i></button>
+                <button class="TopNavButton" id ="homePage" name="home"><i class="ri-home-line TopNavLogo"></i>Home</button>
+                <button class="TopNavButton" id = "favoritesPage"><i class="ri-star-line TopNavLogo"></i>Favorites</button>
+                <button class="TopNavButton" id = "loginPage"><i class="ri-user-settings-fill TopNavLogo"></i>Login</button>
             </span>
         </div>
-
     <div id="FlexBoxWrapper">
         <div id="FlexBox" class = "elem">
             <div id="Image" class = "elem">
@@ -23,12 +22,12 @@
                 </div>
 
             <div id="Textboxes" class = "elem">
-                <ul id="EventUL" name="title"><span id="EventTitle"> Gammel general dag asdasda sdas dasd asd</span></ul>
-                <ul id="EventUL"><i class="ri-map-pin-line" id="logo"></i><span id = "Location">DE-Klubben</span></ul>
+                <ul id="EventUL" name="title"><span id="EventTitle"> Event Title</span></ul>
+                <ul id="EventUL"><i class="ri-map-pin-line" id="logo"></i><span id = "Location">Location</span></ul>
                 <ul id="EventUL"><i class="ri-timer-2-line" id="logo"></i><span id = "Date">Date</span></ul>
-                <ul id="EventUL"><i class="ri-user-follow-line" id="logo"></i><span id = "Participants"> 22 personer har svaret</span></ul>
-                <ul id="EventUL"><i class="ri-home-line" id="logo"></i><span id = "Host"> DE-Klubben</span></ul>
-                <ul id="EventUL"><i class="ri-scales-line" id="logo"></i><span id = "Category"> Alkohol event</span></ul>
+                <ul id="EventUL"><i class="ri-user-follow-line" id="logo"></i><span id = "Participants">People Responded</span></ul>
+                <ul id="EventUL"><i class="ri-home-line" id="logo"></i><span id = "Host"> Organisation </span></ul>
+                <ul id="EventUL"><i class="ri-scales-line" id="logo"></i><span id = "Category"> Category </span></ul>
                 <ul id="EventUL"><i class="ri-heart-fill" id="logo"></i><span id = "Relevance Score"> Relevance score: 85% </i></span></ul>
                 <ul id="EventUL"><i class="ri-facebook-fill" id="logo"></i><a id ="Link" href="">See More</a></ul>
                 <ul id="EventUL"><button><i class="ri-star-line" id="logo"></i></button></ul>
@@ -49,6 +48,6 @@
         </div>
     </div>
 
-<script src="landingPage.js"></script>
+<script src="../js/landingPage.js"></script>
     </body>
 </html>
