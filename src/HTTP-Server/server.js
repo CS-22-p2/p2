@@ -78,6 +78,8 @@ const server = http.createServer(async (req, res) => {
             } else if (body.type === "signUp") { // if the request type is signup it creates a new user
                 let result = await createUser(body);
                 console.log("Trying to sign up");
+            } else if (body.type === "favorite") {
+                // Function that adds event id to favorite list
             }
             console.log(`Received PUT request with body: ${body}`)
             res.writeHead(200, { 'Content-Type': 'application/json' });
