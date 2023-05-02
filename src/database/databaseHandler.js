@@ -15,7 +15,7 @@ export {
 dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions
 async function establishConnection() {
-    const uri = process.env.database_url;
+    const uri = process.env.DATABASE_URL;
     const client = new MongoClient(uri);
 
     try {
@@ -149,7 +149,8 @@ async function checkDuplicateLink(eventLink, collection) {
     } catch (error) {
         console.error(error);
     } finally {
-        setTimeout(() => {client.close()}, 1);
+        await client.close();
+        //setTimeout(async () => {await client.close()}, 1);
     }
 }
 
