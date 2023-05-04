@@ -104,7 +104,7 @@ async function getNewestEntries(collection) {
     // If the specified collection is present we serch for the query and return true if present
     // else it returns false
     if (collectionNames.includes(collection)) {
-        let cursor = await client.db("p2").collection(collection).find({ setup: { $exists: false } }).sort({_id: 1}).limit(10);
+        let cursor = await client.db("p2").collection(collection).find({ setup: { $exists: false } }).sort({_id: 1}); // add .limit if you want a specific amount of entries at a time
 
         await cursor.forEach(doc => result.push(doc));
 
