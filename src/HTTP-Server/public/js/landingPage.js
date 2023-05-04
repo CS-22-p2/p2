@@ -10,6 +10,52 @@ const idArray = ["#EventTitle", "#Location", "#Date",
 
 let events = [];
 
+function onlyOne(checkbox){
+  let checkboxes = document.getElementsByName('check');
+
+  let isChecked = false;
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      isChecked = true;
+    }
+    if (checkboxes[i] !== checkbox) {
+      checkboxes[i].checked = false;
+    }
+  }
+  if (!isChecked) {
+    checkboxes[0].checked = true;
+  }
+}
+
+function changeColor(){
+  const favoriteButtons = document.querySelectorAll('#favoriteButton');
+  const numOfFavoriteButtons = favoriteButtons.length;
+  let isPressed = new Array(numOfFavoriteButtons).fill(false);
+  
+  for (let i = 0; i < numOfFavoriteButtons; i++) {
+    favoriteButtons[i].addEventListener('click', function() {
+      if (isPressed[i]) {
+        favoriteButtons[i].classList.remove('active');
+        isPressed[i] = false;
+      } 
+      
+      
+      else {
+        favoriteButtons[i].classList.add('active');
+        isPressed[i] = true;
+      }
+    });
+  }}
+
+  /*checkboxes.forEach((element)=> {
+    if(element !== checkbox) element.checked = false;
+  })
+
+}*/
+
+
+
+
 let parent = document.querySelector('#FlexBoxWrapper');
 let template = document.querySelector("#FlexBox");
 let elem = parent.querySelector('.elem');
@@ -97,8 +143,6 @@ function goToPage(event)
 
   window.location.href = url;
 }
-
-
 
 
 

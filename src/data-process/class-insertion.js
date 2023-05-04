@@ -15,7 +15,10 @@ export default {
     class_creator
 };
 
+<<<<<<< HEAD
 //class_creator();
+=======
+>>>>>>> e2f5eb5986e02a0742b8312c591c2ff39e8c469c
 
 // Global variables
 let base_score = 100;
