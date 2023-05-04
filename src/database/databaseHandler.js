@@ -262,9 +262,10 @@ main(); */
 When to run the Information Gathering program
 */
 
+// This one is cursed
 async function getData() {
-    let start_hour = "08:00:00";
-    let end_hour = "13:00:00";
+    let start_hour = "14:00:00";
+    let end_hour = "16:00:00";
     let current_date = new Date();
     let start_hour_split = start_hour.split(":");
     let start_hour_date = new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate(), start_hour_split[0], start_hour_split[1], start_hour_split[2]);
