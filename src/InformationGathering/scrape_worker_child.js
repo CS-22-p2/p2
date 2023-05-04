@@ -14,6 +14,9 @@ const browser = await puppeteer.launch({
 });
 
 const page = await browser.newPage()
+page.setExtraHTTPHeaders({
+    "Accept-Language": "en",
+})
 DeleteFirstPage(browser)
 
 // We have recieved an index from the main thread to process
