@@ -251,7 +251,7 @@ main(); */
 /* 
 When to run the Information Gathering program
 */
-
+/* 
 // Bro du kan ikke bruge await i ikke async functions
 function getData() {
     let start_hour = "08:00:00";
@@ -279,4 +279,4 @@ function getData() {
     }
 }
 
-//getData();
+//getData(); */
