@@ -11,7 +11,8 @@ export default {
     on_campus,
     time_left_score,
     strip_and_trim,
-    read_description
+    read_description,
+    class_creator
 };
 
 // Global variables
@@ -287,7 +288,7 @@ async function inserting_DB(event_class) {
     }
 }
 
-async function main() {
+async function class_creator() {
     let event_arr;
     try {
         event_arr = await accessEventsPage();
@@ -320,5 +321,3 @@ async function main() {
     }
     return true;
 }
-
-main();
