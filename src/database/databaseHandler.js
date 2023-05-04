@@ -1,6 +1,7 @@
 // Imports
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import class_creator from '../data-process/class-insertion.js';
 
 // Exports
 export {
@@ -83,7 +84,7 @@ async function getEntry(query, collection) {
     } catch (error) {
         console.error(error);
     } finally {
-        setTimeout(() => { client.close() }, 1500)
+        setTimeout(() => { client.close() });
         //await client.close();
     }
 }
@@ -197,3 +198,35 @@ async function update_existing_event(eventClass, collection) {
 }
 
 main(); */
+
+/* 
+When to run the Information Gathering program
+*/
+
+function getData() {
+    let start_hour = "08:00:00";
+    let end_hour = "13:00:00";
+    let current_date = new Date();
+    let start_hour_split = start_hour.split(":");
+    let start_hour_date = new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate(), start_hour_split[0], start_hour_split[1], start_hour_split[2]);
+
+    let end_hour_split = end_hour.split(":");
+    let end_hour_date = new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate(), end_hour_split[0], end_hour_split[1], end_hour_split[2]);
+
+    console.log(current_date);
+    console.log(start_hour_date);
+    console.log(end_hour_date);
+    if (end_hour_date >= current_date && current_date >= start_hour_date) {
+        try {
+            let execution = await class_creator();
+            if (!execution) {
+                throw new Error("Couldn't get data");
+            }
+        } catch (error) {
+            console.error(error);
+            getData();
+        }
+    }
+}
+
+getData();
