@@ -1,5 +1,5 @@
 import { log } from "console";
-import {date_conversion_formatting} from "./event-insertion.js";
+import { date_conversion_formatting } from "./class-insertion.js";
 import { type } from "os";
 import { test } from "node:test";
 
@@ -35,12 +35,10 @@ const testDates = [
     "FRIDAY, 30 JUNE 2023 AT 17:00 UTC+02"
 ]
 
-function setTestDates(testDates)
-{
+function setTestDates(testDates) {
     let processedDateArray = [];
 
-    for(let date of testDates)
-    {
+    for (let date of testDates) {
         processedDateArray.push(date_conversion_formatting(date));
     }
 
@@ -50,33 +48,29 @@ function setTestDates(testDates)
 
 //Used to sort events by date or by relevancy score
 //Works "in place" so we do not need to return array from function
-function InsertionSort(array)
-{
+function InsertionSort(array) {
     //Checks if the dates are valid and corrects array if invalid dates occur
-    let invalidIndexes = invalidDateChecker(array); 
+    let invalidIndexes = invalidDateChecker(array);
 
     //Insertion Sort --- See CLRS ch. 2.1
-    for(let j = 1; j < array.length; j++)
-    {
+    for (let j = 1; j < array.length; j++) {
         let key = array[j];
         let i = j - 1;
-        while(i >= 0 && array[i] > key)
-        {
+        while (i >= 0 && array[i] > key) {
             array[i + 1] = array[i]
             i = i - 1;
         }
-        array[i + 1]=key;
+        array[i + 1] = key;
     }
     return invalidIndexes;
 }
 
-function invalidDateChecker(array){
+function invalidDateChecker(array) {
     let invalidIndexes = [];
 
     //Check if an invalid date is passed into the array
-    for(let element in array)
-    {
-        if(array[element].toString() === "Invalid Date") //If an invalid date is passed it is removed form the array
+    for (let element in array) {
+        if (array[element].toString() === "Invalid Date") //If an invalid date is passed it is removed form the array
         {
             invalidIndexes.push(parseInt(element)); //Store invalid index for later use
             array.splice(element, 1)
@@ -91,7 +85,7 @@ console.log(eventDates);
 let check = InsertionSort(eventDates);
 console.log(eventDates);
 console.log(check);
-let testNumbers = [100,10,5,17,20,9,0,-3,28,3,1,77];
+let testNumbers = [100, 10, 5, 17, 20, 9, 0, -3, 28, 3, 1, 77];
 console.log(testNumbers);
 InsertionSort(testNumbers);
 console.log(testNumbers);
