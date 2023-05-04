@@ -14,6 +14,7 @@ export {
 
 dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions
+
 async function establishConnection() {
     const uri = process.env.DATABASE_URL;
     const client = new MongoClient(uri);
@@ -159,22 +160,24 @@ async function update_existing_event(eventClass, collection) {
 
     try {
         client = await establishConnection();
-        const results = await client.db("p2").collection(collection).findOne({ link: { $regex: eventClass.eventLink } });
+        const results = await client.db("p2").collection(collection).findOne({ eventLink: { $regex: eventClass.eventLink } });
         if (results) {
             await client.db("p2").collection(collection).updateOne(
                 { _id: results._id },
                 {
-                    "eventTitle": eventClass.eventTitle,
-                    "date": eventClass.date,
-                    "participants": eventClass.participants,
-                    "locations": eventClass.location,
-                    "duration": eventClass.duration,
-                    "description": eventClass.description,
-                    "time_left": eventClass.time_left,
-                    "categories": eventClass.categories,
-                    "tickets": eventClass.tickets,
-                    "image": eventClass.image,
-                    "relevancy_score": eventClass.relevancy_score
+                    $set: {
+                        "eventTitle": eventClass.eventTitle,
+                        "date": eventClass.date,
+                        "participants": eventClass.participants,
+                        "locations": eventClass.location,
+                        "duration": eventClass.duration,
+                        "description": eventClass.description,
+                        "time_left": eventClass.time_left,
+                        "categories": eventClass.categories,
+                        "tickets": eventClass.tickets,
+                        "image": eventClass.image,
+                        "relevancy_score": eventClass.relevancy_score
+                    }
                 }
             )
         }
