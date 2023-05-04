@@ -50,6 +50,7 @@ function setTestDates(testDates)
 */
 //-----------------------------------------------------------------
 
+
 //Used to sort events by date or by relevancy score
 //Works "in place" so we do not need to return array from function
 function InsertionSort(array)
@@ -88,6 +89,7 @@ function invalidDateChecker(array){
 }
 
 //-------Executed Commands-----
+/*
 let eventDates = setTestDates(testDates);
 console.log(eventDates);
 let check = InsertionSort(eventDates);
@@ -97,5 +99,6 @@ let testNumbers = [100,10,5,17,20,9,0,-3,28,3,1,77];
 console.log(testNumbers);
 InsertionSort(testNumbers);
 console.log(testNumbers);
+*/
 //------------------------------
 
