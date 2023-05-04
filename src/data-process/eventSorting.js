@@ -1,7 +1,7 @@
 // import {date_conversion_formatting} from "./event-insertion.js";
 // import { type } from "os";
 // import { test } from "node:test";
-import { insertEntry, serchAllFields } from "../database/databaseHandler.js";
+import { insertEntry, searchAllFields } from "../database/databaseHandler.js";
 
 
 //--------------JUST USED FOR TESTING----------------------
@@ -58,13 +58,13 @@ async function get_sorted_events(search_term) {
         return false;
     }
 
-    // let event_array = await serchAllFields(search);
-    let event_array = [
-        {date: null, relevancy_score: 11},
-        {date: 13, relevancy_score: 13},
-        {date: 12, relevancy_score: 12},
-        {date: 10, relevancy_score: 10},
-    ];
+    let event_array = await searchAllFields(search_term);
+    // let event_array = [
+    //     {date: null, relevancy_score: 11},
+    //     {date: 13, relevancy_score: 13},
+    //     {date: 12, relevancy_score: 12},
+    //     {date: 10, relevancy_score: 10},
+    // ];
 
     let event_array_index = [];
     let unsortable = [];
@@ -81,7 +81,7 @@ async function get_sorted_events(search_term) {
             event_array_index.push(obj);
         }
     }
-    event_array_index = InsertionSort(event_array_index, search_term);
+    event_array_index = InsertionSort(event_array_index);
 
     let sorted_list = [];
 
@@ -96,12 +96,12 @@ async function get_sorted_events(search_term) {
     }
     console.log(sorted_list);
 }
-get_sorted_events("relevancy_score");
+get_sorted_events("date");
 
 
 //Used to sort events by date or by relevancy score
 //Works "in place" so we do not need to return array from function
-function InsertionSort(array, search_term) {
+function InsertionSort(array) {
     //Insertion Sort --- See CLRS ch. 2.1
     for (let j = 1; j < array.length; j++) {
         let key = array[j];

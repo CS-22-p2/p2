@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
 // Exports
-export { insertEntry, getEntry, getNewestEntries, establishConnection, serchAllFields }
+export { insertEntry, getEntry, getNewestEntries, establishConnection, searchAllFields }
 
 dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions
@@ -113,7 +113,7 @@ async function getNewestEntries(collection, skip) {
 }
 
 // This functions returns all the entrys in a collection that matches the searchTerm in any field
-async function serchAllFields(searchTerm) {
+async function searchAllFields(searchTerm) {
     let client;
     let result = [];
 
