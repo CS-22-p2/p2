@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
 // Exports
-export { insertEntry, getEntry, getNewestEntries, establishConnection }
+export { insertEntry, getEntry, getNewestEntries, establishConnection, serchAllFields }
 
 dotenv.config();
 // This function connects to the specified mongo server and returns a client for use in other functions

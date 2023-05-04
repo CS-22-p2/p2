@@ -1,7 +1,7 @@
 // import {date_conversion_formatting} from "./event-insertion.js";
 // import { type } from "os";
 // import { test } from "node:test";
-import{ serchAllFields} from "../database/databaseHandler.js";
+import { insertEntry, serchAllFields } from "../database/databaseHandler.js";
 
 
 //--------------JUST USED FOR TESTING----------------------
@@ -51,90 +51,66 @@ function setTestDates(testDates)
 //-----------------------------------------------------------------
 
 
+async function get_sorted_events(search_term) {
+    // Input validation
+    let possible_search_terms = ["date", "relevancy_score"];
+    if (!possible_search_terms.includes(search_term)) {
+        return false;
+    }
 
-function get_sorted_events(search) {
-    let event_array; 
-    try {
-        event_array = await serchAllFields(search);
-    } catch (error) {
-        
+    // let event_array = await serchAllFields(search);
+    let event_array = [
+        {date: null, relevancy_score: 11},
+        {date: 13, relevancy_score: 13},
+        {date: 12, relevancy_score: 12},
+        {date: 10, relevancy_score: 10},
+    ];
+
+    let event_array_index = [];
+    let unsortable = [];
+
+    for (let i = 0; i < event_array.length; i++) {
+        if (event_array[i][search_term] === undefined ||
+            event_array[i][search_term] === false ||
+            event_array[i][search_term] === null) {
+                let obj = {index: i, value: event_array[i][search_term]}
+                unsortable.push(obj);
+
+        } else {
+            let obj = {index: i, value: event_array[i][search_term]}
+            event_array_index.push(obj);
+        }
     }
-    
-    if (search === "date") {
-        event_array.sort((a, b) => {//
-            if (a.date === undefined || a.date === false || a.date === null) {
-                return 1; // moves to the end of an array 
-            }
-            if (b.date === undefined || b.date === false || b.date === null) {
-                return -1; //moves to the end of an array 
-            }
-            return a.date - b.date;
-        })
-    } else if (search === "relevancy_score") {
-        event_array.sort((a, b) => {
-            if (a.relevancy_score === undefined || a.relevancy_score === false || a.relevancy_score === null) {
-                return 1
-            }
-            if (b.relevancy_score === undefined || b.relevancy_score === false || b.relevancy_score === null) {
-                return -1
-            }
-            return b.relevancy_score - a.relevancy_score;
-        })
+    event_array_index = InsertionSort(event_array_index, search_term);
+
+    let sorted_list = [];
+
+    for (let i = 0; i < event_array_index.length; i++) {
+        sorted_list[i] = event_array[event_array_index[i].index];
     }
-    return event_array;
+    if (search_term === "relevancy_score") {
+        sorted_list = sorted_list.reverse();
+    }
+    for (let i = 0; i < unsortable.length; i++) {
+        sorted_list.push(event_array[unsortable[i].index]);
+    }
+    console.log(sorted_list);
 }
-console.log(get_sorted_events("date"));
+get_sorted_events("relevancy_score");
 
-/*
+
 //Used to sort events by date or by relevancy score
 //Works "in place" so we do not need to return array from function
-function InsertionSort(array)
-{
-    //Checks if the dates are valid and corrects array if invalid dates occur
-    let invalidIndexes = invalidDateChecker(array);
-
+function InsertionSort(array, search_term) {
     //Insertion Sort --- See CLRS ch. 2.1
-    for(let j = 1; j < array.length; j++)
-    {
+    for (let j = 1; j < array.length; j++) {
         let key = array[j];
         let i = j - 1;
-        while(i >= 0 && array[i] > key)
-        {
+        while (i >= 0 && array[i].value > key.value) {
             array[i + 1] = array[i]
             i = i - 1;
         }
-        array[i + 1]=key;
+        array[i + 1] = key;
     }
-    return invalidIndexes;
+    return array;
 }
-
-function invalidDateChecker(array){
-    let invalidIndexes = [];
-
-    //Check if an invalid date is passed into the array
-    for(let element in array)
-    {
-        if(array[element].toString() === "Invalid Date") //If an invalid date is passed it is removed form the array
-        {
-            invalidIndexes.push(parseInt(element)); //Store invalid index for later use
-            array.splice(element, 1)
-        }
-    }
-    return invalidIndexes;
-}
-*/
-
-//-------Executed Commands-----
-/*
-let eventDates = setTestDates(testDates);
-console.log(eventDates);
-let check = InsertionSort(eventDates);
-console.log(eventDates);
-console.log(check);
-let testNumbers = [100,10,5,17,20,9,0,-3,28,3,1,77];
-console.log(testNumbers);
-InsertionSort(testNumbers);
-console.log(testNumbers);
-*/
-//------------------------------
-
