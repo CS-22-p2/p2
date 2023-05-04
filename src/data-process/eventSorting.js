@@ -1,7 +1,6 @@
-import { log } from "console";
-import {date_conversion_formatting} from "./event-insertion.js";
-import { type } from "os";
-import { test } from "node:test";
+// import {date_conversion_formatting} from "./event-insertion.js";
+// import { type } from "os";
+// import { test } from "node:test";
 import{ serchAllFields} from "../database/databaseHandler.js";
 
 
@@ -52,40 +51,47 @@ function setTestDates(testDates)
 //-----------------------------------------------------------------
 
 
-function get_events(search){
-    let eventarray=serchAllFields{search};
-    if(search === "date"){
-        eventarray.sort((a,b) => {//
-            if(a.date === undefined || a.date === false || a.date === null){
-                return 1// moves to the end of an array 
-            }
-            if(b.date === undefined || b.date === false || b.date === null){
-                return -1//moves to the end of an array 
-            }
-            return b.date- a.date
-        })
+
+function get_sorted_events(search) {
+    let event_array; 
+    try {
+        event_array = await serchAllFields(search);
+    } catch (error) {
+        
     }
-    if(search === "relevancy_score"){
-        eventarray.sort((a,b) => {
-            if(a.relevancy_score === undefined || a.relevancy_score === false || a.relevancy_score === null){
+    
+    if (search === "date") {
+        event_array.sort((a, b) => {//
+            if (a.date === undefined || a.date === false || a.date === null) {
+                return 1; // moves to the end of an array 
+            }
+            if (b.date === undefined || b.date === false || b.date === null) {
+                return -1; //moves to the end of an array 
+            }
+            return a.date - b.date;
+        })
+    } else if (search === "relevancy_score") {
+        event_array.sort((a, b) => {
+            if (a.relevancy_score === undefined || a.relevancy_score === false || a.relevancy_score === null) {
                 return 1
             }
-            if(b.relevancy_score === undefined || b.relevancy_score === false || b.relevancy_score === null){
+            if (b.relevancy_score === undefined || b.relevancy_score === false || b.relevancy_score === null) {
                 return -1
             }
-            return a.relevancy_score- b.relevancy_score
+            return b.relevancy_score - a.relevancy_score;
         })
     }
-
-    
+    return event_array;
 }
+console.log(get_sorted_events("date"));
 
+/*
 //Used to sort events by date or by relevancy score
 //Works "in place" so we do not need to return array from function
 function InsertionSort(array)
 {
     //Checks if the dates are valid and corrects array if invalid dates occur
-    let invalidIndexes = invalidDateChecker(array); 
+    let invalidIndexes = invalidDateChecker(array);
 
     //Insertion Sort --- See CLRS ch. 2.1
     for(let j = 1; j < array.length; j++)
@@ -116,6 +122,7 @@ function invalidDateChecker(array){
     }
     return invalidIndexes;
 }
+*/
 
 //-------Executed Commands-----
 /*
