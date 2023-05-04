@@ -2,6 +2,7 @@ import { log } from "console";
 import {date_conversion_formatting} from "./event-insertion.js";
 import { type } from "os";
 import { test } from "node:test";
+import{ serchAllFields} from "../database/databaseHandler.js";
 
 
 //--------------JUST USED FOR TESTING----------------------
@@ -50,6 +51,34 @@ function setTestDates(testDates)
 */
 //-----------------------------------------------------------------
 
+
+function get_events(search){
+    let eventarray=serchAllFields{search};
+    if(search === "date"){
+        eventarray.sort((a,b) => {//
+            if(a.date === undefined || a.date === false || a.date === null){
+                return 1// moves to the end of an array 
+            }
+            if(b.date === undefined || b.date === false || b.date === null){
+                return -1//moves to the end of an array 
+            }
+            return b.date- a.date
+        })
+    }
+    if(search === "relevancy_score"){
+        eventarray.sort((a,b) => {
+            if(a.relevancy_score === undefined || a.relevancy_score === false || a.relevancy_score === null){
+                return 1
+            }
+            if(b.relevancy_score === undefined || b.relevancy_score === false || b.relevancy_score === null){
+                return -1
+            }
+            return a.relevancy_score- b.relevancy_score
+        })
+    }
+
+    
+}
 
 //Used to sort events by date or by relevancy score
 //Works "in place" so we do not need to return array from function
