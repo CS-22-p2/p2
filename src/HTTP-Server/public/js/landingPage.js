@@ -593,12 +593,13 @@ fetch('/getEvents', { method: 'GET'})
 .then(response => response.json())
 .then(data => {
   console.log(data);
+  eventInitializer(data);
   //events = JSON.parse(data);
   //eventInitializer(events);
 })
 .catch(error => console.error(error));
 
-eventInitializer(EventData);
+//eventInitializer(EventData);
 template.remove();
 
 
@@ -615,16 +616,16 @@ function eventInitializer(eventData){
 function createEvent(eventObject)
 {
   let clone = elem.cloneNode(true);
-  clone.dataset.eventid = (Math.random() * 100)%100 // this sets the data-eventid when creating a new event card
+  clone.dataset.eventid = eventObject._id;
   console.log(clone.dataset.eventid);
   clone.querySelector("#EventTitle").innerText = eventObject.eventTitle;
-  clone.querySelector("#Location").innerText = eventObject.eventLocation;
-  clone.querySelector("#Date").innerText = eventObject.eventDate;
-  clone.querySelector("#Participants").innerText = eventObject.eventParticipants;
+  clone.querySelector("#Location").innerText = eventObject.location;
+  clone.querySelector("#Date").innerText = eventObject.date;
+  clone.querySelector("#Participants").innerText = eventObject.participants;
   clone.querySelector("#Host").innerText = eventObject.orgName;
   clone.querySelector("#Link").href = eventObject.eventLink;
-  clone.querySelector("#ImageLink").src = eventObject.eventImage;
-  clone.querySelector("#DescriptionBox").innerText = eventObject.eventDescription;
+  clone.querySelector("#ImageLink").src = eventObject.image;
+  clone.querySelector("#DescriptionBox").innerText = eventObject.description;
   checkExistance(clone,idArray);
   parent.appendChild(clone);
 }
