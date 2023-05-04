@@ -63,6 +63,7 @@ function InsertionSort(array) {
             i = i - 1;
         }
         array[i + 1] = key;
+
     }
     return array;
 }

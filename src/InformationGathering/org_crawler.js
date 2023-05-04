@@ -132,7 +132,7 @@ const scrapeOrgData = async (scrape) => {
   // - a visible browser (`headless: false` - easier to debug because you'll see the browser in action)
   // - no default viewport (`defaultViewport: null` - website page will in full width and height)
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     defaultViewport: null,
   });
 
@@ -195,8 +195,3 @@ const scrape = new OrgScrape("https://www.studerende.aau.dk/studieliv/fritid-og-
     content: "href"
   }
 })
-
-
-/* const orgData = await scrapeOrgData(scrape);
-console.log(orgData)
-console.log(orgData.length) */
