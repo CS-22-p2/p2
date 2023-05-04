@@ -14,7 +14,7 @@ export default {
     read_description
 };
 
-class_creator();
+//class_creator();
 
 // Global variables
 let base_score = 100;
