@@ -107,7 +107,7 @@ async function getNewestEntries(collection, skip) {
     // If the specified collection is present we serch for the query and return true if present
     // else it returns false
     if (collectionNames.includes(collection)) {
-        let cursor = await client.db("p2").collection(collection).find({ setup: { $exists: false } }).sort({_id: 1}).limit(10);
+        let cursor = await client.db("p2").collection(collection).find({ setup: { $exists: false } }).sort({_id: 1});
 
 
         await cursor.forEach(doc => result.push(doc));
@@ -262,7 +262,7 @@ main(); */
 When to run the Information Gathering program
 */
 
-function getData() {
+async function getData() {
     let start_hour = "08:00:00";
     let end_hour = "13:00:00";
     let current_date = new Date();
@@ -287,5 +287,3 @@ function getData() {
         }
     }
 }
-
-getData();

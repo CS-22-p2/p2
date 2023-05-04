@@ -1,4 +1,4 @@
-import { searchAllFields } from "../database/databaseHandler.js";
+import { getNewestEntries } from "../database/databaseHandler.js";
 
 async function get_sorted_events(search_term) {
     // Input validation
@@ -10,7 +10,8 @@ async function get_sorted_events(search_term) {
     // Gets all events with the desired search term
     // if score or date, all events
     // Else categories
-    let event_array = await searchAllFields(search_term);
+    let event_array = await getNewestEntries("events", 1);
+    console.log(event_array);
     let event_array_index = [];
     let unsortable = [];
 
@@ -38,7 +39,7 @@ async function get_sorted_events(search_term) {
     }
 
     // Reverse if highest from lowest is needed
-    if (search_term === "relevancy_score") {
+    if (search_term !== "eventDate") {
         sorted_list = sorted_list.reverse();
     }
 
@@ -66,4 +67,10 @@ function InsertionSort(array) {
 
     }
     return array;
+}
+
+let result = await get_sorted_events("eventDate")
+
+for (let i = 0; i < result.length; i++) {
+    console.log(result[i].eventDate);
 }
