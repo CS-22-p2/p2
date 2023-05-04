@@ -5,6 +5,7 @@ import { test } from "node:test";
 
 
 //--------------JUST USED FOR TESTING----------------------
+/*
 const testDates = [
     "WEDNESDAY, 26 APRIL 2023 AT 18:30 UTC+02",
     "17 JUN AT 16:00 – 18 JUN AT 02:00 UTC+02",
@@ -46,6 +47,7 @@ function setTestDates(testDates)
 
     return processedDateArray;
 }
+*/
 //-----------------------------------------------------------------
 
 //Used to sort events by date or by relevancy score
