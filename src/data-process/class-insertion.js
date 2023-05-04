@@ -14,6 +14,8 @@ export default {
     read_description
 };
 
+class_creator();
+
 // Global variables
 let base_score = 100;
 let high_score = 200;
@@ -231,30 +233,30 @@ class event_data {
         this.eventLink = eventLink;
         this.eventTitle = eventTitle;
         this.eventHost = eventHosts;
-        this.date = date_conversion_formatting(eventDate);
-        this.participants = eventParticipants;
-        this.location = eventLocation;
-        this.duration = get_duration(eventDuration);
+        this.eventDate = date_conversion_formatting(eventDate);
+        this.eventParticipants = eventParticipants;
+        this.eventLocation = eventLocation;
+        this.eventDuration = get_duration(eventDuration);
         this.isPrivate = isPrivate;
-        this.description = eventDescription;
-        this.time_left = time_until_event(this.date);
-        this.categories = read_description(this.description);
-        this.tickets = eventTickets;
-        this.image = eventImage;
-        this.relevancy_score = this.final_score();
+        this.eventDescription = eventDescription;
+        this.timeLeft = time_until_event(this.eventDate);
+        this.eventCategories = read_description(this.eventDescription);
+        this.eventTickets = eventTickets;
+        this.eventImage = eventImage;
+        this.relevancyScore = this.final_score();
     }
 
     final_score() {
         // Basic score, maybe change later
         let basic_score = 0;
 
-        if (on_campus(this.location)) {
+        if (on_campus(this.eventLocation)) {
             basic_score += high_score * 5;
         }
         if (!input_validation(time_left_score(this.time_left), "int")) {
             basic_score += time_left_score(this.time_left);
         }
-        basic_score += this.participants;
+        basic_score += this.eventParticipants;
         return basic_score;
     }
 }

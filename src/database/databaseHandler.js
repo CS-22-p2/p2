@@ -209,16 +209,16 @@ async function update_existing_event(eventClass, collection) {
                 {
                     $set: {
                         "eventTitle": eventClass.eventTitle,
-                        "date": eventClass.date,
-                        "participants": eventClass.participants,
-                        "locations": eventClass.location,
-                        "duration": eventClass.duration,
-                        "description": eventClass.description,
-                        "time_left": eventClass.time_left,
-                        "categories": eventClass.categories,
-                        "tickets": eventClass.tickets,
-                        "image": eventClass.image,
-                        "relevancy_score": eventClass.relevancy_score
+                        "eventDate": eventClass.eventDate,
+                        "eventParticipants": eventClass.eventParticipants,
+                        "eventLocation": eventClass.eventLocation,
+                        "eventDuration": eventClass.eventDuration,
+                        "eventDescription": eventClass.eventDescription,
+                        "timeLeft": eventClass.timeLeft,
+                        "eventCategories": eventClass.eventCategories,
+                        "eventTickets": eventClass.eventTickets,
+                        "eventImage": eventClass.eventImage,
+                        "relevancyScore": eventClass.relevancyScore
                     }
                 }
             )
