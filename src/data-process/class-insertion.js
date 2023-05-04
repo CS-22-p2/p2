@@ -1,5 +1,5 @@
 // Import ES6 modules
-import { getEntry, insertEntry, checkDuplicate} from '../database/databaseHandler.js';
+import { insertEntry, checkDuplicateLink, update_existing_event, getAllEvents } from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
 // Export ES6 modules
@@ -11,8 +11,10 @@ export default {
     on_campus,
     time_left_score,
     strip_and_trim,
-    read_description
+    read_description,
+    class_creator
 };
+
 
 // Global variables
 let base_score = 100;
@@ -40,7 +42,7 @@ function input_validation(input, expected) {
     }
 
     // Correct input
-    return true; 
+    return true;
 }
 
 // Gets date from these 3 possible combinations of input
@@ -67,7 +69,7 @@ function date_conversion_formatting(date_str) {
         { regex: /^(\w{3}) (\d+) AT (\d+):(\d+).*?$/, format: 'MMM D, YYYY h:mm A' },
         { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' }
     ];
-    
+
     for (let i = 0; i < formats.length; i++) {
         // Tries to match with the regex's
         const match = date_str.match(formats[i].regex);
@@ -82,7 +84,7 @@ function date_conversion_formatting(date_str) {
             const isValid = !isNaN(date.getTime());
             if (isValid) {
                 return date;
-            }   
+            }
         }
     }
     // No matching date format
@@ -94,7 +96,6 @@ function date_conversion_formatting(date_str) {
 // 'Duration: 1 hr 30 min' or
 // 'Duration: 1 hr'
 function get_duration(event_duration) {
-    console.log(event_duration);
     if (!input_validation(event_duration, "str")) {
         return null;
     }
@@ -130,7 +131,7 @@ function time_until_event(date) {
 // Formats string
 function format_address(address) {
     // - g = All occurences
-    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase(); 
+    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase();
 }
 
 // Determine if event are on campus
@@ -140,9 +141,9 @@ function on_campus(location) {
     }
 
     // Example adressess, expandable
-    const campus_addresses = ["selmalagerløfsvej", 
-                            "bertil ohtils vej", 
-                            "frederik bajers vej"];
+    const campus_addresses = ["selmalagerløfsvej",
+        "bertil ohtils vej",
+        "frederik bajers vej"];
 
     // check if this.location is in campus_addresses
     if (campus_addresses.includes(format_address(location))) {
@@ -186,21 +187,26 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'alcohol-free': ['nonalcoholic', 'sober', 'drugfree',"spirtis","bars","booze","party"
-                        ,"alkoholfri","ædru","stoffri","spiritus","barer","alkohol","fest" ],
-        'business': ['career', 'networking', 'professional', 'entrepreneurship',"management", "jobs", "job",
-                    ,"karriere","netværk","professionel","iværksætteri","ledelse"],
-        'sport':    ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
-                    ,"tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
+        'Party': ['alcoholic', 'alkohol', 'beer', 'øl', "spirtis", "bars", "booze", 'sprut', "party", 'fest'],
+        'business': ['career', 'networking', 'professional', 'entrepreneurship', "management", "jobs", "job",
+            , "karriere", "netværk", "professionel", "iværksætteri", "ledelse"],
+        'sport': ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
+            , "tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
     };
-    
+
     // strips and trims array
     for (let i = 0; i < tokens.length; i++) {
         tokens[i] = strip_and_trim(tokens[i]);
     }
 
     // Remove generic words
-    const removeable_words = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'person', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us'];
+    const removeable_words = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an',
+        'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'person', 'into', 'year', 'your',
+        'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any',
+        'these', 'give', 'day', 'most', 'us', 'den', 'være', 'til', 'af', 'og', 'en', 'i', 'denne', 'have', 'jeg', 'det', 'for', 'ikke', 'på', 'med', 'han', 'som', 'du', 'gøre', 'ved', 'dette', 'men', 'hans', 'af', 'fra', 'de', 'vi', 'sige', 'hende', 'hun',
+        'eller', 'en', 'vil', 'min', 'en', 'alle', 'ville', 'der', 'deres', 'hvad', 'sådan', 'op', 'ud', 'hvis', 'om', 'hvem', 'få', 'hvilket', 'gå', 'mig', 'når', 'lave', 'kan', 'lige', 'tid', 'ingen', 'bare', 'ham', 'vide', 'tage', 'person', 'ind', 'år',
+        'din', 'god', 'nogle', 'kunne', 'dem', 'se', 'andet', 'end', 'så', 'nu', 'se', 'kun', 'komme', 'sin', 'over', 'tænke', 'også', 'tilbage', 'efter', 'bruge', 'to', 'hvordan', 'vores', 'arbejde', 'første', 'godt', 'måde', 'selv', 'ny', 'vil', 'fordi',
+        'enhver', 'disse', 'give', 'dag', 'mest', 'os'];
     for (let i = tokens.length - 1; i >= 0; i--) {
         if (tokens[i] === '' || removeable_words.includes(tokens[i])) {
             tokens.splice(i, 1);
@@ -220,10 +226,10 @@ function read_description(description) {
 }
 
 class event_data {
-    constructor(orgName, orgCategory, orgContactInfo, 
-        eventLink, eventTitle, eventDate, 
-        eventHosts, eventParticipants, eventLocation, 
-        eventDuration, isPrivate, eventDescription, 
+    constructor(orgName, orgCategory, orgContactInfo,
+        eventLink, eventTitle, eventDate,
+        eventHosts, eventParticipants, eventLocation,
+        eventDuration, isPrivate, eventDescription,
         eventTickets, eventImage) {
         this.orgName = orgName;
         this.orgCategory = orgCategory;
@@ -231,55 +237,71 @@ class event_data {
         this.eventLink = eventLink;
         this.eventTitle = eventTitle;
         this.eventHost = eventHosts;
-        this.date = date_conversion_formatting(eventDate);
-        this.participants = eventParticipants;
-        this.location = eventLocation;
-        this.duration = get_duration(eventDuration);
+        this.eventDate = date_conversion_formatting(eventDate);
+        this.eventParticipants = eventParticipants;
+        this.eventLocation = eventLocation;
+        this.eventDuration = get_duration(eventDuration);
         this.isPrivate = isPrivate;
-        this.description = eventDescription;
-        this.time_left = time_until_event(this.date);
-        this.categories = read_description(this.description);
-        this.tickets = eventTickets;
-        this.image = eventImage;
-        this.relevancy_score = this.final_score();
+        this.eventDescription = eventDescription;
+        this.timeLeft = time_until_event(this.eventDate);
+        this.eventCategories = read_description(this.eventDescription);
+        this.eventTickets = eventTickets;
+        this.eventImage = eventImage;
+        this.relevancyScore = this.final_score();
     }
 
     final_score() {
         // Basic score, maybe change later
         let basic_score = 0;
 
-        if (on_campus(this.location)) {
+        if (on_campus(this.eventLocation)) {
             basic_score += high_score * 5;
         }
         if (!input_validation(time_left_score(this.time_left), "int")) {
             basic_score += time_left_score(this.time_left);
         }
-        basic_score += this.participants;
+        basic_score += this.eventParticipants;
         return basic_score;
     }
 }
 
 async function inserting_DB(event_class) {
-    if (await checkDuplicate(event_class.eventLink, "events")) {
-        return false;
+    try {
+        // checks for duplicate
+        const duplicate = await checkDuplicateLink(event_class.eventLink, "events");
+        if (duplicate) {
+            // Updates existing entry
+            const changes = await update_existing_event(event_class, "events");
+            if (changes) {
+                return true;
+            }
+            // Something went wrong
+            throw new Error("Couldn't update event");
+        }
+        // If not duplicate, insert entry
+        const result = await insertEntry(event_class, "events");
+        if (!result) {
+            throw new Error("Couldn't insert event");
+        }
+        return result;
+    } catch (error) {
+        console.error(error);
     }
-    await insertEntry(event_class, "events");
-    return true;
 }
 
-async function main() {
-    let event_arr = await accessEventsPage();
-    let event_arr_size = event_arr.length;
-    // Debug
-    // console.log(`Array size: ${event_arr_size}`);
-    // console.log(event_arr);
-
-    // guard clause
-    if (event_arr_size <= 0) {
+async function class_creator() {
+    let event_arr;
+    try {
+        event_arr = await accessEventsPage();
+        if (event_arr.length <= 0) {
+            throw new Error("Couldn't get array from webcrawler");
+        }
+    } catch (error) {
+        console.error(error);
         return false;
     }
 
-    for (let i = 0; i < event_arr_size; i++) {
+    for (let i = 0; i < event_arr.length; i++) {
         const event_temp = new event_data(
             event_arr[i].orgName,
             event_arr[i].orgCategory,
@@ -295,17 +317,8 @@ async function main() {
             event_arr[i].eventDescription,
             event_arr[i].eventTickets,
             event_arr[i].eventImage
-        )
-        console.log(event_temp);
-        // let a = await inserting_DB(event_temp);
-        // if (a === false) {
-        //     console.log("Event failed to insert");
-        // }
-        // else {
-        //     console.log("Event inserted");
-        //     console.log(event_temp);
-        // }
+        );
+        await inserting_DB(event_temp);
     }
-
     return true;
 }
