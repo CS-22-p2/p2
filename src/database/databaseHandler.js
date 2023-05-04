@@ -11,6 +11,7 @@ export {
     establishConnection,
     checkDuplicateLink,
     getNewestEntries,
+    searchAllFields,
     getAllEvents
 };
 
@@ -125,7 +126,7 @@ async function getNewestEntries(collection, skip) {
 }
 
 // This functions returns all the entrys in a collection that matches the searchTerm in any field
-async function serchAllFields(searchTerm) {
+async function searchAllFields(searchTerm) {
     let client;
     let result = [];
 
