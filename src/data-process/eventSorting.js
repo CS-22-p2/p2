@@ -11,7 +11,6 @@ async function get_sorted_events(search_term) {
     // if score or date, all events
     // Else categories
     let event_array = await getNewestEntries("events", 1);
-    console.log(event_array);
     let event_array_index = [];
     let unsortable = [];
 
