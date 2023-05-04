@@ -15,6 +15,7 @@ const tickets_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1
 const location_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xi81zsa.x1yc453h";
 const details_class = "span.x193iq5w.xeuugli.x13faqbe.x1vvkbs.xlh3980.xvmahel.x1n0sxbx.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.x4zkp8e.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u.x1yc453h";
 const hosts_class = "span.xt0psk2";
+const initial_textbox_class = "div.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x1vvkbs"
 const description_class = "div.x11i5rnm.xat24cr.x1mh8g0r.x1vvkbs.xtlvy1s";
 const image_class = "img.x85a59c.x193iq5w.x4fas0m.x19kjcj4";
 
@@ -139,7 +140,7 @@ async function getData(eventPageLink, page) {
   //Clicks away from the popup if there is any(Otherwise unable to scrape)
   if(await checkElement(page, popUp_click))
   {
-    await clickElement(page, popUp_click, "Allow essential and optional cookies");
+    await clickElement(page, popUp_click, "Allow all cookies");
   }
 
   //Opens the "See More" section of description
@@ -154,13 +155,13 @@ async function getData(eventPageLink, page) {
   const eventTickets = await getElement(page, tickets_class, "textContent");
   const eventDetails = await getElementsArray(page, details_class, "textContent");
   const eventHosts = await getElementsArray(page, hosts_class, "textContent");
+  const eventDescriptionStart = await getElement(page, initial_textbox_class, "textContent");
   const eventDescription = await getElementsArray(page, description_class, "textContent");
 
   //To get the image we need to go to the image page... Otherwise encrypted :(
   await clickImage(page, image_click);
   const eventImage = await getImage(page, image_class);
-  
-  return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescription, eventTickets, eventImage};
+  return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescriptionStart, eventDescription, eventTickets, eventImage};
 };
 
 /**
@@ -174,7 +175,7 @@ async function getData(eventPageLink, page) {
 async function processInformation(gatheredData)
 {
   let event_data = new Event();
-  let description = "";
+  let description = gatheredData.eventDescriptionStart + " ";
 
   //Some fields can just be stored directly without any processing
   event_data.eventLink = gatheredData.eventLink;
@@ -205,6 +206,7 @@ async function processInformation(gatheredData)
  for(let element of gatheredData.eventDescription)
  {
   description += element; //Append each part of description into one long string
+  description += " "; //Spaces are nice too
  }
  description = description.replace("See less",""); //Removes unwanted string("See less")
  event_data.eventDescription = description;
