@@ -14,7 +14,6 @@ export default {
     read_description
 };
 
-
 // Global variables
 let base_score = 100;
 let high_score = 200;
