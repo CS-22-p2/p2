@@ -566,7 +566,11 @@ let EventData = [
   ]
 
 
-
+  function myFunction() {
+    var popup = document.getElementById("myPopup");
+    popup.classList.toggle("show");
+  }
+  
 //Executed code
 const idArray = ["#EventTitle", "#Location", "#Date",
                  "#Participants","#Host","#Link",
