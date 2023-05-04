@@ -15,9 +15,8 @@
                 <button class="TopNavButton" id = "loginPage"><i class="ri-user-settings-fill TopNavLogo"></i>Login</button>
                 <div class="dropdown"><button class="TopNavButton" id = "category"><i class="ri-scales-line TopNavLogo"></i>Category</button>
                     <div class="dropdown-content">
-                      <a href="#" onclick=""><input type="checkbox" id="dateCheckbox" name="dateCheckbox" checked>Date</a>
-                      <a href="#" onclick=""><input type="checkbox" id="relevanceCheckbox" name="relevanceCheckbox" unchecked>Relevance score</a>
-                      <a href="#" onclick=""><input type="checkbox" id="campusCheckbox" name="campusCheckbox" unchecked>Campus</a>
+                      <a href="#"><input type="checkbox" name="check" value="1" class="required-checkbox" onclick="onlyOne(this)"  checked>Date</a>
+                      <a href="#"><input type="checkbox" name="check" value="2" class="required-checkbox" onclick="onlyOne(this)" unchecked>Relevance score</a>
                     </div></div>
             </span>
         
@@ -39,7 +38,7 @@
                 <ul id="EventUL"><i class="ri-scales-line" id="logo"></i><span id = "Category"> Category </span></ul>
                 <ul id="EventUL"><i class="ri-heart-fill" id="logo"></i><span id = "Relevance Score"> Relevance score: 85% </i></span></ul>
                 <ul id="EventUL"><i class="ri-facebook-fill" id="logo"></i><a id ="Link" href="">See More</a></ul>
-                <ul id="EventUL"><button><i class="ri-star-line" id="logo"></i></button></ul>
+                <ul id="EventUL"><button id="favoriteButton" onclick="changeColor() ><i class="ri-star-line" id="logo"></i></button></ul>
             </div>
             <div id="DescriptionBox" class = "elem">
                 <span id="EventDescription"></span>
