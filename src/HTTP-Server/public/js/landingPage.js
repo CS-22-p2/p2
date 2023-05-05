@@ -1,6 +1,7 @@
+
 //Executed code
 const idArray = ["#EventTitle", "#Location", "#Date",
-                 "#Participants","#Host","#Link","#DescriptionBox", "#Category"];
+  "#Participants", "#Host", "#Link", "#DescriptionBox", "#Category"];
 
 let events = [];
 
@@ -12,39 +13,41 @@ let favoritesButton = document.querySelector('#favoritesPage');
 let loginButton = document.querySelector('#loginPage');
 let categoryForm = document.querySelector('#categoryForm');
 
+
 homeButton.addEventListener('click', goToPage);
 favoritesButton.addEventListener('click', goToPage);
 loginButton.addEventListener('click', goToPage);
 categoryForm.addEventListener('click', sortHandler);
 
-fetch('/getEvents', { method: 'GET'})
-.then(response => response.json())
-.then(data => {
-  eventInitializer(data);
-
-  changeColor();
-})
-.catch(error => console.error(error));
+fetch('/getEvents', { method: 'GET' })
+  .then(response => response.json())
+  .then(data => {
+    eventInitializer(data);
+    changeColor();
+  })
+  .catch(error => console.error(error));
 
 //Removes the generic template the events are based on
 template.remove();
 
 //---------------------------------------------------------------------
 
-function eventInitializer(eventData){
-  for (let event of eventData) 
-  {
+function eventInitializer(eventData) {
+  for (let event of eventData) {
     createEvent(event);
   }
 }
 
-function createEvent(eventObject)
-{
+function createEvent(eventObject, templateElement) {
   //The date is made simple into the format month/day/year
-  const readableDateFormat = new Intl.DateTimeFormat("en-us",{dateStyle: "full"});
+  let clone;
+  const readableDateFormat = new Intl.DateTimeFormat("en-us", { dateStyle: "full" });
   let processedDate = readableDateFormat.format(new Date(eventObject.eventDate))
-  
-  let clone = elem.cloneNode(true);
+
+  if(templateElement === undefined){
+    clone = template.cloneNode(true);
+  }else clone = templateElement.cloneNode(true);
+
   clone.dataset.eventid = eventObject._id;
   clone.querySelector("#EventTitle").innerText = eventObject.eventTitle;
   clone.querySelector("#Location").innerText = eventObject.eventLocation;
@@ -56,30 +59,27 @@ function createEvent(eventObject)
   clone.querySelector("#DescriptionBox").innerText = eventObject.eventDescription;
   clone.querySelector("#Category").innerText = eventObject.eventCategories.toString().toUpperCase();
   clone.querySelector("#RelevanceScore").innerText = eventObject.relevancyScore;
-  checkExistance(clone,idArray);
+  checkExistance(clone, idArray);
   parent.appendChild(clone);
 }
 
-function checkExistance(node, idArray){
-  for(let id of idArray){
+function checkExistance(node, idArray) {
+  for (let id of idArray) {
     //Removes all undefined elements in the TextBox
-    if(node.querySelector(id).innerText === ""){
+    if (node.querySelector(id).innerText === "") {
       node.querySelector(id).parentElement.remove();
     }
   }
   //Removes unwanted descriptions
-  if(node.querySelector("#DescriptionBox").innerText === "") 
-  {
+  if (node.querySelector("#DescriptionBox").innerText === "") {
     node.querySelector("#DescriptionBox").remove();
   }
 }
 
-function goToPage(event)
-{
+function goToPage(event) {
   let url = "";
 
-  switch(event.target.innerText)
-  {
+  switch (event.target.innerText) {
     case 'Home':
       url = "../html/landingPage.html"
       break;
@@ -97,7 +97,7 @@ function goToPage(event)
 function changeColor() {
   // Gets all the favorite "buttons"
   const favoriteButtons = document.querySelectorAll('#fLogo');
-  
+
   // for each of the favorite "buttons" this adds a function which 
   // updates the color of the button to the opposite color, from grey to yellow and back.
   for (let i = 0; i < favoriteButtons.length; i++) {
@@ -113,13 +113,23 @@ function changeColor() {
   }
 }
 
-function sortHandler(event){
-  let selectedOption = event.target.id;
-  if(selectedOption === "relevanceOpt"){
+function sortHandler(event) {
+  let selectedOption = event.target.id.toString();
+  let templateBox = document.querySelector("#FlexBox");
 
-  }else if(selectedOption === "dateOpt"){
-
-  }
+  fetch('/sortedEvents', {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(selectedOption)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.events);
+    eventInitializer(data.events, templateBox);
+  })
+  .catch(error => console.log(`Network error occured ${error}`));
 }
 
 function favoriteEvent(event) {
@@ -133,11 +143,11 @@ function favoriteEvent(event) {
     userId: objCookie.userId,
     eventId: event.target.parentElement.parentElement.parentElement.dataset.eventid
   }
-  
+
   fetch("/", {
     method: 'PUT',
     headers: {
-    'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
   }).then((response) => {
