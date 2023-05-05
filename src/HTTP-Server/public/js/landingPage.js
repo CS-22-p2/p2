@@ -1,8 +1,7 @@
-
 function myFunction() {
-    var popup = document.getElementById("myPopup");
-    popup.classList.toggle("show");
-  }
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
   
 //Executed code
 const idArray = ["#EventTitle", "#Location", "#Date",
@@ -27,26 +26,22 @@ function onlyOne(checkbox){
   }
 }
 
-function changeColor(){
-  const favoriteButtons = document.querySelectorAll('#favoriteButton');
-  const numOfFavoriteButtons = favoriteButtons.length;
-  let isPressed = new Array(numOfFavoriteButtons).fill(false);
+function changeColor() {
+  const favoriteButtons = document.querySelectorAll('#fLogo');
   
-  for (let i = 0; i < numOfFavoriteButtons; i++) {
-    favoriteButtons[i].addEventListener('click', function() {
-      if (isPressed[i]) {
-        favoriteButtons[i].classList.remove('active');
-        isPressed[i] = false;
-      } 
-      
-      
-      else {
-        favoriteButtons[i].classList.add('active');
-        isPressed[i] = true;
+  for (let i = 0; i < favoriteButtons.length; i++) {
+    favoriteButtons[i].style.backgroundColor = "rgb(159, 175, 166)";
+    favoriteButtons[i].addEventListener('click', (event) => {
+      console.log(event.target.style.backgroundColor);
+      if (event.target.style.backgroundColor == "rgb(159, 175, 166)") {
+        event.target.style.backgroundColor = "rgb(255, 215, 0)";
+      } else {
+        event.target.style.backgroundColor = "rgb(159, 175, 166)";
       }
     });
-  }}
-
+  }
+}
+  
 let parent = document.querySelector('#FlexBoxWrapper');
 let template = document.querySelector("#FlexBox");
 let elem = parent.querySelector('.elem');
@@ -65,6 +60,7 @@ fetch('/getEvents', { method: 'GET'})
   eventInitializer(data);
   //events = JSON.parse(data);
   //eventInitializer(events);
+  changeColor();
 })
 .catch(error => console.error(error));
 
@@ -138,6 +134,4 @@ function goToPage(event)
 
   window.location.href = url;
 }
-
-
 
