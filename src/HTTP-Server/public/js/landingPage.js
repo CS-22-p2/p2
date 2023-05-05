@@ -10,10 +10,12 @@ let elem = parent.querySelector('.elem');
 let homeButton = document.querySelector('#homePage');
 let favoritesButton = document.querySelector('#favoritesPage');
 let loginButton = document.querySelector('#loginPage');
+let categoryForm = document.querySelector('#categoryForm');
 
 homeButton.addEventListener('click', goToPage);
 favoritesButton.addEventListener('click', goToPage);
 loginButton.addEventListener('click', goToPage);
+categoryForm.addEventListener('click', sortHandler);
 
 fetch('/getEvents', { method: 'GET'})
 .then(response => response.json())
@@ -24,7 +26,7 @@ fetch('/getEvents', { method: 'GET'})
 })
 .catch(error => console.error(error));
 
-//eventInitializer(EventData);
+//Removes the generic template the events are based on
 template.remove();
 
 //---------------------------------------------------------------------
@@ -110,19 +112,11 @@ function changeColor() {
   }
 }
 
-function onlyOne(checkbox){
-  let checkboxes = document.getElementsByName('check');
+function sortHandler(event){
+  let selectedOption = event.target.id;
+  if(selectedOption === "relevanceOpt"){
 
-  let isChecked = false;
-  for (let i = 0; i < checkboxes.length; i++) {
-    if (checkboxes[i].checked) {
-      isChecked = true;
-    }
-    if (checkboxes[i] !== checkbox) {
-      checkboxes[i].checked = false;
-    }
-  }
-  if (!isChecked) {
-    checkboxes[0].checked = true;
+  }else if(selectedOption === "dateOpt"){
+
   }
 }

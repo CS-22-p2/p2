@@ -1,6 +1,7 @@
 // Imports
 import { createUser, checkLogin } from '../user-system/userHandler.js';
 import { getNewestEntries } from '../database/databaseHandler.js';
+import { get_sorted_events} from '../data-process/eventSorting.js';
 import http from 'http';
 import fs  from 'fs';
 import url from 'url';
