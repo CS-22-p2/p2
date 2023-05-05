@@ -3,7 +3,7 @@ export { get_sorted_events}
 
 async function get_sorted_events(search_term) {
     // Input validation
-    let possible_search_terms = ["eventDate", "relevancy_score", "categories"];
+    let possible_search_terms = ["eventDate", "relevancyScore", "eventCategories"];
     if (!possible_search_terms.includes(search_term)) {
         return false;
     }
@@ -28,9 +28,6 @@ async function get_sorted_events(search_term) {
             event_array_index.push(obj);
         }
     }
-
-    // Returns index array of how the sorted list should be
-    event_array_index = InsertionSort(event_array_index);
     // Returns index array of how the sorted list should be
     event_array_index = InsertionSort(event_array_index);
 
@@ -38,16 +35,6 @@ async function get_sorted_events(search_term) {
     // Gets the original object and inserts it with the index arrat
     for (let i = 0; i < event_array_index.length; i++) {
         sorted_list[i] = event_array[event_array_index[i].index];
-    }
-    let sorted_list = [];
-    // Gets the original object and inserts it with the index arrat
-    for (let i = 0; i < event_array_index.length; i++) {
-        sorted_list[i] = event_array[event_array_index[i].index];
-    }
-
-    // Reverse if highest from lowest is needed
-    if (search_term !== "eventDate") {
-        sorted_list = sorted_list.reverse();
     }
     // Reverse if highest from lowest is needed
     if (search_term !== "eventDate") {
@@ -57,13 +44,8 @@ async function get_sorted_events(search_term) {
     // Adds the unsortable data to the array
     for (let i = 0; i < unsortable.length; i++) {
         sorted_list.push(event_array[unsortable[i].index]);
-    // Adds the unsortable data to the array
-    for (let i = 0; i < unsortable.length; i++) {
-        sorted_list.push(event_array[unsortable[i].index]);
     }
 
-    // Returns an array with sorted event objects
-    return sorted_list;
     // Returns an array with sorted event objects
     return sorted_list;
 }
@@ -76,7 +58,6 @@ function InsertionSort(array) {
         let key = array[j];
         let i = j - 1;
         while (i >= 0 && array[i].value > key.value) {
-        while (i >= 0 && array[i].value > key.value) {
             array[i + 1] = array[i]
             i = i - 1;
         }
@@ -85,11 +66,9 @@ function InsertionSort(array) {
 
     }
     return array;
-    return array;
 }
 
-let result = await get_sorted_events("eventDate")
-let result = await get_sorted_events("eventDate")
+/* let result = await get_sorted_events("eventDate")
 
     //Check if an invalid date is passed into the array
     for (let element in array) {
@@ -101,3 +80,4 @@ let result = await get_sorted_events("eventDate")
     }
     return invalidIndexes;
 }
+ */
