@@ -1,6 +1,6 @@
 // Imports
 import { createUser, checkLogin } from '../user-system/userHandler.js';
-import { getNewestEntries, updateFavorite } from '../database/databaseHandler.js';
+import { getNewestEntries, updateFavorite, getFavorites } from '../database/databaseHandler.js';
 import http from 'http';
 import fs  from 'fs';
 import url from 'url';
@@ -17,8 +17,14 @@ const publicDirectoryPath = path.join(__dirname, 'public');
 const server = http.createServer(async (req, res) => {
     if (req.method === 'GET') {
         // This handels get request asking for data
-        if(req.url === '/getEvents') {
+        if(req.url.includes('/getEvents')) {
             const events = await getEvents();
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(events));
+            return;
+        } else if (req.url.includes('/getFevorites')) {
+            let query = extractQuery(req.url);
+            const events = await getFavorites(parseInt(query[0].value))
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(events));
             return;
@@ -129,6 +135,22 @@ function getContentType(extname) {
             return'image/avif';
             break;
       }
+}
+
+function extractQuery(url) {
+    let split = url.split("?");
+    let querys;
+    let result = [];
+    for (let i = 0; i < split.length; i++) {
+        if (split[i].includes("=")) {
+            querys = split[i];
+        }
+    }
+    querys = querys.split("=")
+    for (let i = 0; i < querys.length; i += 2) {
+        result.push({query: querys[i], value: querys[i + 1]});
+    }
+    return result;
 }
 
 async function getEvents() {
