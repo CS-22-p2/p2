@@ -1,51 +1,14 @@
-
+// Christian, hvad skulle den her function bruges til?
 function myFunction() {
-    var popup = document.getElementById("myPopup");
-    popup.classList.toggle("show");
-  }
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
   
 //Executed code
 const idArray = ["#EventTitle", "#Location", "#Date",
                  "#Participants","#Host","#Link","#DescriptionBox", "#Category"];
 
 let events = [];
-
-function onlyOne(checkbox){
-  let checkboxes = document.getElementsByName('check');
-
-  let isChecked = false;
-  for (let i = 0; i < checkboxes.length; i++) {
-    if (checkboxes[i].checked) {
-      isChecked = true;
-    }
-    if (checkboxes[i] !== checkbox) {
-      checkboxes[i].checked = false;
-    }
-  }
-  if (!isChecked) {
-    checkboxes[0].checked = true;
-  }
-}
-
-function changeColor(){
-  const favoriteButtons = document.querySelectorAll('#favoriteButton');
-  const numOfFavoriteButtons = favoriteButtons.length;
-  let isPressed = new Array(numOfFavoriteButtons).fill(false);
-  
-  for (let i = 0; i < numOfFavoriteButtons; i++) {
-    favoriteButtons[i].addEventListener('click', function() {
-      if (isPressed[i]) {
-        favoriteButtons[i].classList.remove('active');
-        isPressed[i] = false;
-      } 
-      
-      
-      else {
-        favoriteButtons[i].classList.add('active');
-        isPressed[i] = true;
-      }
-    });
-  }}
 
 let parent = document.querySelector('#FlexBoxWrapper');
 let template = document.querySelector("#FlexBox");
@@ -65,12 +28,12 @@ fetch('/getEvents', { method: 'GET'})
   eventInitializer(data);
   //events = JSON.parse(data);
   //eventInitializer(events);
+  changeColor();
 })
 .catch(error => console.error(error));
 
 //eventInitializer(EventData);
 template.remove();
-
 
 //---------------------------------------------------------------------
 
@@ -80,7 +43,6 @@ function eventInitializer(eventData){
     createEvent(event);
   }
 }
-
 
 function createEvent(eventObject)
 {
@@ -114,9 +76,9 @@ function checkExistance(node, idArray){
   }
   //Removes unwanted descriptions
   if(node.querySelector("#DescriptionBox").innerText === "") 
-    {
-      node.querySelector("#DescriptionBox").remove();
-    }
+  {
+    node.querySelector("#DescriptionBox").remove();
+  }
 }
 
 function goToPage(event)
@@ -139,5 +101,38 @@ function goToPage(event)
   window.location.href = url;
 }
 
+function changeColor() {
+  // Gets all the favorite "buttons"
+  const favoriteButtons = document.querySelectorAll('#fLogo');
+  
+  // for each of the favorite "buttons" this adds a function which 
+  // updates the color of the button to the opposite color, from grey to yellow and back.
+  for (let i = 0; i < favoriteButtons.length; i++) {
+    favoriteButtons[i].style.backgroundColor = "rgb(159, 175, 166)";
+    favoriteButtons[i].addEventListener('click', (event) => {
+      console.log(event.target.style.backgroundColor);
+      if (event.target.style.backgroundColor == "rgb(159, 175, 166)") {
+        event.target.style.backgroundColor = "rgb(255, 215, 0)";
+      } else {
+        event.target.style.backgroundColor = "rgb(159, 175, 166)";
+      }
+    });
+  }
+}
 
+function onlyOne(checkbox){
+  let checkboxes = document.getElementsByName('check');
 
+  let isChecked = false;
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      isChecked = true;
+    }
+    if (checkboxes[i] !== checkbox) {
+      checkboxes[i].checked = false;
+    }
+  }
+  if (!isChecked) {
+    checkboxes[0].checked = true;
+  }
+}
