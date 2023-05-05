@@ -11,7 +11,8 @@ export {
     establishConnection,
     checkDuplicateLink,
     getNewestEntries,
-    getAllEvents
+    getAllEvents,
+    updateFavorite
 };
 
 dotenv.config();
@@ -227,8 +228,25 @@ async function updateFavorite(userId, eventId) {
     try {
         client = await establishConnection();
         
-        const result = client.db("p2").collection(collection).updateOne({userId: userId}, {$push: {}})
+        const result = await client.db("p2").collection("userdb").findOne({userId: userId});
+        let favorittes = result.favorittes
 
+        const duplicate = favorittes.includes(eventId);
+        if (!duplicate) {
+            favorittes.push(eventId);
+            const updateResult = await client.db("p2").collection("userdb").updateOne(
+                {userId: userId}, 
+                {$set: {favorittes: favorittes}});
+            if (updateResult) {
+                // favorittes updated
+                return true;
+            }
+            // favorittes not updated
+            return false;
+        }
+        console.log(result.favorittes);
+        // event id is duplicate
+        return false;
     } catch (error) {
         console.error(error);
     } finally {

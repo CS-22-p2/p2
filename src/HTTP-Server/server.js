@@ -1,6 +1,6 @@
 // Imports
 import { createUser, checkLogin } from '../user-system/userHandler.js';
-import { getNewestEntries } from '../database/databaseHandler.js';
+import { getNewestEntries, updateFavorite } from '../database/databaseHandler.js';
 import http from 'http';
 import fs  from 'fs';
 import url from 'url';
@@ -80,6 +80,7 @@ const server = http.createServer(async (req, res) => {
                 console.log("Trying to sign up");
             } else if (body.type === "favorite") {
                 // Function that adds event id to favorite list
+                await updateFavorite(body.userId, body.eventId);
             }
             console.log(`Received PUT request with body: ${body}`)
             res.writeHead(200, { 'Content-Type': 'application/json' });
