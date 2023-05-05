@@ -38,6 +38,7 @@ function eventInitializer(eventData){
   }
 }
 
+// Nu kan der næsten vises favorite events på favorites page, relevancy score fucker en smule
 function createEvent(eventObject)
 {
   //The date is made simple into the format month/day/year
@@ -123,7 +124,6 @@ function sortHandler(event){
 }
 
 function favoriteEvent(event) {
-  document.cookie = "username=John Doe";
   let cookies = document.cookie;
   let userCookie = getUserCookie(cookies);
   let objCookie = JSON.parse(userCookie);
@@ -133,7 +133,7 @@ function favoriteEvent(event) {
     userId: objCookie.userId,
     eventId: event.target.parentElement.parentElement.parentElement.dataset.eventid
   }
-  
+
   fetch("/", {
     method: 'PUT',
     headers: {
