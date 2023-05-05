@@ -17,6 +17,7 @@ const publicDirectoryPath = path.join(__dirname, 'public');
 
 const server = http.createServer(async (req, res) => {
     if (req.method === 'GET') {
+        // This handels get request asking for data
         if(req.url === '/getEvents') {
             const events = await getEvents();
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -76,7 +77,8 @@ const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({message: 'PUT request successful', cookie: result}));
 
                 return true;
-            } else if (body.type === "signUp") { // if the request type is signup it creates a new user
+            } else if (body.type === "signUp") { 
+                // if the request type is signup it creates a new user
                 let result = await createUser(body);
                 console.log("Trying to sign up");
             } else if (body.type === "favorite") {
