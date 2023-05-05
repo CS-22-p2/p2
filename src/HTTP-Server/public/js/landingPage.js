@@ -1,9 +1,3 @@
-// Christian, hvad skulle den her function bruges til?
-function myFunction() {
-  var popup = document.getElementById("myPopup");
-  popup.classList.toggle("show");
-}
-  
 //Executed code
 const idArray = ["#EventTitle", "#Location", "#Date",
                  "#Participants","#Host","#Link","#DescriptionBox", "#Category"];
@@ -24,10 +18,8 @@ loginButton.addEventListener('click', goToPage);
 fetch('/getEvents', { method: 'GET'})
 .then(response => response.json())
 .then(data => {
-  console.log(data);
   eventInitializer(data);
-  //events = JSON.parse(data);
-  //eventInitializer(events);
+
   changeColor();
 })
 .catch(error => console.error(error));
@@ -52,7 +44,6 @@ function createEvent(eventObject)
   
   let clone = elem.cloneNode(true);
   clone.dataset.eventid = eventObject._id;
-  console.log(clone.dataset.eventid);
   clone.querySelector("#EventTitle").innerText = eventObject.eventTitle;
   clone.querySelector("#Location").innerText = eventObject.eventLocation;
   clone.querySelector("#Date").innerText = processedDate;
@@ -110,7 +101,6 @@ function changeColor() {
   for (let i = 0; i < favoriteButtons.length; i++) {
     favoriteButtons[i].style.backgroundColor = "rgb(159, 175, 166)";
     favoriteButtons[i].addEventListener('click', (event) => {
-      console.log(event.target.style.backgroundColor);
       if (event.target.style.backgroundColor == "rgb(159, 175, 166)") {
         event.target.style.backgroundColor = "rgb(255, 215, 0)";
       } else {
