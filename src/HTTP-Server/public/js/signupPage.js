@@ -39,6 +39,8 @@ async function submit(){
         body: JSON.stringify(data)
     }).then(response => {
         console.log('PUT request successful');
+        
+        window.location.href = "landingPage.html";
     }).catch(error => {
         console.error('Error sending PUT request:', error);
     });
