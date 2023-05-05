@@ -1,5 +1,5 @@
 
-  function myFunction() {
+function myFunction() {
     var popup = document.getElementById("myPopup");
     popup.classList.toggle("show");
   }
@@ -47,15 +47,6 @@ function changeColor(){
     });
   }}
 
-  /*checkboxes.forEach((element)=> {
-    if(element !== checkbox) element.checked = false;
-  })
-
-}*/
-
-
-
-
 let parent = document.querySelector('#FlexBoxWrapper');
 let template = document.querySelector("#FlexBox");
 let elem = parent.querySelector('.elem');
@@ -93,12 +84,16 @@ function eventInitializer(eventData){
 
 function createEvent(eventObject)
 {
+  //The date is made simple into the format month/day/year
+  const readableDateFormat = new Intl.DateTimeFormat("en-us",{dateStyle: "full"});
+  let processedDate = readableDateFormat.format(new Date(eventObject.eventDate))
+  
   let clone = elem.cloneNode(true);
   clone.dataset.eventid = eventObject._id;
   console.log(clone.dataset.eventid);
   clone.querySelector("#EventTitle").innerText = eventObject.eventTitle;
   clone.querySelector("#Location").innerText = eventObject.eventLocation;
-  clone.querySelector("#Date").innerText = eventObject.eventDate;
+  clone.querySelector("#Date").innerText = processedDate;
   clone.querySelector("#Participants").innerText = eventObject.eventParticipants;
   clone.querySelector("#Host").innerText = eventObject.orgName;
   clone.querySelector("#Link").href = eventObject.eventLink;
