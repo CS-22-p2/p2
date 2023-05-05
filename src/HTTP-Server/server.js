@@ -130,7 +130,6 @@ function getContentType(extname) {
 
 async function getEvents() {
     const result = await getNewestEntries("events"); // This might need to be updated a tiny bit
-
     return result;
 }
 

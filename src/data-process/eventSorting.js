@@ -1,4 +1,5 @@
 import { getNewestEntries } from "../database/databaseHandler.js";
+export { get_sorted_events}
 
 async function get_sorted_events(search_term) {
     // Input validation
