@@ -23,10 +23,12 @@ fetch(`/getFevorites?userId=${objCookie.userId}`, { method: 'GET'})
 .then(response => response.json())
 .then(data => {
   eventInitializer(data);
+
+  changeColor();
 })
 .catch(error => console.error(error));
 
-//Removes the generic template the events are based on
+// Removes the generic template the events are based on
 template.remove();
 
 //---------------------------------------------------------------------
@@ -99,5 +101,25 @@ function getUserCookie(cookies) {
     if (c[i].includes("currentUser")) {
       return c[i].split("=")[1];
     }
+  }
+}
+
+function changeColor() {
+  // Gets all the favorite "buttons"
+  const favoriteButtons = document.querySelectorAll('#fLogo');
+  
+  // for each of the favorite "buttons" this adds a function which 
+  // updates the color of the button to the opposite color, from grey to yellow and back.
+  for (let i = 0; i < favoriteButtons.length; i++) {
+    favoriteButtons[i].style.backgroundColor = "rgb(255, 215, 0)";
+    favoriteButtons[i].addEventListener('click', (event) => {
+      if (event.target.style.backgroundColor == "rgb(159, 175, 166)") {
+        event.target.style.backgroundColor = "rgb(255, 215, 0)";
+      } else {
+        event.target.style.backgroundColor = "rgb(159, 175, 166)";
+      }
+    });
+    // This function should be changed to remove the clicked event form favorites list
+    // favoriteButtons[i].addEventListener('click', favoriteEvent);
   }
 }
