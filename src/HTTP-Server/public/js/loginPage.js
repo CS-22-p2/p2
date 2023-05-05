@@ -35,11 +35,10 @@ function submit(){
     }).then((res) => {
         console.log(res.cookie);
         
-        document.cookie = "username=John Doe";
-        
         document.cookie = `${res.cookie.cookieName}=${res.cookie.cookieValue};` +
-        `max-age=${res.cookie.cookieOptions.maxAge};`
-        // Forward the user to the landing page
+        `max-age=${res.cookie.cookieOptions.maxAge};`;
+
+        window.location.href = "landingPage.html";
     }).catch(error => {
         console.error('Error sending PUT request:', error);
     });
