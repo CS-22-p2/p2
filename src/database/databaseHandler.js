@@ -1,5 +1,5 @@
 // Imports
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import class_creator from '../data-process/class-insertion.js';
 
@@ -12,7 +12,8 @@ export {
     checkDuplicateLink,
     getNewestEntries,
     getAllEvents,
-    updateFavorite
+    updateFavorite,
+    getFavorites
 };
 
 dotenv.config();
@@ -254,11 +255,36 @@ async function updateFavorite(userId, eventId) {
     }
 }
 
+async function getFavorites(userId) {
+    let client;
+    let favoriteEvents = [];
+
+    try {
+        client = await establishConnection();
+
+        const user = await client.db("p2").collection("userdb").findOne({userId: userId});
+        if (user) {
+            let favorites = [];
+            user.favorittes.forEach((ele) => {favorites.push(new ObjectId(ele))});
+            const favoriteEvents = await client.db("p2").collection("events").find({_id: {$in: favorites}}).toArray();
+            //favoriteEventsCursor.forEach(ele => favoriteEvents.push(ele.name));
+            if (favoriteEvents) {
+                return favoriteEvents;
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
+}
+
 /* async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Theis", "userdb");
     //const result = await serchAllFields("m");
-    const result = await getNewestEntries("events")
+    //const result = await getNewestEntries("events")
+    const result = await getFavorites(2);
     
     console.log(result);
 }
