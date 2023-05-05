@@ -139,9 +139,7 @@ function favoriteEvent(event) {
     userId: objCookie.userId,
     eventId: event.target.parentElement.parentElement.parentElement.dataset.eventid
   }
-
-  console.log(data);
-
+  
   fetch("/", {
     method: 'PUT',
     headers: {
