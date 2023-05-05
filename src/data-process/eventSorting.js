@@ -3,7 +3,7 @@ export { get_sorted_events}
 
 async function get_sorted_events(search_term) {
     // Input validation
-    let possible_search_terms = ["eventDate", "relevancy_score", "categories"];
+    let possible_search_terms = ["eventDate", "relevancyScore", "eventCategories"];
     if (!possible_search_terms.includes(search_term)) {
         return false;
     }
@@ -69,8 +69,9 @@ function InsertionSort(array) {
     return array;
 }
 
-let result = await get_sorted_events("eventDate")
+/* let result = await get_sorted_events("eventDate")
 
 for (let i = 0; i < result.length; i++) {
     console.log(result[i].eventDate);
 }
+ */
