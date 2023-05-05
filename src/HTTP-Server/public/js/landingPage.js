@@ -109,6 +109,7 @@ function changeColor() {
         event.target.style.backgroundColor = "rgb(159, 175, 166)";
       }
     });
+    favoriteButtons[i].addEventListener('click', favoriteEvent);
   }
 }
 
@@ -118,5 +119,45 @@ function sortHandler(event){
 
   }else if(selectedOption === "dateOpt"){
 
+  }
+}
+
+function favoriteEvent(event) {
+  document.cookie = "username=John Doe";
+  let cookies = document.cookie;
+  let userCookie = getUserCookie(cookies);
+  let objCookie = JSON.parse(userCookie);
+
+  let data = {
+    type: "favorite",
+    userId: objCookie.userId,
+    eventId: event.target.parentElement.parentElement.parentElement.dataset.eventid
+  }
+
+  console.log(data);
+
+  fetch("/", {
+    method: 'PUT',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    let res = response.json()
+    return res;
+  }).catch((res) => {
+    console.log(res);
+  });
+}
+
+function getUserCookie(cookies) {
+  let c = cookies.split(";");
+  for (let i = 0; i < c.length; i++) {
+    if (c[i].includes("currentUser")) {
+      return c[i].split("=")[1];
+    }
   }
 }
