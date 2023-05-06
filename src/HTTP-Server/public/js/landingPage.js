@@ -38,12 +38,16 @@ function eventInitializer(eventData) {
   }
 }
 
-function createEvent(eventObject, templateElement) {
+// Nu kan der næsten vises favorite events på favorites page, relevancy score fucker en smule
+function createEvent(eventObject, templateElement)
+{
   //The date is made simple into the format month/day/year
   let clone;
   const readableDateFormat = new Intl.DateTimeFormat("en-us", { dateStyle: "full" });
   let processedDate = readableDateFormat.format(new Date(eventObject.eventDate))
 
+  //The initial template is removed from the web page, hence we need to pass in any other "FlexBox"
+  //To use as an template if the original is not there
   if(templateElement === undefined){
     clone = template.cloneNode(true);
   }else clone = templateElement.cloneNode(true);
@@ -114,9 +118,12 @@ function changeColor() {
 }
 
 function sortHandler(event) {
+  //Based on what the user selects in radio buttons, the program changes the sort option
   let selectedOption = event.target.id.toString();
-  let templateBox = document.querySelector("#FlexBox");
+  //The program selects any event box to be a template for the events that are going to be inserted
+  let templateBox = document.querySelector("#FlexBox"); 
 
+  //Request events, together with sending the wanted option as a body of the request
   fetch('/sortedEvents', {
     method: 'POST',
     headers: {
@@ -127,9 +134,20 @@ function sortHandler(event) {
   .then(response => response.json())
   .then(data => {
     console.log(data.events);
-    eventInitializer(data.events, templateBox);
+    eventInitializer(data.events, templateBox); //Insert events into the page
+    removeEvents(data.events.length); //Removes the previous events
   })
   .catch(error => console.log(`Network error occured ${error}`));
+}
+
+function removeEvents(nmbrOfInsertedEvents){
+  let eventBoxes = document.querySelectorAll("#FlexBox"); //Selects all the boxes on the page
+  //We want to remove all events except the ones just received
+  let removalNumber = eventBoxes.length - nmbrOfInsertedEvents;
+  
+  for(let i = 0; i < removalNumber; i++){
+    eventBoxes[i].remove();
+  }
 }
 
 function favoriteEvent(event) {
