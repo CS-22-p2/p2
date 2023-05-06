@@ -19,14 +19,16 @@ let cookies = document.cookie;
 let userCookie = getUserCookie(cookies);
 let objCookie = JSON.parse(userCookie);
 
-fetch(`/getFevorites?userId=${objCookie.userId}`, { method: 'GET'})
-.then(response => response.json())
-.then(data => {
-  eventInitializer(data);
-
-  changeColor();
-})
-.catch(error => console.error(error));
+if (objCookie.userId != undefined) {
+  fetch(`/getFevorites?userId=${objCookie.userId}`, { method: 'GET'})
+  .then(response => response.json())
+  .then(data => {
+    eventInitializer(data);
+  
+    changeColor();
+  })
+  .catch(error => console.error(error));
+}
 
 // Removes the generic template the events are based on
 template.remove();
