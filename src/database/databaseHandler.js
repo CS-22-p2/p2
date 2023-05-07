@@ -61,38 +61,6 @@ async function insertEntry(newEntry, collection) {
     }
 }
 
-// This function might be deprecated
-// This function returns an entry specified by name and collection
-async function getEntry(query, collection) {
-    let client;
-    try {
-        client = await establishConnection();
-
-        // Get all the collections present in the database and extract their names
-        const collections = await client.db("p2").listCollections().toArray();
-        const collectionNames = [];
-        collections.forEach(ele => collectionNames.push(ele.name));
-        // If the specified collection is present we serch for the query and return true if present
-        // else it returns false
-        if (collectionNames.includes(collection)) {
-            const result = await client.db("p2").collection(collection).findOne({ fName: query }); // We need to figure out how to make  dynamic querys: https://stackoverflow.com/questions/39986639/dynamic-query-mongodb
-
-            if (result) {
-                console.log(`Found a entry in the collection with the name '${query}':`);
-                return result;
-            } else {
-                console.log(`No entrys found with the name '${query}'`);
-                return false
-            }
-        }
-    } catch (error) {
-        console.error(error);
-    } finally {
-        setTimeout(() => { client.close() });
-        //await client.close();
-    }
-}
-
 async function getNewestEntries(collection) {
     let client;
     let result = [];
