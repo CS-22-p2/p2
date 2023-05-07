@@ -234,6 +234,7 @@ async function updateFavorite(userId, eventId) {
 
         const duplicate = favorittes.includes(eventId);
         if (!duplicate) {
+            // Addes the event id to the users list of favorites
             favorittes.push(eventId);
             const updateResult = await client.db("p2").collection("userdb").updateOne(
                 {userId: userId}, 
@@ -244,8 +245,17 @@ async function updateFavorite(userId, eventId) {
             }
             // favorittes not updated
             return false;
+        } else {
+            // Removes the event id to the users list of favorites
+            favorittes.splice(favorittes.indexOf(eventId), 1);
+            const updateResult = await client.db("p2").collection("userdb").updateOne(
+                {userId: userId}, 
+                {$set: {favorittes: favorittes}});
+            if (updateResult) {
+                // favorittes updated
+                return true;
+            }
         }
-        console.log(result.favorittes);
         // event id is duplicate
         return false;
     } catch (error) {

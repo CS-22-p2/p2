@@ -106,7 +106,7 @@ function getUserCookie(cookies) {
   }
 }
 
-function changeColor() {
+function changeColor(event) {
   // Gets all the favorite "buttons"
   const favoriteButtons = document.querySelectorAll('#fLogo');
   
@@ -120,8 +120,31 @@ function changeColor() {
       } else {
         event.target.style.backgroundColor = "rgb(159, 175, 166)";
       }
+      let cookies = document.cookie;
+      let userCookie = getUserCookie(cookies);
+      let objCookie = JSON.parse(userCookie);
+
+      let data = {
+        type: "favorite",
+        userId: objCookie.userId,
+        eventId: event.target.parentElement.parentElement.parentElement.dataset.eventid
+      }
+
+      fetch("/", {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        let res = response.json()
+        return res;
+      }).catch((res) => {
+        console.log(res);
+      });
     });
-    // This function should be changed to remove the clicked event form favorites list
-    // favoriteButtons[i].addEventListener('click', favoriteEvent);
   }
 }
