@@ -186,11 +186,9 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        Festives: ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
-        'Career': ['career', 'networking', 'professional', 'entrepreneurship', "management", "jobs", "job",
-            , "karriere", "netværk", "professionel", "iværksætteri", "ledelse"],
-        'Sports': ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
-            , "tennis", "fodbold", "basketball", "cykling", "volleybold", "svømning"]
+        'Festives': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
+        'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
+        'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
     };
     
     // strips and trims array
@@ -210,7 +208,7 @@ function read_description(description) {
     for (const category in categories) {
         let keywords = categories[category];
         for (const keyword of keywords) {
-            if (tokens.includes(keyword)) {
+            if (tokens.includes(keyword) && !found_categories.includes(category)) {
                 found_categories.push(category);
             }
         }
@@ -250,7 +248,7 @@ class event_data {
         if (on_campus(this.eventLocation)) {
             basic_score += high_score * 5;
         }
-        if (!input_validation(time_left_score(this.time_left), "int")) {
+        if (input_validation(time_left_score(this.time_left), "int")) {
             basic_score += time_left_score(this.time_left);
         }
         basic_score += this.eventParticipants;
