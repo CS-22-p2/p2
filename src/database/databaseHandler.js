@@ -6,7 +6,6 @@ import class_creator from '../data-process/class-insertion.js';
 // Exports
 export {
     insertEntry,
-    getEntry,
     update_existing_event,
     establishConnection,
     checkDuplicateLink,

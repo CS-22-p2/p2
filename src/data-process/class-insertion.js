@@ -186,12 +186,11 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'alcohol-free': ['nonalcoholic', 'sober', 'drugfree',"spirtis","bars","booze","party"
-                        ,"alkoholfri","ædru","stoffri","spiritus","barer","alkohol","fest" ],
-        'business': ['career', 'networking', 'professional', 'entrepreneurship',"management", "jobs", "job",
-                    ,"karriere","netværk","professionel","iværksætteri","ledelse"],
-        'sport':    ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
-                    ,"tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
+        Festives: ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
+        'Career': ['career', 'networking', 'professional', 'entrepreneurship', "management", "jobs", "job",
+            , "karriere", "netværk", "professionel", "iværksætteri", "ledelse"],
+        'Sports': ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
+            , "tennis", "fodbold", "basketball", "cykling", "volleybold", "svømning"]
     };
     
     // strips and trims array
