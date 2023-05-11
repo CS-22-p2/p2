@@ -186,7 +186,7 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'Festives': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
+        'Festivity': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
         'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
         'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
     };
@@ -319,3 +319,5 @@ async function class_creator() {
     }
     return true;
 }
+
+class_creator();

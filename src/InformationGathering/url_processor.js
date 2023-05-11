@@ -29,7 +29,6 @@ async function accessEventsPage()
 {
     // Collects the organisations Web-page URLs
     const orgData = await scrapeOrgData(scrape);
-    await logEvents(orgData);
 
     //Launches an empty browser
     const browser = await puppeteer.launch({
@@ -130,7 +129,6 @@ async function processEvents(eventLinks, org)
         processedData.orgContactInfo = org.contactInfo;
         eventsArray.push(processedData); //Store the event in the event array
     }
-
     return eventsArray;
 }
 
