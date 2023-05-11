@@ -319,5 +319,3 @@ async function class_creator() {
     }
     return true;
 }
-
-class_creator();
