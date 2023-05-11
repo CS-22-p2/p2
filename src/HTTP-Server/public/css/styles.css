@@ -37,6 +37,10 @@ select:invalid {
     margin-left: 65%;
 }
 
+.right2 {
+    margin-left: 60%;
+}
+
 .formItem {
     display: block;
     margin: auto;
@@ -57,4 +61,10 @@ select:invalid {
 
 .formButton {
     width: 150px;
+}
+
+.signUp {
+    margin: auto;
+    white-space: nowrap;
+    color: black;
 }

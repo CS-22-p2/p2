@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,16 +9,43 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     <title>Document</title>
 </head>
+
 <body>
     <div id="logoBox">
-        <h1>Campus Connect</h1> 
+        <h1>Campus Connect</h1>
         <span id="topnavBar">
-            <button class="TopNavButton" id ="homePage" name="home"><i class="ri-home-line TopNavLogo"></i>Home</button>
-            <button class="TopNavButton" id = "favoritesPage"><i class="ri-star-line TopNavLogo"></i>Favorites</button>
-            <button class="TopNavButton" id = "loginPage"><i class="ri-user-settings-fill TopNavLogo"></i>Login</button>
+            <button class="TopNavButton" id="homePage" name="home"><i class="ri-home-line TopNavLogo"></i>Home</button>
+            <button class="TopNavButton" id="favoritesPage"><i class="ri-star-line TopNavLogo"></i>Favorites</button>
+            <button class="TopNavButton" id="loginPage"><i class="ri-user-settings-fill TopNavLogo"></i>Login</button>
         </span>
     </div>
-<h1>Favorites Page</h1>
-<script src="../js/favoritesPage.js"></script>
+    <h1>Favorites Page</h1>
+
+    <div id="FlexBoxWrapper">
+        <div id="FlexBox" class="elem" data-eventid="1">
+            <div id="Image" class="elem">
+                <img id="ImageLink" class="elem"
+                    src="https://scontent-arn2-1.xx.fbcdn.net/v/t39.30808-6/302149571_488156493317541_662533801508009729_n.png?_nc_cat=107&ccb=1-7&_nc_sid=e3f864&_nc_ohc=DGVXDiUymKAAX_314NL&_nc_ht=scontent-arn2-1.xx&oh=00_AfC3p04ntcDRaPuz2J3wuij3mciyXIty0PPv7vukE8FPAQ&oe=644D9D3F">
+            </div>
+
+            <div id="Textboxes" class="elem">
+                <ul id="EventUL" name="title"><span id="EventTitle"> Event Title</span></ul>
+                <ul id="EventUL"><i class="ri-map-pin-line" id="logo"></i><span id="Location">Location</span></ul>
+                <ul id="EventUL"><i class="ri-timer-2-line" id="logo"></i><span id="Date">Date</span></ul>
+                <ul id="EventUL"><i class="ri-user-follow-line" id="logo"></i><span id="Participants">People Responded</span></ul>
+                <ul id="EventUL"><i class="ri-home-line" id="logo"></i><span id="Host"> Organisation </span></ul>
+                <ul id="EventUL"><i class="ri-scales-line" id="logo"></i><span id="Category"> Category </span></ul>
+                <ul id="EventUL"><i class="ri-heart-fill" id="logo"></i><span id="RelevanceScore"> Relevance score: 85%</span></ul>
+                <ul id="EventUL"><i class="ri-facebook-fill" id="logo"></i><a id="Link" href="">See More</a></ul>
+                <ul id="EventUL"><i class="ri-star-line" id="fLogo""></i></ul>
+            </div>
+            <div id="DescriptionBox" class="elem">
+                <span id="EventDescription"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/favoritesPage.js"></script>
 </body>
+
 </html>

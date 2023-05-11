@@ -15,9 +15,21 @@
                 <button class="TopNavButton" id = "loginPage"><i class="ri-user-settings-fill TopNavLogo"></i>Login</button>
                 <div class="dropdown"><button class="TopNavButton" id = "category"><i class="ri-scales-line TopNavLogo"></i>Category</button>
                     <div class="dropdown-content">
-                      <a href="#" onclick=""><input type="checkbox" id="dateCheckbox" name="dateCheckbox" checked>Date</a>
-                      <a href="#" onclick=""><input type="checkbox" id="relevanceCheckbox" name="relevanceCheckbox" unchecked>Relevance score</a>
-                      <a href="#" onclick=""><input type="checkbox" id="campusCheckbox" name="campusCheckbox" unchecked>Campus</a>
+                        <form id="categoryForm">
+                            <fieldset>
+                              <legend>Select Category</legend>
+                              <ul class="categoryList">
+                                <li>
+                                    <input type="radio" id="dateOpt" name="category" value="date" checked>
+                                    <label for="dateOpt">Date</label>
+                                </li>
+                                <li>
+                                    <input type="radio" id="relevanceOpt" name="category" value="relevance" />
+                                    <label for="relevanceOpt">Relevance Score</label>
+                                </li>
+                              </ul>
+                            </fieldset>
+                          </form>
                     </div></div>
             </span>
         
@@ -37,9 +49,9 @@
                 <ul id="EventUL"><i class="ri-user-follow-line" id="logo"></i><span id = "Participants">People Responded</span></ul>
                 <ul id="EventUL"><i class="ri-home-line" id="logo"></i><span id = "Host"> Organisation </span></ul>
                 <ul id="EventUL"><i class="ri-scales-line" id="logo"></i><span id = "Category"> Category </span></ul>
-                <ul id="EventUL"><i class="ri-heart-fill" id="logo"></i><span id = "Relevance Score"> Relevance score: 85% </i></span></ul>
+                <ul id="EventUL"><i class="ri-heart-fill" id="logo"></i><span id = "RelevanceScore"> Relevance score: 85%</span></ul>
                 <ul id="EventUL"><i class="ri-facebook-fill" id="logo"></i><a id ="Link" href="">See More</a></ul>
-                <ul id="EventUL"><button><i class="ri-star-line" id="logo"></i></button></ul>
+                <ul id="EventUL"><i class="ri-star-line" id="fLogo""></i></ul>
             </div>
             <div id="DescriptionBox" class = "elem">
                 <span id="EventDescription"></span>

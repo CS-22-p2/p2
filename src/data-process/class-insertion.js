@@ -186,12 +186,10 @@ function read_description(description) {
     const tokens = description.split(" ");
     let found_categories = [];
     const categories = {
-        'alcohol-free': ['nonalcoholic', 'sober', 'drugfree',"spirtis","bars","booze","party"
-                        ,"alkoholfri","ædru","stoffri","spiritus","barer","alkohol","fest" ],
-        'business': ['career', 'networking', 'professional', 'entrepreneurship',"management", "jobs", "job",
-                    ,"karriere","netværk","professionel","iværksætteri","ledelse"],
-        'sport':    ['tennis', "football", "basketball", "baseball", "cycling", "volleyball", "swimming"
-                    ,"tennis", "fodbold", "basketball", "baseball", "cykling", "volleybold", "svømning"]
+        'Festives': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
+        'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
+        'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
+
     };
     
     // strips and trims array
@@ -211,7 +209,7 @@ function read_description(description) {
     for (const category in categories) {
         let keywords = categories[category];
         for (const keyword of keywords) {
-            if (tokens.includes(keyword)) {
+            if (tokens.includes(keyword) && !found_categories.includes(category)) {
                 found_categories.push(category);
             }
         }
@@ -231,30 +229,30 @@ class event_data {
         this.eventLink = eventLink;
         this.eventTitle = eventTitle;
         this.eventHost = eventHosts;
-        this.date = date_conversion_formatting(eventDate);
-        this.participants = eventParticipants;
-        this.location = eventLocation;
-        this.duration = get_duration(eventDuration);
+        this.eventDate = date_conversion_formatting(eventDate);
+        this.eventParticipants = eventParticipants;
+        this.eventLocation = eventLocation;
+        this.eventDuration = get_duration(eventDuration);
         this.isPrivate = isPrivate;
-        this.description = eventDescription;
-        this.time_left = time_until_event(this.date);
-        this.categories = read_description(this.description);
-        this.tickets = eventTickets;
-        this.image = eventImage;
-        this.relevancy_score = this.final_score();
+        this.eventDescription = eventDescription;
+        this.timeLeft = time_until_event(this.eventDate);
+        this.eventCategories = read_description(this.eventDescription);
+        this.eventTickets = eventTickets;
+        this.eventImage = eventImage;
+        this.relevancyScore = this.final_score();
     }
 
     final_score() {
         // Basic score, maybe change later
         let basic_score = 0;
 
-        if (on_campus(this.location)) {
+        if (on_campus(this.eventLocation)) {
             basic_score += high_score * 5;
         }
-        if (!input_validation(time_left_score(this.time_left), "int")) {
+        if (input_validation(time_left_score(this.time_left), "int")) {
             basic_score += time_left_score(this.time_left);
         }
-        basic_score += this.participants;
+        basic_score += this.eventParticipants;
         return basic_score;
     }
 }

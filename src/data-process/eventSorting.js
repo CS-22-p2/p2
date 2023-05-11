@@ -1,8 +1,10 @@
 import { getNewestEntries } from "../database/databaseHandler.js";
+export { get_sorted_events}
 
 async function get_sorted_events(search_term) {
     // Input validation
-    let possible_search_terms = ["eventDate", "relevancy_score", "categories"];
+    let possible_search_terms = ["eventDate", "relevancyScore", "eventCategories"];
+
     if (!possible_search_terms.includes(search_term)) {
         return false;
     }
@@ -27,7 +29,7 @@ async function get_sorted_events(search_term) {
             event_array_index.push(obj);
         }
     }
-
+  
     // Returns index array of how the sorted list should be
     event_array_index = InsertionSort(event_array_index);
 
@@ -71,5 +73,5 @@ function InsertionSort(array) {
 let result = await get_sorted_events("eventDate")
 
 for (let i = 0; i < result.length; i++) {
-    console.log(result[i].eventDate);
+    console.log(result[i]);
 }
