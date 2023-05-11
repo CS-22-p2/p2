@@ -250,7 +250,7 @@ class event_data {
         if (on_campus(this.eventLocation)) {
             basic_score += high_score * 5;
         }
-        if (input_validation(time_left_score(this.time_left), "int")) {
+        if (time_left_score(this.time_left) !== null) {
             basic_score += time_left_score(this.time_left);
         }
         basic_score += this.eventParticipants;
