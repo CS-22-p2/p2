@@ -182,15 +182,16 @@ function read_description(description) {
     if (!input_validation(description, "str")) {
         return null;
     }
-    // Array with the description
-    const tokens = description.split(" ");
-    let found_categories = [];
+
     const categories = {
         'Festives': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
         'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
         'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
     };
     
+    // Array with the description
+    const tokens = description.split(" ");
+
     // strips and trims array
     for (let i = 0; i < tokens.length; i++) {
         tokens[i] = strip_and_trim(tokens[i]);
@@ -204,6 +205,7 @@ function read_description(description) {
         }
     }
 
+    let found_categories = [];
     // Checks if the keywords in categories array is present in the description
     for (const category in categories) {
         let keywords = categories[category];
