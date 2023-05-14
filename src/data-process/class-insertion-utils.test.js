@@ -1,67 +1,227 @@
-const {input_validation, date_conversion_formatting, get_duration} = require("./class-insertion-utils")
+const {
+    input_validation,
+    date_conversion_formatting,
+    time_until_event,
+    get_duration,
+    format_address,
+    on_campus,
+    time_left_score,
+    strip_and_trim,
+    read_description,
+} = require("./class-insertion-utils.js")
+
+// https://jestjs.io/docs/expect - Expect documentation where you can find what things to check for.
+// 'not' is the negation of whatever you want to check, e.g 'expect(test_func()).not.toBe(1)'
+
+// 'describe' creates a group of tests. These can be nested.
 
 // Input Validation
-test("Input Validation Expected Missing", () => {
-    expect(input_validation()).toBe(false)
-    expect(input_validation(1)).toBe(false)
-    expect(input_validation("string")).toBe(false)
-    expect(input_validation(true)).toBe(false)
-    expect(input_validation({})).toBe(false)
-})
+describe("Input Validation", () => {
+    describe("Expected Argument - Missing", () => {
+        test("No input", () => {
+            expect(input_validation()).toBe(false)
+        })
+    
+        test("Numbers", () => {
+            expect(input_validation(1)).toBe(false)
+        })
+    
+        test("Strings", () => {
+            expect(input_validation("string")).toBe(false)
+        })
+    
+        test("Booleans", () => {
+            expect(input_validation(true)).toBe(false)
+        })
+    
+        test("Objects", () => {
+            expect(input_validation({})).toBe(false)
+        })
+    })
 
-test("Input Validation Strings", () => {
-    expect(input_validation("string", "str")).toBe(true)
-    expect(input_validation("", "str")).toBe(true)
+    describe("Expected Argument - Strings", () => {
+        test("Populated string", () => {
+            expect(input_validation("string", "str")).toBe(true)
+        })
 
-    expect(input_validation(undefined, "str")).toBe(false)
-    expect(input_validation(1, "str")).toBe(false)
-})
+        test("Empty string", () => {
+            expect(input_validation("", "str")).toBe(true)
+        })
 
-test("Input Validation Integers", () => {
-    expect(input_validation(1, "int")).toBe(true)
-    expect(input_validation(0, "int")).toBe(true)
-    expect(input_validation(-1, "int")).toBe(true)
+        test("Undefined", () => {
+            expect(input_validation(undefined, "str")).toBe(false)
+        })
 
-    expect(input_validation(undefined, "int")).toBe(false)
-    expect(input_validation("one", "int")).toBe(false)
-    expect(input_validation("1", "int")).toBe(false)
-})
+        test("Number", () => {
+            expect(input_validation(1, "str")).toBe(false)
+        })
 
-test("Input Validation Booleans", () => {
-    expect(input_validation(true, "bool")).toBe(true)
-    expect(input_validation(false, "bool")).toBe(true)
+        test("Boolean", () => {
+            expect(input_validation(true, "str")).toBe(false)
+        })
+    })
 
-    expect(input_validation(1, "bool")).toBe(false)
-    expect(input_validation(0, "bool")).toBe(false)
-    expect(input_validation(undefined, "bool")).toBe(false)
-    expect(input_validation("1", "bool")).toBe(false)
-})
+    describe("Expected Argument - Integers", () => {
+        test("Positive", () => {
+            expect(input_validation(1, "int")).toBe(true)
+        })
 
-test("Input Validation Objects", () => {
-    expect(input_validation({}, "obj")).toBe(true)
-    expect(input_validation({nestedObj: {}}, "obj")).toBe(true)
+        test("Zero", () => {
+            expect(input_validation(0, "int")).toBe(true)
+        })
 
-    expect(input_validation(undefined, "obj")).toBe(false)
+        test("Negative", () => {
+            expect(input_validation(-1, "int")).toBe(true)
+        })
+
+        test("Undefined", () => {
+            expect(input_validation(undefined, "int")).toBe(false)
+        })
+
+        test("\"One\"", () => {
+            expect(input_validation("one", "int")).toBe(false)
+        })
+
+        test("\"1\"", () => {
+            expect(input_validation("1", "int")).toBe(false)
+        })
+    })
+
+    describe("Expected Argument - Booleans", () => {
+        test("True", () => {
+            expect(input_validation(true, "bool")).toBe(true)
+        })
+
+        test("False", () => {
+            expect(input_validation(false, "bool")).toBe(true)
+        })
+
+        test("1", () => {
+            expect(input_validation(1, "bool")).toBe(false)
+        })
+
+        test("0", () => {
+            expect(input_validation(0, "bool")).toBe(false)
+        })
+
+        test("Undefined", () => {
+            expect(input_validation(undefined, "bool")).toBe(false)
+        })
+
+        test("\"1\"", () => {
+            expect(input_validation("1", "bool")).toBe(false)
+        })
+    })
+
+    describe("Expected Argument - Objects", () => {
+        test("Empty object", () => {
+            expect(input_validation({}, "obj")).toBe(true)
+        })
+
+        test("Nested empty object", () => {
+            expect(input_validation({nestedObj: {}}, "obj")).toBe(true)
+        })
+
+        test("Undefined", () => {
+            expect(input_validation(undefined, "obj")).toBe(false)
+        })
+    })
 })
 
 // Date conversion formatting
+describe("Date Conversion Formatting", () => {
+    describe("Formats", () => {
+        test("Format #1", () => {
+            expect(date_conversion_formatting('TUESDAY, MAY 2, 2023 AT 5:30 PM – 7:00 PM UTC+02')).not.toBeNull()
+        })
 
-// Get duration
-test("Get Duration - Different durations", () => {
-    expect(get_duration("Duration: 1 hr 30 min")).toBe("1 hour(s) and 30 minute(s)")
+        test("Format #2", () => {
+            expect(date_conversion_formatting('WEDNESDAY, APRIL 26, 2023 AT 6:30 PM UTC+02')).not.toBeNull()
+        })
 
-    // The cases for these needs to be fixed
-    expect(get_duration("Duration: -1 hr 30 min")).toBe("-1 hour(s) and 30 minute(s)")
-    expect(get_duration("Duration: 0 hr 0 min")).toBe("0 hour(s) and 0 minute(s)")
+        test("Format #3", () => {
+            expect(date_conversion_formatting('JUN 17 AT 4:00 PM – JUN 18 AT 2:00 AM UTC+02')).not.toBeNull()
+        })
+    })
+
+    describe("Invalid input", () => {
+        test("Empty", () => {
+            expect(date_conversion_formatting("")).toBeNull()
+        })
+
+        test("Bad timestamp", () => {
+            expect(date_conversion_formatting("TUESDAY")).toBeNull()
+        })
+    })
 })
 
-test("Get Duration - Invalid input", () => {
-    expect(get_duration("Duration: ")).toBe("")
-    expect(get_duration("")).toBe("")
+// Time until event
+describe("Time Until Event", () => {
+    test("Difference between two present dates should be 0", () => {
+        let current_date = new Date()
+        let precision = 2
+    
+        // Difference between the same dates (present time) should be zero
+        expect(time_until_event(current_date)).toBeCloseTo(0, precision)
+    })
 
-    // To solve these, there should probably be a check to see if the input is a string or not.
-    expect(get_duration(undefined)).toBe("")
-    expect(get_duration(true)).toBe("")
-    expect(get_duration(1)).toBe("")
-    expect(get_duration()).toBe("")
+    describe("Invalid input", () => {
+        let invalid_date
+
+        test("Non-date object", () => {
+            expect(time_until_event({})).toBeNull()
+        })
+
+        test("Invalid date object", () => {
+            invalid_date = new Date(8.64e15 + 1)
+            expect(time_until_event(invalid_date)).toBeNaN()
+        })
+
+        test("Bad timestamp", () => {
+            invalid_date = new Date("invalid date")
+            expect(time_until_event(invalid_date)).toBeNaN()
+        })
+    })
+})
+
+describe("Get Duration", () => {
+    describe("Differnt durations", () => {
+        test("Positive", () => {
+            expect(get_duration("Duration: 1 hr 30 min")).toBe("1 hour(s) and 30 minute(s)")
+        })
+
+        test("Negative", () => {
+            expect(get_duration("Duration: -1 hr 30 min")).toBe("-1 hour(s) and 30 minute(s)")
+        })
+
+        test("Zero", () => {
+            expect(get_duration("Duration: 0 hr 0 min")).toBe("0 hour(s) and 0 minute(s)")
+        })
+    })
+
+    describe("Invalid input", () => {
+        test("Unfinished string", () => {
+            expect(get_duration("Duration: ")).toBe("")
+        })
+
+        test("Empty string", () => {
+            expect(get_duration("")).toBe("")
+        })
+
+        test("Undefined", () => {
+            expect(get_duration(undefined)).toBe("")
+        })
+
+        test("Boolean", () => {
+            expect(get_duration(true)).toBe("")
+        })
+        
+        test("1", () => {
+            expect(get_duration(1)).toBe("")
+        })
+
+        test("No args", () => {
+            expect(get_duration()).toBe("")
+        })
+    })
 })

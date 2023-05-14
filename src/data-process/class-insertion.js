@@ -6,10 +6,8 @@ const {
     input_validation,
     date_conversion_formatting,
     time_until_event,
-    format_address,
     on_campus,
     time_left_score,
-    strip_and_trim,
     read_description,
 } = require("./class-insertion-utils.js")
 

@@ -112,7 +112,8 @@ function get_duration(event_duration) {
 
 // When event is happening relative to current time
 function time_until_event(date) {
-    if (!input_validation(date, "obj")) {
+    // Validate the date by datatype, instance of Date and valid timestamp (date value will be NaN if invalid)
+    if (!input_validation(date, "obj") || !(date instanceof Date) || date.valueOf() === NaN) {
         return null;
     }
 
