@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import class_creator from '../data-process/class-insertion.js';
 
 // Exports
-export {
+module.exports = {
     insertEntry,
     update_existing_event,
     establishConnection,
