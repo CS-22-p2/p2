@@ -1,6 +1,7 @@
 // Import ES6 modules
 import { insertEntry, checkDuplicateLink, update_existing_event, getAllEvents } from '../database/databaseHandler.js';
 import { accessEventsPage } from    '../InformationGathering/url_processor.js';
+
 const {
     input_validation,
     date_conversion_formatting,
@@ -10,7 +11,7 @@ const {
     time_left_score,
     strip_and_trim,
     read_description,
-} = require("./class-insertion-functions.js")
+} = require("./class-insertion-utils.js")
 
 // Export ES6 modules
 export default {

@@ -3,6 +3,7 @@ const exp = require("constants");
 module.exports = {
     input_validation,
     date_conversion_formatting,
+    get_duration,
     time_until_event,
     format_address,
     on_campus,
