@@ -91,7 +91,7 @@ function date_conversion_formatting(date_str) {
 // 'Duration: 1 hr'
 function get_duration(event_duration) {
     if (!input_validation(event_duration, "str")) {
-        return null;
+        return "";
     }
     // - i = flag for case sensitive. Lower and uppercase is the same
     // - (?:\s*(\d+)\s*(min))? = optional
@@ -100,13 +100,18 @@ function get_duration(event_duration) {
     const regex = /^Duration:\s*(\d+)\s*(hr)(?:\s*(\d+)\s*(min))?$/i; // Good luck.
     // Gets the expression from event duration, [1] is hour and [3] is minutes (may not be present)
     const result_expression = event_duration.match(regex);
+    if (result_expression == undefined) return "";
+
     let hours = result_expression[1];
-    let minutes = 0;
+    let minutes = result_expression[3];
+
+    if (hours == undefined) return "";
+
     // Checks if there is minutes
-    if (!isNaN(result_expression[3])) {
-        minutes = result_expression[3];
+    if (!isNaN(minutes)) {
         return `${hours} hour(s) and ${minutes} minute(s)`;
     }
+
     return `${hours} hour(s)`;
 }
 
