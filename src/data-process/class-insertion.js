@@ -143,8 +143,12 @@ function on_campus(location) {
 
     // Example adressess, expandable
     const campus_addresses = ["selmalagerløfsvej", 
-                            "bertil ohtils vej", 
-                            "frederik bajers vej"];
+                            "bertil ohlins vej", 
+                            "frederik bajers vej",
+                            "alfred obels vej",
+                            "thomas manns vej",
+                            "myrdalstræde", 
+                            "pontoppidanstræde"];
 
     // check if this.location is in campus_addresses
     if (campus_addresses.includes(format_address(location))) {
