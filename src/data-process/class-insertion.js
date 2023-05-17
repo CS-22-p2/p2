@@ -20,29 +20,28 @@ let high_score = 200;
 
 // Checks if input is of the expected type. Returns true if correct
 function input_validation(input, expected) {
-    // Guard clause
-    if (expected === undefined || expected === null) {
+    if (input === undefined || input === null) {
         return false
-    } if (expected === "str") {
-        if (typeof input !== "string" || input === null || input === undefined) {
-            return false;
-        }
-    } if (expected === "int") {
-        if (typeof input !== "number" || !Number.isInteger(input)) {
-            return false;
-        }
-    } if (expected === "bool") {
-        if (typeof input !== "boolean") {
-            return false;
-        }
-    } if (expected === "obj") {
-        if (typeof input !== 'object' || input === null) {
-            return false;
-        }
     }
 
-    // Correct input
-    return true; 
+    if (expected === "str") {
+        if (typeof input === "string") {
+            return true;
+        }
+    } if (expected === "int") {
+        if (typeof input === "number" || Number.isInteger(input)) {
+            return true;
+        }
+    } if (expected === "bool") {
+        if (typeof input === "boolean") {
+            return true;
+        }
+    } if (expected === "obj") {
+        if (typeof input === 'object') {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Gets date from these 3 possible combinations of input
