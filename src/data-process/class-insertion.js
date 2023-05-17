@@ -21,7 +21,9 @@ let high_score = 200;
 // Checks if input is of the expected type. Returns true if correct
 function input_validation(input, expected) {
     // Guard clause
-    if (expected === "str") {
+    if (expected === undefined || expected === null) {
+        return false
+    } if (expected === "str") {
         if (typeof input !== "string" || input === null || input === undefined) {
             return false;
         }
@@ -187,7 +189,6 @@ function read_description(description) {
         'Festives': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
         'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
         'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
-
     };
     
     // Array with the description
