@@ -12,7 +12,8 @@ export {
     getNewestEntries,
     getAllEvents,
     updateFavorite,
-    getFavorites
+    getFavorites,
+    removeOutdatedEvents
 };
 
 dotenv.config();
@@ -234,7 +235,6 @@ async function updateFavorite(userId, eventId) {
 
 async function getFavorites(userId) {
     let client;
-    let favoriteEvents = [];
 
     try {
         client = await establishConnection();
@@ -256,13 +256,29 @@ async function getFavorites(userId) {
     }
 }
 
+async function removeOutdatedEvents() {
+    let client;
+
+    try {
+        client = await establishConnection();
+
+        const result = await client.db("p2").collection("events").deleteMany({eventDate: {$lt: new Date(Date.now())}});
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
+}
+
 /* async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Theis", "userdb");
     //const result = await serchAllFields("m");
     //const result = await getNewestEntries("events")
-    const result = await getFavorites(2);
-    
+    //const result = await getFavorites(2);
+    const result = removeOutdatedEvents();
+
     console.log(result);
 }
 
