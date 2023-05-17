@@ -112,7 +112,7 @@ function get_duration(event_duration) {
     // Checks if there is minutes
     if (!isNaN(result_expression[3])) {
         minutes = result_expression[3];
-        return `${hours} hour(s) and ${minutes} minute(s)`;
+        return `${hours}, ${minutes} hours(s)`;
     }
     return `${hours} hour(s)`;
 }
