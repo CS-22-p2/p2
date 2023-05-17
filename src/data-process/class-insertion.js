@@ -148,7 +148,9 @@ function on_campus(location) {
                             "alfred obels vej",
                             "thomas manns vej",
                             "myrdalstræde", 
-                            "pontoppidanstræde"];
+                            "pontoppidanstræde",
+                            "Korghstræde",
+                            ];
 
     // check if this.location is in campus_addresses
     if (campus_addresses.includes(format_address(location))) {
