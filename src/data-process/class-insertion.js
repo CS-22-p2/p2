@@ -21,7 +21,9 @@ let high_score = 200;
 // Checks if input is of the expected type. Returns true if correct
 function input_validation(input, expected) {
     // Guard clause
-    if (expected === "str") {
+    if (expected === undefined || expected === null) {
+        return false
+    } if (expected === "str") {
         if (typeof input !== "string" || input === null || input === undefined) {
             return false;
         }
