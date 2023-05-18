@@ -275,12 +275,9 @@ async function inserting_DB(event_class) {
     return true;
 }
 
-async function main() {
+async function collectEvents() {
     let event_arr = await accessEventsPage();
     let event_arr_size = event_arr.length;
-    // Debug
-    // console.log(`Array size: ${event_arr_size}`);
-    // console.log(event_arr);
 
     // guard clause
     if (event_arr_size <= 0) {
@@ -304,7 +301,6 @@ async function main() {
             event_arr[i].eventTickets,
             event_arr[i].eventImage
         )
-        console.log(event_temp);
         // let a = await inserting_DB(event_temp);
         // if (a === false) {
         //     console.log("Event failed to insert");
