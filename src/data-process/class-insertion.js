@@ -66,7 +66,8 @@ function date_conversion_formatting(date_str) {
         { regex: /^(.*?), (.*?)( \d+)?, (\d{4}) AT (\d+):(\d+) (AM|PM).*?$/, format: 'MMMM D, YYYY h:mm A' },
         { regex: /^(.*?), (\w{3}) (\d+).*?$/, format: 'MMM D, YYYY' },
         { regex: /^(\w{3}) (\d+) AT (\d+):(\d+).*?$/, format: 'MMM D, YYYY h:mm A' },
-        { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' }
+        { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' },
+        { regex: /^(\d{1,2})\s*(\w{3})/, format: 'DD MMM'}
     ];
     
     for (let i = 0; i < formats.length; i++) {
@@ -74,8 +75,12 @@ function date_conversion_formatting(date_str) {
         const match = date_str.match(formats[i].regex);
         // If found
         if (match) {
-            // Format the match
-            const dateStringFormatted = match.slice(1).join(' ').replace('AT', '').trim();
+            let dateStringFormatted = match.slice(1).join(' ').replace('AT', '').trim();
+            // Special case for format without year
+            if(formats[i].format === 'DD MMM')
+            {
+                dateStringFormatted += ` ${new Date().getFullYear()}`
+            }
             let date = new Date(dateStringFormatted);
             // Plus one day. Apperantly JS counts from 0 in this case (so 1. Apri 2023) == (2023-04-00)
             date.setDate(date.getDate() + 1);
@@ -190,7 +195,7 @@ function read_description(description) {
     }
 
     const categories = {
-        'Festives': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
+        'Festivity': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
         'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
         'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
     };
