@@ -1,6 +1,4 @@
-const exp = require("constants");
-
-module.exports = {
+export {
     input_validation,
     date_conversion_formatting,
     get_duration,
@@ -125,6 +123,8 @@ function time_until_event(date) {
 
 // Formats string
 function format_address(address) {
+    if (!input_validation(address, "str")) return ""
+
     // - g = All occurences
     return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase();
 }
@@ -137,14 +137,12 @@ function on_campus(location) {
 
     // Example adressess, expandable
     const campus_addresses = ["selmalagerløfsvej",
+        "selma lagerløfs vej",
         "bertil ohtils vej",
         "frederik bajers vej"];
 
     // check if this.location is in campus_addresses
-    if (campus_addresses.includes(format_address(location))) {
-        return true;
-    }
-    return false;
+    return campus_addresses.includes(format_address(location))
 }
 
 function time_left_score(time_left) {

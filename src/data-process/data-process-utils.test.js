@@ -1,4 +1,5 @@
-const {
+import { describe } from "node:test"
+import {
     input_validation,
     date_conversion_formatting,
     time_until_event,
@@ -8,7 +9,7 @@ const {
     time_left_score,
     strip_and_trim,
     read_description,
-} = require("./class-insertion-utils.js")
+} from "./data-process-utils.js"
 
 // https://jestjs.io/docs/expect - Expect documentation where you can find what things to check for.
 // 'not' is the negation of whatever you want to check, e.g 'expect(test_func()).not.toBe(1)'
@@ -184,6 +185,7 @@ describe("Time Until Event", () => {
     })
 })
 
+// Get duration
 describe("Get Duration", () => {
     describe("Differnt durations", () => {
         test("Positive", () => {
@@ -222,6 +224,60 @@ describe("Get Duration", () => {
 
         test("No args", () => {
             expect(get_duration()).toBe("")
+        })
+    })
+})
+
+// Format address
+describe("Format address", () => {
+    describe("Addresses", () => {
+        test("Cassiopeia", () => {
+            expect(format_address("Selma Lagerløfs Vej 300, 9220 Aalborg")).toBe("selma lagerløfs vej")
+        })
+
+        test("Aalborg University", () => {
+            expect(format_address("Kroghstræde 3, 9220 Aalborg Øst")).toBe("kroghstræde")
+        })
+    })
+
+    describe("Invalid input", () => {
+        let expected = ""
+
+        test("Empty string", () => {
+            expect(format_address("")).toBe(expected)
+        })
+
+        test("Undefined", () => {
+            expect(format_address(undefined)).toBe(expected)
+        })
+
+        test("Number", () => {
+            expect(format_address(1)).toBe(expected)
+        })
+
+        test("Boolean", () => {
+            expect(format_address(true)).toBe(expected)
+        })
+
+        test("Objects", () => {
+            expect(format_address({})).toBe(expected)
+        })
+    })
+})
+
+// On campus
+describe("On Campus", () => {
+    // Addresses have already been tested with 'format_address'
+
+    describe("Invalid input", () => {
+        let expected = false
+
+        test("Empty string", () => {
+            expect(on_campus("")).toBe(expected)
+        })
+
+        test("Unlisted address", () => {
+            expect(on_campus("Fibigerstræde 15, 9220 Aalborg").toBe(expected))
         })
     })
 })
