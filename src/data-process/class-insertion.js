@@ -1,5 +1,5 @@
 // Import ES6 modules
-import { getEntry, insertEntry, checkDuplicateLink } from '../database/databaseHandler.js';
+import { insertEntry, checkDuplicateLink } from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
 // Export ES6 modules
@@ -82,8 +82,6 @@ function date_conversion_formatting(date_str) {
                 dateStringFormatted += ` ${new Date().getFullYear()}`
             }
             let date = new Date(dateStringFormatted);
-            // Plus one day. Apperantly JS counts from 0 in this case (so 1. Apri 2023) == (2023-04-00)
-            date.setDate(date.getDate() + 1);
             // Checks if valid date. JS returns NaN (not a number) if date.getTime() isn't valid
             const isValid = !isNaN(date.getTime());
             if (isValid) {
@@ -319,3 +317,5 @@ async function main() {
 
     return true;
 }
+
+console.log(date_conversion_formatting("TUESDAY, MAY 2, 2023 AT 5:30 PM").toDateString());
