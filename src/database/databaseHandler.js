@@ -89,7 +89,7 @@ async function getNewestEntries(collection) {
 }
 
 // This functions returns all the entrys in a collection that matches the searchTerm in any field
-async function serchAllFields(searchTerm) {
+async function searchAllFields(searchTerm) {
     let client;
     let result = [];
 
@@ -97,9 +97,15 @@ async function serchAllFields(searchTerm) {
         client = await establishConnection();
 
         // This function call returns a cursor containing the searched entrys 
-        let cursor = client.db("p2").collection("userdb").find({
-            $or: [{ fName: { $regex: searchTerm, $options: "i" } },
-            { lName: { $regex: searchTerm, $options: "i" } }
+        let cursor =  client.db("p2").collection("events").find(
+            {$or: [
+                {orgName: {$regex: searchTerm, $options: "i"}},
+                {orgCategory: {$regex: searchTerm, $options: "i"}},
+                {eventTitle: {$regex: searchTerm, $options: "i"}},
+                {eventHost: {$regex: searchTerm, $options: "i"}},
+                {location: {$regex: searchTerm, $options: "i"}},
+                {description: {$regex: searchTerm, $options: "i"}},
+                {categories: {$regex: searchTerm, $options: "i"}}
             ]
         });
         await cursor.forEach(doc => result.push(doc));
