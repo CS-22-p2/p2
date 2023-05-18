@@ -1,5 +1,5 @@
 // Import ES6 modules
-import { getEntry, insertEntry, checkDuplicateLink } from '../database/databaseHandler.js';
+import { insertEntry, checkDuplicateLink } from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
 // Export ES6 modules
