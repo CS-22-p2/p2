@@ -9,7 +9,7 @@ async function submit(){
     values += "mail = " + document.getElementsByName("mail")[0].value + "\n";
     values += "password = " + document.getElementsByName("password")[0].value + "\n";
     values += "campus = " + document.getElementsByName("campus")[0].value + "\n";
-    alert(values);
+   
 
     const url = '/';
     

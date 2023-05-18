@@ -5,7 +5,8 @@ function submit(){
     let values = "";
     values += "Email = " + document.getElementsByName("mail")[0].value + "\n";
     values += "Password = " + document.getElementsByName("password")[0].value + "\n";
-    alert(values);
+
+    console.log(values);
 
     let email = document.getElementsByName("mail")[0].value;
     let password = document.getElementsByName("password")[0].value;
