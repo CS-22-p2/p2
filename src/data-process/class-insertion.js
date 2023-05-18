@@ -317,5 +317,3 @@ async function main() {
 
     return true;
 }
-
-console.log(date_conversion_formatting("TUESDAY, MAY 2, 2023 AT 5:30 PM").toDateString());
