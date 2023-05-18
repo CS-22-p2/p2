@@ -184,7 +184,7 @@ function time_left_score(time_left) {
 
 function strip_and_trim(string) {
     // - ^ = negation
-    return (string.replace(/[^a-zA-Z]/g, '')).toLowerCase();
+    return (string.replace(/[^a-zA-Z\xC5\xC6\xD8\xE5\xE6\xF8]/g, '')).toLowerCase();
 }
 
 function read_description(description) {
