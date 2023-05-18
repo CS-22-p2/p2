@@ -24,7 +24,6 @@ async function establishConnection() {
 
     try {
         await client.connect();
-        console.log("We in!");
         return client;
 
     } catch (error) {
@@ -43,7 +42,6 @@ async function insertEntry(newEntry, collection) {
         const collections = await client.db("p2").listCollections().toArray();
         const collectionNames = [];
         collections.forEach(ele => collectionNames.push(ele.name));
-        console.log(collectionNames);
         // If the specified collection is present we insert the new entry and return true
         // else it returns false without inserting the new entry
         if (collectionNames.includes(collection)) {
@@ -51,7 +49,6 @@ async function insertEntry(newEntry, collection) {
             console.log(`New entry created with the following id: ${result.insertedId}`);
             return true;
         }
-        console.log("Nothing happend");
         return false;
     } catch (error) {
         console.error(error)
@@ -256,7 +253,7 @@ async function getFavorites(userId) {
     }
 }
 
-/* async function main() {
+/*  async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Theis", "userdb");
     //const result = await serchAllFields("m");
@@ -266,38 +263,4 @@ async function getFavorites(userId) {
     console.log(result);
 }
 
-
-main(); */
-
-/* 
-When to run the Information Gathering program
-*/
-/* 
-// Bro du kan ikke bruge await i ikke async functions
-function getData() {
-    let start_hour = "08:00:00";
-    let end_hour = "13:00:00";
-    let current_date = new Date();
-    let start_hour_split = start_hour.split(":");
-    let start_hour_date = new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate(), start_hour_split[0], start_hour_split[1], start_hour_split[2]);
-
-    let end_hour_split = end_hour.split(":");
-    let end_hour_date = new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate(), end_hour_split[0], end_hour_split[1], end_hour_split[2]);
-
-    console.log(current_date);
-    console.log(start_hour_date);
-    console.log(end_hour_date);
-    if (end_hour_date >= current_date && current_date >= start_hour_date) {
-        try {
-            let execution = await class_creator();
-            if (!execution) {
-                throw new Error("Couldn't get data");
-            }
-        } catch (error) {
-            console.error(error);
-            getData();
-        }
-    }
-}
-
-//getData(); */
+ */

@@ -68,9 +68,3 @@ function InsertionSort(array) {
     }
     return array;
 }
-
-let result = await get_sorted_events("eventDate")
-
-for (let i = 0; i < result.length; i++) {
-    console.log(result[i]);
-}

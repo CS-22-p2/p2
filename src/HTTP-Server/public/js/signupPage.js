@@ -1,5 +1,4 @@
 let button = document.getElementsByName("button");
-console.log(button);
 button[0].addEventListener("click", submit);
 
 async function submit(){
@@ -11,7 +10,6 @@ async function submit(){
     values += "password = " + document.getElementsByName("password")[0].value + "\n";
     values += "campus = " + document.getElementsByName("campus")[0].value + "\n";
     alert(values);
-    console.log(values);
 
     const url = '/';
     
@@ -29,7 +27,6 @@ async function submit(){
         password: password,
         campus: campus
     }
-    console.log(data);
     
     fetch(url, {
         method: 'PUT',

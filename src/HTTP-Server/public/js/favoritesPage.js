@@ -90,7 +90,6 @@ function goToPage(event)
       url = "../html/favoritesPage.html"
       break;
     case 'Login':
-      console.log("login");
       break;
   }
 

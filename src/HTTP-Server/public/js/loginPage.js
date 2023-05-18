@@ -1,5 +1,4 @@
 let button = document.getElementsByName("login");
-console.log(button);
 button[0].addEventListener("click", submit);
 
 function submit(){
@@ -7,7 +6,6 @@ function submit(){
     values += "Email = " + document.getElementsByName("mail")[0].value + "\n";
     values += "Password = " + document.getElementsByName("password")[0].value + "\n";
     alert(values);
-    console.log(values);
 
     let email = document.getElementsByName("mail")[0].value;
     let password = document.getElementsByName("password")[0].value;
@@ -33,8 +31,6 @@ function submit(){
         let res = response.json()
         return res;
     }).then((res) => {
-        console.log(res.cookie);
-        
         document.cookie = `${res.cookie.cookieName}=${res.cookie.cookieValue};` +
         `max-age=${res.cookie.cookieOptions.maxAge};`;
 
