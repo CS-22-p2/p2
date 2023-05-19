@@ -67,9 +67,9 @@ function date_conversion_formatting(date_str) {
         { regex: /^(.*?), (\w{3}) (\d+).*?$/, format: 'MMM D, YYYY' },
         { regex: /^(\w{3}) (\d+) AT (\d+):(\d+).*?$/, format: 'MMM D, YYYY h:mm A' },
         { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' },
-        { regex: /^(\d{1,2})\s*(\w{3})/, format: 'DD MMM'}
+        { regex: /^(\d{1,2})\s*(\w{3})/, format: 'DD MMM' }
     ];
-    
+
     for (let i = 0; i < formats.length; i++) {
         // Tries to match with the regex's
         const match = date_str.match(formats[i].regex);
@@ -77,8 +77,7 @@ function date_conversion_formatting(date_str) {
         if (match) {
             let dateStringFormatted = match.slice(1).join(' ').replace('AT', '').trim();
             // Special case for format without year
-            if(formats[i].format === 'DD MMM')
-            {
+            if (formats[i].format === 'DD MMM') {
                 dateStringFormatted += ` ${new Date().getFullYear()}`
             }
             let date = new Date(dateStringFormatted);
@@ -88,7 +87,7 @@ function date_conversion_formatting(date_str) {
             const isValid = !isNaN(date.getTime());
             if (isValid) {
                 return date;
-            }   
+            }
         }
     }
     // No matching date format
@@ -136,7 +135,7 @@ function time_until_event(date) {
 // Formats string
 function format_address(address) {
     // - g = All occurences
-    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase(); 
+    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase();
 }
 
 // Determine if event are on campus
@@ -146,14 +145,14 @@ function on_campus(location) {
     }
 
     // Example adressess, expandable
-    const campus_addresses = ["selmalagerløfsvej", 
-                            "bertil ohlins vej", 
-                            "frederik bajers vej",
-                            "alfred obels vej",
-                            "thomas manns vej",
-                            "myrdalstræde", 
-                            "pontoppidanstræde",
-                            "korghstræde"];
+    const campus_addresses = ["selmalagerløfsvej",
+        "bertil ohlins vej",
+        "frederik bajers vej",
+        "alfred obels vej",
+        "thomas manns vej",
+        "myrdalstræde",
+        "pontoppidanstræde",
+        "korghstræde"];
 
     // check if this.location is in campus_addresses
     if (campus_addresses.includes(format_address(location))) {
@@ -195,11 +194,11 @@ function read_description(description) {
     }
 
     const categories = {
-        'Festivity': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
+        'Festivity': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske", "beer", "beers", "øl", "spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
         'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
         'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
     };
-    
+
     // Array with the description
     const tokens = description.split(" ");
 
@@ -230,10 +229,10 @@ function read_description(description) {
 }
 
 class event_data {
-    constructor(orgName, orgCategory, orgContactInfo, 
-        eventLink, eventTitle, eventDate, 
-        eventHosts, eventParticipants, eventLocation, 
-        eventDuration, isPrivate, eventDescription, 
+    constructor(orgName, orgCategory, orgContactInfo,
+        eventLink, eventTitle, eventDate,
+        eventHosts, eventParticipants, eventLocation,
+        eventDuration, isPrivate, eventDescription,
         eventTickets, eventImage) {
         this.orgName = orgName;
         this.orgCategory = orgCategory;
