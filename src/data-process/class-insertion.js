@@ -301,17 +301,8 @@ async function collectEvents() {
             event_arr[i].eventTickets,
             event_arr[i].eventImage
         )
-        // let a = await inserting_DB(event_temp);
-        // if (a === false) {
-        //     console.log("Event failed to insert");
-        // }
-        // else {
-        //     console.log("Event inserted");
-        //     console.log(event_temp);
-        // }
+        await inserting_DB(event_temp);
     }
 
     return true;
 }
-
-collectEvents();
