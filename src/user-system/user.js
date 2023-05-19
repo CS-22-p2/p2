@@ -34,11 +34,3 @@ async function getId() {
         await client.close();
     }
 }
-
-/* async function main() {
-    const result = await getId();
-
-    console.log(result);
-}
-
-main(); */

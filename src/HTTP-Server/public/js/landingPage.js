@@ -133,7 +133,6 @@ function sortHandler(event) {
   })
   .then(response => response.json())
   .then(data => {
-    console.log(data.events);
     eventInitializer(data.events, templateBox); //Insert events into the page
     removeEvents(data.events.length); //Removes the previous events
   })

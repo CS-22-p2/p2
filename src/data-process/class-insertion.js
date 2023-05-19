@@ -1,5 +1,5 @@
 // Import ES6 modules
-import { getEntry, insertEntry, checkDuplicateLink } from '../database/databaseHandler.js';
+import { insertEntry, checkDuplicateLink } from '../database/databaseHandler.js';
 import { accessEventsPage } from '../InformationGathering/url_processor.js';
 
 // Export ES6 modules
@@ -20,29 +20,28 @@ let high_score = 200;
 
 // Checks if input is of the expected type. Returns true if correct
 function input_validation(input, expected) {
-    // Guard clause
-    if (expected === undefined || expected === null) {
+    if (input === undefined || input === null) {
         return false
-    } if (expected === "str") {
-        if (typeof input !== "string" || input === null || input === undefined) {
-            return false;
-        }
-    } if (expected === "int") {
-        if (typeof input !== "number" || !Number.isInteger(input)) {
-            return false;
-        }
-    } if (expected === "bool") {
-        if (typeof input !== "boolean") {
-            return false;
-        }
-    } if (expected === "obj") {
-        if (typeof input !== 'object' || input === null) {
-            return false;
-        }
     }
 
-    // Correct input
-    return true; 
+    if (expected === "str") {
+        if (typeof input === "string") {
+            return true;
+        }
+    } if (expected === "int") {
+        if (typeof input === "number" || Number.isInteger(input)) {
+            return true;
+        }
+    } if (expected === "bool") {
+        if (typeof input === "boolean") {
+            return true;
+        }
+    } if (expected === "obj") {
+        if (typeof input === 'object') {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Gets date from these 3 possible combinations of input
@@ -67,16 +66,20 @@ function date_conversion_formatting(date_str) {
         { regex: /^(.*?), (.*?)( \d+)?, (\d{4}) AT (\d+):(\d+) (AM|PM).*?$/, format: 'MMMM D, YYYY h:mm A' },
         { regex: /^(.*?), (\w{3}) (\d+).*?$/, format: 'MMM D, YYYY' },
         { regex: /^(\w{3}) (\d+) AT (\d+):(\d+).*?$/, format: 'MMM D, YYYY h:mm A' },
-        { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' }
+        { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d+):(\d+).*?$/, format: 'MM/DD/YYYY h:mm A' },
+        { regex: /^(\d{1,2})\s*(\w{3})/, format: 'DD MMM' }
     ];
-    
+
     for (let i = 0; i < formats.length; i++) {
         // Tries to match with the regex's
         const match = date_str.match(formats[i].regex);
         // If found
         if (match) {
-            // Format the match
-            const dateStringFormatted = match.slice(1).join(' ').replace('AT', '').trim();
+            let dateStringFormatted = match.slice(1).join(' ').replace('AT', '').trim();
+            // Special case for format without year
+            if (formats[i].format === 'DD MMM') {
+                dateStringFormatted += ` ${new Date().getFullYear()}`
+            }
             let date = new Date(dateStringFormatted);
             // Plus one day. Apperantly JS counts from 0 in this case (so 1. Apri 2023) == (2023-04-00)
             date.setDate(date.getDate() + 1);
@@ -84,7 +87,7 @@ function date_conversion_formatting(date_str) {
             const isValid = !isNaN(date.getTime());
             if (isValid) {
                 return date;
-            }   
+            }
         }
     }
     // No matching date format
@@ -112,7 +115,7 @@ function get_duration(event_duration) {
     // Checks if there is minutes
     if (!isNaN(result_expression[3])) {
         minutes = result_expression[3];
-        return `${hours}, ${minutes} hours(s)`;
+        return `${hours} hour(s) ${minutes} days(s)`;
     }
     return `${hours} hour(s)`;
 }
@@ -132,7 +135,7 @@ function time_until_event(date) {
 // Formats string
 function format_address(address) {
     // - g = All occurences
-    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase(); 
+    return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase();
 }
 
 // Determine if event are on campus
@@ -142,14 +145,14 @@ function on_campus(location) {
     }
 
     // Example adressess, expandable
-    const campus_addresses = ["selmalagerløfsvej", 
-                            "bertil ohlins vej", 
-                            "frederik bajers vej",
-                            "alfred obels vej",
-                            "thomas manns vej",
-                            "myrdalstræde", 
-                            "pontoppidanstræde",
-                            "Korghstræde"];
+    const campus_addresses = ["selmalagerløfsvej",
+        "bertil ohlins vej",
+        "frederik bajers vej",
+        "alfred obels vej",
+        "thomas manns vej",
+        "myrdalstræde",
+        "pontoppidanstræde",
+        "korghstræde"];
 
     // check if this.location is in campus_addresses
     if (campus_addresses.includes(format_address(location))) {
@@ -191,11 +194,11 @@ function read_description(description) {
     }
 
     const categories = {
-        'Festives': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske","beer","beers","øl","spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
+        'Festivity': ["alcoholic", "alcoholics", "alkoholisk", "alkoholiske", "beer", "beers", "øl", "spirits", "spiritus", "bars", "bar", "barer", "booze", "sprit", "party", "parties", "fest", "fester"],
         'Career': ["job", "jobs", "arbejde", "career", "careers", "karriere", "karrierer", "interview", "interviews", "resume", "resumes", "CV", "promotion", "promotions", "forfremmelse", "forfremmelser", "salary", "salaries", "løn", "lønninger", "networking", "networking", "netværkning", "professional", "professionals", "professionel", "entrepreneurship", "entrepreneurship", "iværksætteri", "iværksætteri", "management", "management", "ledelse", "ledelse"],
         'Sports': ["tennis", "tennis", "fodbold", "fodbold", "basketball", "basketball", "baseball", "baseball", "cycling", "cykling", "volleyball", "volleybold", "swimming", "svømning"]
     };
-    
+
     // Array with the description
     const tokens = description.split(" ");
 
@@ -226,10 +229,10 @@ function read_description(description) {
 }
 
 class event_data {
-    constructor(orgName, orgCategory, orgContactInfo, 
-        eventLink, eventTitle, eventDate, 
-        eventHosts, eventParticipants, eventLocation, 
-        eventDuration, isPrivate, eventDescription, 
+    constructor(orgName, orgCategory, orgContactInfo,
+        eventLink, eventTitle, eventDate,
+        eventHosts, eventParticipants, eventLocation,
+        eventDuration, isPrivate, eventDescription,
         eventTickets, eventImage) {
         this.orgName = orgName;
         this.orgCategory = orgCategory;
@@ -312,6 +315,5 @@ async function main() {
         //     console.log(event_temp);
         // }
     }
-
     return true;
 }

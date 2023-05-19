@@ -10,10 +10,10 @@ export {
     establishConnection,
     checkDuplicateLink,
     getNewestEntries,
-    searchAllFields,
     getAllEvents,
     updateFavorite,
-    getFavorites
+    getFavorites,
+    removeOutdatedEvents
 };
 
 dotenv.config();
@@ -25,7 +25,6 @@ async function establishConnection() {
 
     try {
         await client.connect();
-        console.log("We in!");
         return client;
 
     } catch (error) {
@@ -44,7 +43,6 @@ async function insertEntry(newEntry, collection) {
         const collections = await client.db("p2").listCollections().toArray();
         const collectionNames = [];
         collections.forEach(ele => collectionNames.push(ele.name));
-        console.log(collectionNames);
         // If the specified collection is present we insert the new entry and return true
         // else it returns false without inserting the new entry
         if (collectionNames.includes(collection)) {
@@ -52,7 +50,6 @@ async function insertEntry(newEntry, collection) {
             console.log(`New entry created with the following id: ${result.insertedId}`);
             return true;
         }
-        console.log("Nothing happend");
         return false;
     } catch (error) {
         console.error(error)
@@ -61,8 +58,7 @@ async function insertEntry(newEntry, collection) {
     }
 }
 
-// When calling for entries for the main page start from 0, and increment when ever button pressed
-async function getNewestEntries(collection, skip) {
+async function getNewestEntries(collection) {
     let client;
     let result = [];
     try {
@@ -242,7 +238,6 @@ async function updateFavorite(userId, eventId) {
 
 async function getFavorites(userId) {
     let client;
-    let favoriteEvents = [];
 
     try {
         client = await establishConnection();
@@ -264,15 +259,30 @@ async function getFavorites(userId) {
     }
 }
 
+async function removeOutdatedEvents() {
+    let client;
+
+    try {
+        client = await establishConnection();
+
+        const result = await client.db("p2").collection("events").deleteMany({eventDate: {$lt: new Date(Date.now())}});
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
+}
+
 /* async function main() {
     //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
     //const result = await getEntry("Theis", "userdb");
     //const result = await serchAllFields("m");
     //const result = await getNewestEntries("events")
-    const result = await getFavorites(2);
-    
-    //console.log(result);
+    //const result = await getFavorites(2);
+    const result = removeOutdatedEvents();
+
+    console.log(result);
 }
 
-
-main(); */
+ */

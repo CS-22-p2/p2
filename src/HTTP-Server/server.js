@@ -18,7 +18,7 @@ const publicDirectoryPath = path.join(__dirname, 'public');
 const server = http.createServer(async (req, res) => {
     if (req.method === 'GET') {
         // This handels get request asking for data
-        if (req.url === '/getEvents') {
+        if(req.url.includes('/getEvents')) {
             const events = await getEvents();
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(events));
@@ -48,7 +48,6 @@ const server = http.createServer(async (req, res) => {
                     res.end(`Server error: ${err.code}`);
                 }
             } else { // Responds with the request content
-                console.log(contentType);
                 res.writeHead(200, { 'contentType': contentType });
                 res.end(content, 'utf-8');
             }
@@ -64,7 +63,6 @@ const server = http.createServer(async (req, res) => {
                 body = JSON.parse(body);
             });
             req.on('end', async () => {
-                console.log(body);
                 if(body === "dateOpt")
                 {
                     let eventResponse = await get_sorted_events("eventDate");
@@ -88,7 +86,6 @@ const server = http.createServer(async (req, res) => {
         });
         // When the full request is received it gets processed
         req.on('end', async () => {
-            console.log(body);
             if (body.type === "login") {
                 // Do login stuff
 
@@ -108,12 +105,10 @@ const server = http.createServer(async (req, res) => {
             } else if (body.type === "signUp") {
                 // if the request type is signup it creates a new user
                 let result = await createUser(body);
-                console.log("Trying to sign up");
             } else if (body.type === "favorite") {
                 // Function that adds event id to favorite list
                 await updateFavorite(body.userId, body.eventId);
             }
-            console.log(`Received PUT request with body: ${body}`)
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'PUT request successful' }));
         });
