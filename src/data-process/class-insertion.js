@@ -316,6 +316,5 @@ async function main() {
         //     console.log(event_temp);
         // }
     }
-
     return true;
 }
