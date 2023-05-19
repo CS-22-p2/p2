@@ -162,7 +162,7 @@ function on_campus(location) {
 
 function time_left_score(time_left) {
     // Input validation
-    if (!input_validation(time_left, "obj")) {
+    if (!input_validation(time_left, "int")) {
         return null;
     }
 
@@ -259,8 +259,8 @@ class event_data {
         if (on_campus(this.eventLocation)) {
             basic_score += high_score * 5;
         }
-        if (time_left_score(this.time_left) !== null) {
-            basic_score += time_left_score(this.time_left);
+        if (time_left_score(this.timeLeft) !== null) {
+            basic_score += time_left_score(this.timeLeft);
         }
         basic_score += this.eventParticipants;
         return basic_score;
@@ -313,3 +313,5 @@ async function collectEvents() {
 
     return true;
 }
+
+collectEvents();
