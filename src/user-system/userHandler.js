@@ -73,9 +73,6 @@ function createCookie(user) {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        userPass: user.userPass,
-        campus: user.campus,
-        favorittes: user.favorittes,
         userId: user.userId
     };
 
@@ -91,14 +88,3 @@ function createCookie(user) {
     
     return { cookieName: 'currentUser', cookieValue: signedCookie, cookieOptions };
 }
-
-const userData = { type: 'login', email: 'tmnj21@student.aau.dk', password: '123456789'};
-
-/* async function main() {
-    //await createUser(userData);
-    const result = await checkLogin(userData)
-
-    console.log(result);
-}
-
-main(); */

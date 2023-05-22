@@ -81,8 +81,6 @@ function date_conversion_formatting(date_str) {
                 dateStringFormatted += ` ${new Date().getFullYear()}`
             }
             let date = new Date(dateStringFormatted);
-            // Plus one day. Apperantly JS counts from 0 in this case (so 1. Apri 2023) == (2023-04-00)
-            date.setDate(date.getDate() + 1);
             // Checks if valid date. JS returns NaN (not a number) if date.getTime() isn't valid
             const isValid = !isNaN(date.getTime());
             if (isValid) {
@@ -163,7 +161,7 @@ function on_campus(location) {
 
 function time_left_score(time_left) {
     // Input validation
-    if (!input_validation(time_left, "obj")) {
+    if (!input_validation(time_left, "int")) {
         return null;
     }
 
@@ -185,7 +183,7 @@ function time_left_score(time_left) {
 
 function strip_and_trim(string) {
     // - ^ = negation
-    return (string.replace(/[^a-zA-Z]/g, '')).toLowerCase();
+    return (string.replace(/[^a-zA-Z\xC5\xC6\xD8\xE5\xE6\xF8]/g, '')).toLowerCase();
 }
 
 function read_description(description) {
@@ -260,8 +258,8 @@ class event_data {
         if (on_campus(this.eventLocation)) {
             basic_score += high_score * 5;
         }
-        if (time_left_score(this.time_left) !== null) {
-            basic_score += time_left_score(this.time_left);
+        if (time_left_score(this.timeLeft) !== null) {
+            basic_score += time_left_score(this.timeLeft);
         }
         basic_score += this.eventParticipants;
         return basic_score;
@@ -276,12 +274,9 @@ async function inserting_DB(event_class) {
     return true;
 }
 
-async function main() {
+async function collectEvents() {
     let event_arr = await accessEventsPage();
     let event_arr_size = event_arr.length;
-    // Debug
-    // console.log(`Array size: ${event_arr_size}`);
-    // console.log(event_arr);
 
     // guard clause
     if (event_arr_size <= 0) {
@@ -305,15 +300,7 @@ async function main() {
             event_arr[i].eventTickets,
             event_arr[i].eventImage
         )
-        console.log(event_temp);
-        // let a = await inserting_DB(event_temp);
-        // if (a === false) {
-        //     console.log("Event failed to insert");
-        // }
-        // else {
-        //     console.log("Event inserted");
-        //     console.log(event_temp);
-        // }
+        await inserting_DB(event_temp);
     }
     return true;
 }
