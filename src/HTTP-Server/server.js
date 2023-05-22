@@ -1,8 +1,7 @@
 // Imports
 import { createUser, checkLogin } from '../user-system/userHandler.js';
-import { getNewestEntries, updateFavorite, getFavorites } from '../database/databaseHandler.js';
+import { getNewestEntries, updateFavorite, getFavorites, getCategory } from '../database/databaseHandler.js';
 import { get_sorted_events } from '../data-process/eventSorting.js';
-import http from 'http';
 import fs from 'fs';
 import url from 'url';
 import path from 'path';
@@ -16,6 +15,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const publicDirectoryPath = path.join(__dirname, 'public');
 
 const server = http.createServer(async (req, res) => {
+    let eventResponse;
     if (req.method === 'GET') {
         // This handels get request asking for data
         if(req.url.includes('/getEvents')) {
@@ -63,17 +63,25 @@ const server = http.createServer(async (req, res) => {
                 body = JSON.parse(body);
             });
             req.on('end', async () => {
-                if(body === "dateOpt")
-                {
-                    let eventResponse = await get_sorted_events("eventDate");
-                    res.writeHead(200, { 'Content-Type': 'application/json'});
-                    res.end(JSON.stringify({ events: eventResponse}));
-                }else if(body === "relevanceOpt")
-                {
-                    let eventResponse = await get_sorted_events("relevancyScore");
-                    res.writeHead(200, { 'Content-Type': 'application/json'});
-                    res.end(JSON.stringify({ events: eventResponse}));
+                switch(body){
+                    case 'dateOpt':
+                        eventResponse = await get_sorted_events("eventDate");
+                        break;
+                    case 'relevanceOpt':
+                        eventResponse = await get_sorted_events("relevancyScore");
+                        break;
+                    case 'festivityOpt':
+                        eventResponse = await getCategory("Festivity");
+                        break;
+                    case 'careerOpt':
+                        eventResponse = await getCategory("Career");
+                        break;
+                    case 'sportsOpt':
+                        eventResponse = await getCategory("Sports");
+                        break;
                 }
+                res.writeHead(200, { 'Content-Type': 'application/json'});
+                res.end(JSON.stringify({ events: eventResponse}));
             })
         }
     } else if (req.method === 'PUT') {
