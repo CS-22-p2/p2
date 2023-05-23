@@ -13,7 +13,8 @@ export {
     getAllEvents,
     updateFavorite,
     getFavorites,
-    removeOutdatedEvents
+    removeOutdatedEvents,
+    getCategory
 };
 
 dotenv.config();
@@ -259,6 +260,24 @@ async function getFavorites(userId) {
     }
 }
 
+async function getCategory(category){
+    let client;
+    let result = [];
+    try {
+        client = await establishConnection();
+        const cursor  = client.db("p2").collection("events").find({eventCategories: category});
+        await cursor.forEach(doc => result.push(doc));
+        if (result.length > 0) {
+            return result;
+        }
+        return false;
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await client.close();
+    }
+}
+
 async function removeOutdatedEvents() {
     let client;
 
@@ -273,16 +292,3 @@ async function removeOutdatedEvents() {
         await client.close();
     }
 }
-
-/* async function main() {
-    //const result = await insertEntry({fName: "Emma", lName: "smith", age: 16, gender: 1}, "userdb");
-    //const result = await getEntry("Theis", "userdb");
-    //const result = await serchAllFields("m");
-    //const result = await getNewestEntries("events")
-    //const result = await getFavorites(2);
-    const result = removeOutdatedEvents();
-
-    console.log(result);
-}
-
- */
