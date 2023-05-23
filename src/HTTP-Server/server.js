@@ -3,6 +3,7 @@ import { createUser, checkLogin } from '../user-system/userHandler.js';
 import { getNewestEntries, updateFavorite, getFavorites, getCategory } from '../database/databaseHandler.js';
 import { get_sorted_events } from '../data-process/eventSorting.js';
 import fs from 'fs';
+import http from "http" 
 import url from 'url';
 import path from 'path';
 import dotenv from 'dotenv';
