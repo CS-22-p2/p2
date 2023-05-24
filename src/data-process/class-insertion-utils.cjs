@@ -1,5 +1,3 @@
-const exp = require("constants");
-
 module.exports = {
     input_validation,
     date_conversion_formatting,
@@ -10,6 +8,24 @@ module.exports = {
     time_left_score,
     strip_and_trim,
     read_description,
+    insertion_sort,
+}
+
+// Used to sort events by date or by relevancy score
+// Works "in place" so we do not need to return array from function
+function insertion_sort(array) {
+    //Insertion Sort --- See CLRS ch. 2.1
+    for (let j = 1; j < array.length; j++) {
+        let key = array[j];
+        let i = j - 1;
+        while (i >= 0 && array[i].value > key.value) {
+            array[i + 1] = array[i]
+            i = i - 1;
+        }
+        array[i + 1] = key;
+
+    }
+    return array;
 }
 
 // Checks if input is of the expected type. Returns true if correct
@@ -105,14 +121,20 @@ function get_duration(event_duration) {
     let hours = result_expression[1];
     let minutes = result_expression[3];
 
-    if (hours == undefined) return "";
+    let str = "";
+
+    if (!isNaN(hours)) {
+        str += `${hours} hour(s) `;
+    }
 
     // Checks if there is minutes
     if (!isNaN(minutes)) {
-        return `${hours} hour(s) and ${minutes} minute(s)`;
+        // Add 'and' if hours has been defined
+        str += hours !== undefined ? `and ${minutes} minute(s) ` : `${minutes} minute(s)`;
     }
 
-    return `${hours} hour(s)`;
+    // Finish by trimming any potential white space
+    return str.trim();
 }
 
 // When event is happening relative to current time
@@ -130,6 +152,8 @@ function time_until_event(date) {
 
 // Formats string
 function format_address(address) {
+    if (typeof address !== 'string') return "";
+
     // - g = All occurences
     return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase();
 }
@@ -142,14 +166,15 @@ function on_campus(location) {
 
     // Example adressess, expandable
     const campus_addresses = ["selmalagerløfsvej",
+        "selma lagerløfs vej",
+        "kroghstræde",
+        "krogh stræde",
         "bertil ohtils vej",
-        "frederik bajers vej"];
+        "niels jernes vej",
+        "fredrik bajers vej"];
 
     // check if this.location is in campus_addresses
-    if (campus_addresses.includes(format_address(location))) {
-        return true;
-    }
-    return false;
+    return campus_addresses.includes(format_address(location))
 }
 
 function time_left_score(time_left) {

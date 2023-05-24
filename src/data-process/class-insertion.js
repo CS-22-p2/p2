@@ -1,15 +1,15 @@
 // Import ES6 modules
-import { insertEntry, checkDuplicateLink, update_existing_event, getAllEvents } from '../database/databaseHandler.js';
+import { insertEntry, checkDuplicateLink, update_existing_event } from '../database/databaseHandler.js';
 import { accessEventsPage } from    '../InformationGathering/url_processor.js';
 
-const {
+import {
     input_validation,
     date_conversion_formatting,
     time_until_event,
     on_campus,
     time_left_score,
     read_description,
-} = require("./class-insertion-utils.js")
+} from "./class-insertion-utils.cjs"
 
 // Export ES6 modules
 export default {

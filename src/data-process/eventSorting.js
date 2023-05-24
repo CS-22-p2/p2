@@ -1,4 +1,5 @@
 import { getNewestEntries } from "../database/databaseHandler.js";
+import { insertion_sort } from "./class-insertion-utils.cjs";
 export { get_sorted_events}
 
 async function get_sorted_events(search_term) {
@@ -30,7 +31,7 @@ async function get_sorted_events(search_term) {
     }
 
     // Returns index array of how the sorted list should be
-    event_array_index = InsertionSort(event_array_index);
+    event_array_index = insertion_sort(event_array_index);
 
     let sorted_list = [];
     // Gets the original object and inserts it with the index arrat
@@ -50,23 +51,6 @@ async function get_sorted_events(search_term) {
 
     // Returns an array with sorted event objects
     return sorted_list;
-}
-
-// Used to sort events by date or by relevancy score
-// Works "in place" so we do not need to return array from function
-function InsertionSort(array) {
-    //Insertion Sort --- See CLRS ch. 2.1
-    for (let j = 1; j < array.length; j++) {
-        let key = array[j];
-        let i = j - 1;
-        while (i >= 0 && array[i].value > key.value) {
-            array[i + 1] = array[i]
-            i = i - 1;
-        }
-        array[i + 1] = key;
-
-    }
-    return array;
 }
 
 let result = await get_sorted_events("eventDate")
