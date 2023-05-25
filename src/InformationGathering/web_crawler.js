@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer'
 import { Event } from "./eventClass.js";
 import { checkPrime } from 'crypto';
-export {getData, processInformation, getElement, getElementsArray};
+export {getData, getElement, getElementsArray};
  
 //The classes of the HTML elements we want to read from the DOM
 // _click suffix indicates that it is a "clickable" DOM element
@@ -163,54 +163,4 @@ async function getData(eventPageLink, page) {
   const eventImage = await getImage(page, image_class);
   return {eventLink, eventTitle, eventDate, eventHosts, eventParticipants, eventLocation, eventDetails, eventDescriptionStart, eventDescription, eventTickets, eventImage};
 };
-
-/**
- * processInformation processes the raw event data from the facebook page and stores them in an event object
- * The description comes as an array of strings -> Converted into one long string
- * Participants are collected as strings -> Converted into integer
- * Details also come as an array of strings -> Extract duration and if an event is private
- * @param {"The raw data from the facebook event page"} gatheredData 
- * @returns "Event Object, with all the relevant information from the event-class model"
- */
-async function processInformation(gatheredData)
-{
-  let event_data = new Event();
-  let description = gatheredData.eventDescriptionStart + " ";
-
-  //Some fields can just be stored directly without any processing
-  event_data.eventLink = gatheredData.eventLink;
-  event_data.eventTitle = gatheredData.eventTitle;
-  event_data.eventDate = gatheredData.eventDate;
-  event_data.eventHosts = gatheredData.eventHosts;
-  event_data.eventLocation = gatheredData.eventLocation;
-  event_data.eventTickets = gatheredData.eventTickets;
-  event_data.eventImage = gatheredData.eventImage;
-  
-  //Converting participants from string to integer
-  event_data.eventParticipants = parseInt(gatheredData.eventParticipants);
-
-  //Processing details. Since details is an array of strings
-  for(let element of gatheredData.eventDetails)
-  {
-    if(element.includes("Duration:") || element.includes("days") || (element.includes("hr")) && (element.includes("min"))){
-      event_data.eventDuration = element;
-    }else if(element.includes("Public"))
-    {
-      event_data.isPrivate = false;
-    }else if(element.includes("Private")){
-      event_data.isPrivate = true;
-    }
-  }
- 
- //Processing Event Description
- for(let element of gatheredData.eventDescription)
- {
-  description += element; //Append each part of description into one long string
-  description += " "; //Spaces are nice too
- }
- description = description.replace("See less",""); //Removes unwanted string("See less")
- event_data.eventDescription = description;
-
- return event_data; 
-}
 

@@ -1,4 +1,5 @@
 import { getNewestEntries } from "../database/databaseHandler.js";
+import { insertion_sort } from "./data-process-utils.js";
 export { get_sorted_events}
 
 async function get_sorted_events(search_term) {
@@ -29,7 +30,7 @@ async function get_sorted_events(search_term) {
         }
     }
     // Returns index array of how the sorted list should be
-    event_array_index = InsertionSort(event_array_index);
+    event_array_index = insertion_sort(event_array_index);
 
     let sorted_list = [];
     // Gets the original object and inserts it with the index arrat
@@ -62,8 +63,6 @@ function InsertionSort(array) {
             i = i - 1;
         }
         array[i + 1] = key;
-
-
     }
     return array;
 }

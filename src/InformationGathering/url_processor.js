@@ -1,8 +1,15 @@
 import puppeteer from "puppeteer";
-import {getData, processInformation, getElement, getElementsArray} from "./web_crawler.js";
+import {getElement, getElementsArray} from "./web_crawler.js";
 import {scrapeOrgData, scrape, DeleteFirstPage} from "./org_crawler.js";
 import { Event } from "./eventClass.js";
 import { assignEventScrapeWorkers } from "./scrape_worker_main.js";
+
+import {
+    eventCheck,
+    checkFb,
+    logEvents,
+    processInformation,
+} from "./information-gathering-utils.js"
 
 export {accessEventsPage};
 
@@ -29,6 +36,7 @@ async function accessEventsPage()
 {
     // Collects the organisations Web-page URLs
     const orgData = await scrapeOrgData(scrape);
+    logEvents(orgData);
 
     //Launches an empty browser
     const browser = await puppeteer.launch({
@@ -53,7 +61,7 @@ async function accessEventsPage()
     for(let org of orgData){
         //If URL is to a facebook group -> Appends path string "/upcoming_hosted_events"
         //Otherwise: fbURL is set to "Unknown"
-        let fbURL = await checkFb(org.destinationURL);
+        let fbURL = checkFb(org.destinationURL);
         
         if(fbURL !== "Unknown")
         {
@@ -66,7 +74,7 @@ async function accessEventsPage()
             //The element called "no_event_class" will have the value of "No events to show" if the are no upcomming events
             let check_value = await getElement(page, no_event_class, "innerHTML");
 
-            if(await eventCheck(check_value))
+            if(eventCheck(check_value))
             {
                 //Extracts all links from the organisation event overview page
                 eventLinks =  await getElementsArray(page, event_link_class, "href");
@@ -77,33 +85,6 @@ async function accessEventsPage()
     }
     await browser.close(); //Close the browser
     return eventList; //Return collected events
-}
-
-// false = page has NO upcoming events
-// true = page has upcomming events
-async function eventCheck(string){
-    return string !== "No events to show";
-}
-
-//Checks if facebook link, and appends necessary path
-async function checkFb(orgURL){
-    let eventPageURL = orgURL;
-    
-    //Checks if the URL is a link to facebook
-    if(orgURL.includes("facebook"))
-    {
-        //Some URL's have a trailing / which we need to take into account
-        if(orgURL.at(-1) === "/")
-        {
-            eventPageURL += "upcoming_hosted_events";
-        }else{
-            eventPageURL += "/upcoming_hosted_events";
-        }
-    }else
-    {
-        eventPageURL = "Unknown"; //The URL is not a link to a facebook page
-    }
-    return eventPageURL; //Return processed URL
 }
 
 /**
@@ -123,7 +104,7 @@ async function processEvents(eventLinks, org)
 
     for (let data of unProcessedData)
     {
-        let processedData = await processInformation(data);
+        let processedData = processInformation(data);
         processedData.orgName = org.name;
         processedData.orgCategory = org.category;
         processedData.orgContactInfo = org.contactInfo;
