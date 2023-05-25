@@ -1,7 +1,6 @@
 // Imports
 import { MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
-import class_creator from '../data-process/class-insertion.js';
 
 // Exports
 export {
