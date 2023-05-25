@@ -125,12 +125,3 @@ async function removeDuplicate(eventLinks)
     }
     return noDuplicateArray;
 }
-
-//Used for debugging and overview of collected links
-async function logEvents(orgData)
-{
-    for(let org of orgData)
-    {
-        console.log(org.destinationURL);
-    }
-}
