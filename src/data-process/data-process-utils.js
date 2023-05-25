@@ -1,4 +1,4 @@
-module.exports = {
+export {
     input_validation,
     date_conversion_formatting,
     get_duration,
@@ -152,7 +152,7 @@ function time_until_event(date) {
 
 // Formats string
 function format_address(address) {
-    if (typeof address !== 'string') return "";
+    if (!input_validation(address, "str")) return ""
 
     // - g = All occurences
     return (((address.split(",")[0]).replace(/\d+/g, '')).trim()).toLowerCase();

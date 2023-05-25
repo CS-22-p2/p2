@@ -1,4 +1,4 @@
-const {
+import {
     insertion_sort,
     input_validation,
     date_conversion_formatting,
@@ -9,7 +9,7 @@ const {
     time_left_score,
     strip_and_trim,
     read_description,
-} = require("./class-insertion-utils.cjs")
+} from "./data-process-utils.js"
 
 // https://jestjs.io/docs/expect - Expect documentation where you can find what things to check for.
 // 'not' is the negation of whatever you want to check, e.g 'expect(test_func()).not.toBe(1)'
@@ -238,6 +238,7 @@ describe("Time Until Event", () => {
     })
 })
 
+// Get duration
 describe("Get Duration", () => {
     describe("Differnt durations", () => {
         test("Positive", () => {
@@ -289,9 +290,15 @@ describe("Get Duration", () => {
 })
 
 // Format address
-describe("Format Address", () => {
-    test("Correct Address", () => {
-        expect(format_address("Kroghstræde 3, Aalborg")).toBe("kroghstræde")
+describe("Format address", () => {
+    describe("Addresses", () => {
+        test("Cassiopeia", () => {
+            expect(format_address("Selma Lagerløfs Vej 300, 9220 Aalborg")).toBe("selma lagerløfs vej")
+        })
+
+        test("Aalborg University", () => {
+            expect(format_address("Kroghstræde 3, 9220 Aalborg Øst")).toBe("kroghstræde")
+        })
     })
 
     test("Whitespace", () => {
