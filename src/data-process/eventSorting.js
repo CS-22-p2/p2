@@ -29,7 +29,6 @@ async function get_sorted_events(search_term) {
             event_array_index.push(obj);
         }
     }
-
     // Returns index array of how the sorted list should be
     event_array_index = insertion_sort(event_array_index);
 
@@ -38,7 +37,6 @@ async function get_sorted_events(search_term) {
     for (let i = 0; i < event_array_index.length; i++) {
         sorted_list[i] = event_array[event_array_index[i].index];
     }
-
     // Reverse if highest from lowest is needed
     if (search_term !== "eventDate") {
         sorted_list = sorted_list.reverse();
@@ -53,8 +51,32 @@ async function get_sorted_events(search_term) {
     return sorted_list;
 }
 
-let result = await get_sorted_events("eventDate")
-
-for (let i = 0; i < result.length; i++) {
-    console.log(result[i]);
+//  Used to sort events by date or by relevancy score
+//  Works "in place" so we do not need to return array from function
+function InsertionSort(array) {
+    //Insertion Sort --- See CLRS ch. 2.1
+    for (let j = 1; j < array.length; j++) {
+        let key = array[j];
+        let i = j - 1;
+        while (i >= 0 && array[i].value > key.value) {
+            array[i + 1] = array[i]
+            i = i - 1;
+        }
+        array[i + 1] = key;
+    }
+    return array;
 }
+
+/* let result = await get_sorted_events("eventDate")
+
+    //Check if an invalid date is passed into the array
+    for (let element in array) {
+        if (array[element].toString() === "Invalid Date") //If an invalid date is passed it is removed form the array
+        {
+            invalidIndexes.push(parseInt(element)); //Store invalid index for later use
+            array.splice(element, 1)
+        }
+    }
+    return invalidIndexes;
+}
+ */

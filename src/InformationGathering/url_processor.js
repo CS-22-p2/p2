@@ -20,9 +20,9 @@ const event_link_class = "a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9
 //---------------EXECUTED COMMANDS--------------
 
 //eventList will hold an array of instances of the eventClass, which are later stored in the database
-/* let eventList = await accessEventsPage();
-console.log(eventList);
-console.log(eventList.length); */
+//let eventList = await accessEventsPage();
+//console.log(eventList);
+//console.log(eventList.length);
 //--------------------------------------------------------
 
 /**
@@ -97,10 +97,10 @@ async function accessEventsPage()
 async function processEvents(eventLinks, org)
 {
     let eventsArray = []; //Holds the colled events
-
+    let noDuplicateLinks = await removeDuplicate(eventLinks);
     // Get event data from workers
     let unProcessedData;
-    await assignEventScrapeWorkers(eventLinks).then((data) => unProcessedData = data)
+    await assignEventScrapeWorkers(noDuplicateLinks).then((data) => unProcessedData = data)
 
     for (let data of unProcessedData)
     {
@@ -110,6 +110,27 @@ async function processEvents(eventLinks, org)
         processedData.orgContactInfo = org.contactInfo;
         eventsArray.push(processedData); //Store the event in the event array
     }
-
     return eventsArray;
+}
+
+async function removeDuplicate(eventLinks)
+{
+    let noDuplicateArray = [];
+    for(let link of eventLinks)
+    {
+        //Event links that contain queries are just duplicate from the same organisation
+        if( !(link.includes("?")) ){
+            noDuplicateArray.push(link);
+        }
+    }
+    return noDuplicateArray;
+}
+
+//Used for debugging and overview of collected links
+async function logEvents(orgData)
+{
+    for(let org of orgData)
+    {
+        console.log(org.destinationURL);
+    }
 }

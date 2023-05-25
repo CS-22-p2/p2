@@ -1,9 +1,9 @@
 // Imports
 import { createUser, checkLogin } from '../user-system/userHandler.js';
-import { getNewestEntries, updateFavorite, getFavorites } from '../database/databaseHandler.js';
+import { getNewestEntries, updateFavorite, getFavorites, getCategory } from '../database/databaseHandler.js';
 import { get_sorted_events } from '../data-process/eventSorting.js';
-import http from 'http';
 import fs from 'fs';
+import http from "http" 
 import url from 'url';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -16,6 +16,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const publicDirectoryPath = path.join(__dirname, 'public');
 
 const server = http.createServer(async (req, res) => {
+    let eventResponse;
     if (req.method === 'GET') {
         // This handels get request asking for data
         if(req.url.includes('/getEvents')) {
@@ -48,7 +49,6 @@ const server = http.createServer(async (req, res) => {
                     res.end(`Server error: ${err.code}`);
                 }
             } else { // Responds with the request content
-                console.log(contentType);
                 res.writeHead(200, { 'contentType': contentType });
                 res.end(content, 'utf-8');
             }
@@ -64,18 +64,25 @@ const server = http.createServer(async (req, res) => {
                 body = JSON.parse(body);
             });
             req.on('end', async () => {
-                console.log(body);
-                if(body === "dateOpt")
-                {
-                    let eventResponse = await get_sorted_events("eventDate");
-                    res.writeHead(200, { 'Content-Type': 'application/json'});
-                    res.end(JSON.stringify({ events: eventResponse}));
-                }else if(body === "relevanceOpt")
-                {
-                    let eventResponse = await get_sorted_events("relevancyScore");
-                    res.writeHead(200, { 'Content-Type': 'application/json'});
-                    res.end(JSON.stringify({ events: eventResponse}));
+                switch(body){
+                    case 'dateOpt':
+                        eventResponse = await get_sorted_events("eventDate");
+                        break;
+                    case 'relevanceOpt':
+                        eventResponse = await get_sorted_events("relevancyScore");
+                        break;
+                    case 'festivityOpt':
+                        eventResponse = await getCategory("Festivity");
+                        break;
+                    case 'careerOpt':
+                        eventResponse = await getCategory("Career");
+                        break;
+                    case 'sportsOpt':
+                        eventResponse = await getCategory("Sports");
+                        break;
                 }
+                res.writeHead(200, { 'Content-Type': 'application/json'});
+                res.end(JSON.stringify({ events: eventResponse}));
             })
         }
     } else if (req.method === 'PUT') {
@@ -88,7 +95,6 @@ const server = http.createServer(async (req, res) => {
         });
         // When the full request is received it gets processed
         req.on('end', async () => {
-            console.log(body);
             if (body.type === "login") {
                 // Do login stuff
 
@@ -108,12 +114,10 @@ const server = http.createServer(async (req, res) => {
             } else if (body.type === "signUp") {
                 // if the request type is signup it creates a new user
                 let result = await createUser(body);
-                console.log("Trying to sign up");
             } else if (body.type === "favorite") {
                 // Function that adds event id to favorite list
                 await updateFavorite(body.userId, body.eventId);
             }
-            console.log(`Received PUT request with body: ${body}`)
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'PUT request successful' }));
         });
