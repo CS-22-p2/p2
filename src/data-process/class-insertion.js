@@ -9,7 +9,7 @@ import {
     on_campus,
     time_left_score,
     read_description,
-} from "./class-insertion-utils.cjs"
+} from "./data-process-utils.js"
 
 // Export ES6 modules
 export default {
