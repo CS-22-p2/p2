@@ -30,7 +30,7 @@ async function get_sorted_events(search_term) {
         }
     }
     // Returns index array of how the sorted list should be
-    event_array_index = insertion_sort(event_array_index);
+    event_array_index = InsertionSort(event_array_index);
 
     let sorted_list = [];
     // Gets the original object and inserts it with the index arrat
@@ -66,17 +66,3 @@ function InsertionSort(array) {
     }
     return array;
 }
-
-/* let result = await get_sorted_events("eventDate")
-
-    //Check if an invalid date is passed into the array
-    for (let element in array) {
-        if (array[element].toString() === "Invalid Date") //If an invalid date is passed it is removed form the array
-        {
-            invalidIndexes.push(parseInt(element)); //Store invalid index for later use
-            array.splice(element, 1)
-        }
-    }
-    return invalidIndexes;
-}
- */
