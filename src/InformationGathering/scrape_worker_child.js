@@ -2,9 +2,9 @@ import {
     workerData, parentPort
 } from "worker_threads"
 
-import { getData } from "./web_crawler.js"
+import { getData } from "./eventScraper.js"
 import puppeteer from "puppeteer"
-import { DeleteFirstPage } from "./org_crawler.js";
+import { DeleteFirstPage } from "./orgScraper.js";
 
 // Create a new browser
 const browser = await puppeteer.launch({
