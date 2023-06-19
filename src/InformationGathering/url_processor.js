@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
-import {getElement, getElementsArray} from "./web_crawler.js";
-import {scrapeOrgData, scrape, DeleteFirstPage} from "./org_crawler.js";
+import {getElement, getElementsArray} from "./eventScraper.js";
+import {scrapeOrgData, scrape, DeleteFirstPage} from "./orgScraper.js";
 import { Event } from "./eventClass.js";
 import { assignEventScrapeWorkers } from "./scrape_worker_main.js";
 

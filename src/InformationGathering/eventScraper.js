@@ -1,6 +1,5 @@
 import puppeteer from 'puppeteer'
 import { Event } from "./eventClass.js";
-import { checkPrime } from 'crypto';
 export {getData, getElement, getElementsArray};
  
 //The classes of the HTML elements we want to read from the DOM
